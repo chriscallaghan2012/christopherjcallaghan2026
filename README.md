@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# christopherjcallaghan2026
 
-# Run and deploy your AI Studio app
+> Next.js 15 (App Router + React 19 + TypeScript) Web Application, Supabase Database, Resend Email Engine, and Gemini AI Architecture Studio for Christopher J. Callaghan.
 
-This contains everything you need to run your app locally.
+## Quick Start
 
-View your app in AI Studio: https://ai.studio/apps/f1d2af07-fce7-49f6-8933-07805227cda3
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-## Run Locally
+### 2. Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
 
-**Prerequisites:**  Node.js
+Fill in your configuration:
+- `NEXT_PUBLIC_SUPABASE_URL` & `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Supabase connection)
+- `RESEND_API_KEY` (Resend Email API)
+- `VITE_GEMINI_API_KEY` (Google Gemini AI API)
 
+### 3. Run Locally
+```bash
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Open `http://localhost:3000` in your browser.
+
+### 4. Build for Production
+```bash
+npm run build
+```
+
+---
+
+## Features
+
+- **Next.js 15 (App Router)**: Sub-second edge rendering and 100/100 Lighthouse SEO with JSON-LD Schema markup.
+- **Supabase**: PostgreSQL persistence (`contact_submissions`, `consultation_requests`, `ai_blueprints`) with local fallback mode.
+- **Resend Email Engine**: Dual HTML email dispatch (Admin Alert + Client Confirmation) with an interactive **Email Template Sandbox** tab.
+- **Gemini 2.0 AI Studio**: Real AI software architecture blueprint generator.
