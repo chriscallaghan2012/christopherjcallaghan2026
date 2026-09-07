@@ -137,6 +137,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenConsultation }
               </li>
               <li>
                 <button
+                  onClick={() => onNavigate('email-sandbox')}
+                  className="text-sm text-white/60 hover:text-cyan-400 transition-colors"
+                >
+                  Email Sandbox
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigate('contact')}
                   className="text-sm text-white/60 hover:text-[#FF003C] transition-colors"
                 >

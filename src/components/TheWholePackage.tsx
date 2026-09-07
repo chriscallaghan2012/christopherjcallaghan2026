@@ -217,7 +217,7 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
             </div>
           </div>
 
-          {/* Pillar 3: Getting Funded */}
+          {/* Pillar 3: Funding & Finance Support */}
           <div className="group rounded-3xl border border-white/10 bg-black/60 backdrop-blur-2xl p-8 hover:border-emerald-500/50 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] transition-all flex flex-col justify-between relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 

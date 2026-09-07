@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-overview-btn"
             onClick={() => handleNav('home')}
-            className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`shrink-0 whitespace-nowrap px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
               currentTab === 'home'
                 ? 'bg-white/10 text-white shadow-inner'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-whole-package-btn"
             onClick={() => handleNav('package')}
-            className={`flex items-center gap-1.5 px-3 xl:px-4 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap ${
+            className={`shrink-0 flex items-center gap-1.5 px-3 xl:px-4 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap ${
               currentTab === 'package'
                 ? 'bg-gradient-to-r from-[#FF003C] to-purple-600 text-white shadow-[0_0_20px_rgba(255,0,60,0.4)]'
                 : 'text-white/85 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-projects-btn"
             onClick={() => handleNav('projects')}
-            className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`shrink-0 whitespace-nowrap px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
               currentTab === 'projects'
                 ? 'bg-white/10 text-white shadow-inner'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -89,7 +89,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-services-btn"
             onClick={() => handleNav('services')}
-            className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`shrink-0 whitespace-nowrap px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
               currentTab === 'services'
                 ? 'bg-white/10 text-white shadow-inner'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-expertise-btn"
             onClick={() => handleNav('expertise')}
-            className={`hidden xl:block px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`hidden shrink-0 whitespace-nowrap xl:block px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
               currentTab === 'expertise'
                 ? 'bg-white/10 text-white shadow-inner'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -113,7 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-tool-btn"
             onClick={() => handleNav('ai-tool')}
-            className={`flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`shrink-0 flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
               currentTab === 'ai-tool'
                 ? 'bg-[#FF003C]/20 text-[#FF003C] border border-[#FF003C]/40 shadow-[0_0_15px_rgba(255,0,60,0.2)]'
                 : 'text-white/60 hover:text-[#FF003C] hover:bg-white/5'
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-email-sandbox-btn"
             onClick={() => handleNav('email-sandbox')}
-            className={`flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`hidden shrink-0 whitespace-nowrap xl:flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all ${
               currentTab === 'email-sandbox'
                 ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.2)]'
                 : 'text-white/60 hover:text-cyan-400 hover:bg-white/5'
@@ -142,14 +142,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-contact-btn"
             onClick={() => handleNav('contact')}
-            className="hidden xl:block px-4 xl:px-5 py-2 xl:py-2.5 rounded-full border border-white/15 text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-bold text-white/80 hover:border-[#FF003C] hover:text-[#FF003C] transition-all hover:bg-[#FF003C]/5"
+            className="hidden shrink-0 whitespace-nowrap xl:block px-4 xl:px-5 py-2 xl:py-2.5 rounded-full border border-white/15 text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-bold text-white/80 hover:border-[#FF003C] hover:text-[#FF003C] transition-all hover:bg-[#FF003C]/5"
           >
             Contact
           </button>
           <button
             id="nav-consultation-btn"
             onClick={onOpenConsultation}
-            className="group relative flex items-center gap-1.5 xl:gap-2 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full bg-[#FF003C] text-white text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-black shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all hover:scale-105 active:scale-95 whitespace-nowrap min-h-[38px] xl:min-h-[42px]"
+            className="group shrink-0 relative flex items-center gap-1.5 xl:gap-2 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full bg-[#FF003C] text-white text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-black shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all hover:scale-105 active:scale-95 whitespace-nowrap min-h-[38px] xl:min-h-[42px]"
           >
             <span>Start Project</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
