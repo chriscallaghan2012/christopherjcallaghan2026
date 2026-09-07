@@ -1,14 +1,26 @@
 import { Project, ServiceItem, RoleExpertise, TimelineMilestone, SkillItem, Testimonial, VenturePackageModule, VentureStageConfig } from '../types';
 
-export const HOTLINK_BASE = 'https://www.christopherjcallaghan.com/_next/image?url=%2Fimages%2F';
+const FALLBACK_PROJECT_IMAGES: Record<string, string> = {
+  'secure-api.png': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+  'multi-tenant-college.png': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+  'schoo-management.png': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+  'genafize-logo.png': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+  'matchdayparking.png': 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=80',
+  'tutors-directory.png': 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80'
+};
 
 export function getHotlinkImageUrl(imagePath: string, width = 1200): string {
+  if (!imagePath) {
+    return 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80';
+  }
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath;
   }
-  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
-  const fileName = cleanPath.replace('images/', '');
-  return `${HOTLINK_BASE}${encodeURIComponent(fileName)}&w=${width}&q=75`;
+  const fileName = imagePath.replace('/images/', '').replace('images/', '');
+  if (FALLBACK_PROJECT_IMAGES[fileName]) {
+    return FALLBACK_PROJECT_IMAGES[fileName];
+  }
+  return imagePath;
 }
 
 export const VENTURE_STAGES: VentureStageConfig[] = [
@@ -113,7 +125,24 @@ export const VENTURE_PACKAGE_MODULES: VenturePackageModule[] = [
     defaultChecked: false
   },
 
-  // GETTING FUNDED
+  // FUNDING & FINANCE SUPPORT
+  {
+    id: 'funding-route-advisory',
+    name: 'Funding Route Advisory & Applications',
+    category: 'funding',
+    description: 'Help identifying the right funding route for your business — from idea stage to already trading — with application-ready preparation and supporting documentation.',
+    deliverables: [
+      'Start Up Loans',
+      'Business & government grants',
+      'Local authority & innovation funding',
+      'SEIS/EIS investor preparation & Angels',
+      'Equity crowdfunding, asset & premises finance',
+      'Funding applications & supporting documentation',
+      'Business plans & financial forecasts (tech-funding prep)'
+    ],
+    impactMetric: 'Application-ready funding preparation',
+    defaultChecked: true
+  },
   {
     id: 'funding-sme-grant-starter',
     name: 'SME & Startup Micro-Funding (Up to £25k)',

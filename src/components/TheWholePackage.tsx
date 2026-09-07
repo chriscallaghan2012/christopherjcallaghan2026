@@ -83,7 +83,7 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
           </h2>
 
           <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-white/80 tracking-tight">
-            The Setup. The Advertising. Getting Funded.
+            The Setup. The Advertising. Funding &amp; Finance Support.
           </p>
 
           <p className="text-white/60 text-base md:text-lg max-w-2xl mx-auto leading-relaxed pt-2">
@@ -113,10 +113,10 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-left">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono font-bold uppercase mb-1">
                 <TrendingUp className="w-4 h-4" />
-                03. Getting Funded
+                03. Funding &amp; Finance
               </div>
-              <p className="text-sm font-bold text-white">Investor-Ready Capital Rails</p>
-              <p className="text-xs text-white/50">Live Working Demos & VC Telemetry</p>
+              <p className="text-sm font-bold text-white">Route &amp; Application Support</p>
+              <p className="text-xs text-white/50">Start Up Loans, Grants, Angels &amp; More</p>
             </div>
           </div>
         </div>
@@ -233,20 +233,27 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
 
               <div>
                 <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-                  Getting Funded
+                  Funding &amp; Finance Support
                 </h3>
                 <p className="text-sm text-white/60 leading-relaxed">
-                  From £25k SME micro-grants to multi-million Series A rounds. I build working interactive prototypes and real-time traction dashboards that close capital.
+                  Helping you identify the right funding route for your business. Whether you&rsquo;re starting from an idea or already trading, I help you understand what funding may be available and prepare the business for an application.
                 </p>
               </div>
 
               <div className="space-y-3 pt-2">
                 {[
-                  'SME & Startup Micro-Funding & Grants (Up to £25k)',
-                  'Innovate UK & Regional Voucher Technical Diligence',
-                  'Live Interactive Working Investor Demo (Clickable MVP)',
-                  'Defensible Technical Moat & IP Architecture Deck',
-                  'Live Telemetry Data Room (Real-time MRR, LTV & Cohorts)'
+                  'Start Up Loans',
+                  'Business loans',
+                  'Government grants',
+                  'Local authority funding',
+                  'Innovation & technology funding',
+                  'SEIS/EIS investor preparation',
+                  'Angel investment',
+                  'Equity crowdfunding',
+                  'Asset & equipment finance',
+                  'Vehicle and premises finance',
+                  'Funding applications & supporting documentation',
+                  'Business plans & financial forecasts (tech-funding preparation)'
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-2.5 text-xs text-white/80">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -258,8 +265,8 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
 
             <div className="pt-8 border-t border-white/10 mt-6">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-white/40">Capital Spectrum</span>
-                <span className="text-emerald-400 font-bold">Up to £25k to £10M+</span>
+                <span className="text-white/40">Scope</span>
+                <span className="text-emerald-400 font-bold">Advisory &amp; Application Prep</span>
               </div>
             </div>
           </div>
