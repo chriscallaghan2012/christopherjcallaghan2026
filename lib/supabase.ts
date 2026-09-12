@@ -36,6 +36,14 @@ export interface ConsultationSubmission {
   details: string;
 }
 
+export interface AiBlueprintSubmission {
+  title: string;
+  domain: string;
+  user_prompt: string;
+  model_used?: string;
+  blueprint_json: object;
+}
+
 /**
  * Stores contact form submission in Supabase with local fallback
  */
@@ -118,5 +126,42 @@ export async function submitConsultationRequest(data: ConsultationSubmission) {
   } catch (err: any) {
     console.warn('Supabase consultation failed, using local storage fallback:', err.message);
     return { success: true, isLocalFallback: true, refCode, error: err.message };
+  }
+}
+
+/**
+ * Archives an AI Architecture Studio blueprint alongside the consultation lead.
+ */
+export async function submitAiBlueprint(data: AiBlueprintSubmission) {
+  if (!isSupabaseConfigured) {
+    try {
+      const existing = JSON.parse(localStorage.getItem('cjc_ai_blueprints') || '[]');
+      existing.push({ ...data, created_at: new Date().toISOString() });
+      localStorage.setItem('cjc_ai_blueprints', JSON.stringify(existing));
+    } catch {
+      // Ignore local storage write errors
+    }
+    return { success: true, isLocalFallback: true };
+  }
+
+  try {
+    const { data: inserted, error } = await supabase
+      .from('ai_blueprints')
+      .insert([
+        {
+          title: data.title,
+          domain: data.domain,
+          user_prompt: data.user_prompt,
+          model_used: data.model_used || 'Gemini 2.0 Flash',
+          blueprint_json: data.blueprint_json
+        }
+      ])
+      .select();
+
+    if (error) throw error;
+    return { success: true, isLocalFallback: false, inserted };
+  } catch (err: any) {
+    console.warn('Supabase ai_blueprints insert failed, using local storage fallback:', err.message);
+    return { success: true, isLocalFallback: true, error: err.message };
   }
 }

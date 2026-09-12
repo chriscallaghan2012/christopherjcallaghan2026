@@ -7,6 +7,7 @@ export interface EmailPayload {
   message?: string;
   fundingGoal?: string;
   packageScope?: string;
+  aiBlueprint?: string;
   type?: 'contact' | 'consultation';
   submittedAt?: string;
 }
@@ -94,6 +95,13 @@ export function generateAdminNotificationEmail(data: EmailPayload): string {
                 <span style="color: #FF003C; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">Technical Specification & Goals</span>
                 <p style="margin: 0; color: #ffffff; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${data.message || data.message || 'No additional notes provided.'}</p>
               </div>
+
+              ${data.aiBlueprint ? `
+              <!-- AI Architecture Studio Blueprint Attachment -->
+              <div style="background-color: rgba(168, 85, 247, 0.06); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                <span style="color: #a855f7; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">🤖 AI Architecture Studio Blueprint Attached</span>
+                <p style="margin: 0; color: #e9d5ff; font-size: 13px; line-height: 1.7; white-space: pre-wrap; font-family: monospace;">${data.aiBlueprint}</p>
+              </div>` : ''/* aiBlueprint */}
 
               <!-- Action Button -->
               <table role="presentation" width="100%">
@@ -200,6 +208,13 @@ export function generateClientConfirmationEmail(data: EmailPayload): string {
                   </tr>
                 </table>
               </div>
+
+              ${data.aiBlueprint ? `
+              <!-- AI Blueprint Receipt -->
+              <div style="background-color: rgba(168, 85, 247, 0.06); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 25px;">
+                <span style="color: #a855f7; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">Your AI Architecture Studio Blueprint</span>
+                <p style="margin: 0; color: #e9d5ff; font-size: 12px; line-height: 1.65; white-space: pre-wrap; font-family: monospace;">${data.aiBlueprint}</p>
+              </div>` : ''/* aiBlueprint */}
 
               <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.5;">
                 In the meantime, feel free to explore my full engineering portfolio and interactive tools at <a href="https://christopherjcallaghan.com" style="color: #FF003C; text-decoration: none; font-weight: bold;">christopherjcallaghan.com</a>.

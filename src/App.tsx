@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScreenTab, Project, ServiceItem } from './types';
+import { ScreenTab, Project, ServiceItem, AIStudioContext } from './types';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { WhoIAm } from './components/WhoIAm';
@@ -44,6 +44,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<ServiceItem | null>(null);
+  const [aiContext, setAiContext] = useState<AIStudioContext | null>(null);
 
   // Keep the SPA tab state in sync with the URL so direct visits to
   // /package and /email-sandbox (and ?tab=... URLs) land on the right screen.
@@ -62,12 +63,19 @@ export default function App() {
 
   const handleSelectServiceForInquiry = (service: ServiceItem) => {
     setPreselectedService(service);
+    setAiContext(null);
     setIsConsultationOpen(true);
   };
 
-  const handleOpenConsultation = () => {
+  const handleOpenConsultation = (context?: AIStudioContext) => {
     setPreselectedService(null);
+    setAiContext(context ?? null);
     setIsConsultationOpen(true);
+  };
+
+  const handleCloseConsultation = () => {
+    setIsConsultationOpen(false);
+    setAiContext(null);
   };
 
   return (
@@ -204,8 +212,9 @@ export default function App() {
       {/* Consultation Modal */}
       <ConsultationModal
         isOpen={isConsultationOpen}
-        onClose={() => setIsConsultationOpen(false)}
+        onClose={handleCloseConsultation}
         preselectedService={preselectedService}
+        aiContext={aiContext}
       />
     </div>
   );

@@ -53,6 +53,25 @@ export interface Testimonial {
 
 export type ScreenTab = 'home' | 'package' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'contact' | 'email-sandbox';
 
+export interface ArchitectureBlueprint {
+  title: string;
+  domain: string;
+  frontend: string;
+  backend: string;
+  database: string;
+  aiEngine: string;
+  devops: string;
+  keyWorkflows: string[];
+  latencyTarget: string;
+}
+
+export interface AIStudioContext {
+  blueprint: ArchitectureBlueprint;
+  prompt: string;
+  model: string;
+  scale: string;
+}
+
 export interface VenturePackageModule {
   id: string;
   name: string;

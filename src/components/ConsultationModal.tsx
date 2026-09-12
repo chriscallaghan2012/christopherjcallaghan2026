@@ -1,17 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, CheckCircle2, RefreshCw } from 'lucide-react';
-import { ServiceItem } from '../types';
+import { X, Send, CheckCircle2, RefreshCw, Sparkles, Bot, Gauge } from 'lucide-react';
+import { ServiceItem, AIStudioContext, ArchitectureBlueprint } from '../types';
 
 interface ConsultationModalProps {
   isOpen: boolean;
   onClose: () => void;
   preselectedService?: ServiceItem | null;
+  aiContext?: AIStudioContext | null;
+}
+
+const STANDARD_SCOPES = [
+  'The Whole Package (Setup + Advertising + Funding)',
+  'SME & Startup Kickstart (Up to £25k Grants & MVP)',
+  'The Setup (Product Architecture, AI Engine & Build)',
+  'The Advertising (Programmatic SEO, CAPI & Growth)',
+  'Getting Funded (Investor Demo, Pitch Moat & Data Room)',
+  'Advisory / Bespoke Architecture'
+];
+
+/** Renders an AI Studio blueprint as editable project notes in the form. */
+function formatBlueprintNotes(bp: ArchitectureBlueprint): string {
+  return [
+    `[AI Architecture Studio Blueprint] ${bp.title}`,
+    `Domain: ${bp.domain}`,
+    `Frontend: ${bp.frontend}`,
+    `Backend: ${bp.backend}`,
+    `Database: ${bp.database}`,
+    `AI Engine: ${bp.aiEngine}`,
+    `DevOps: ${bp.devops}`,
+    `Latency Target: ${bp.latencyTarget}`,
+    '',
+    'Recommended Execution Stages:',
+    ...bp.keyWorkflows
+  ].join('\n');
 }
 
 export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   isOpen,
   onClose,
-  preselectedService
+  preselectedService,
+  aiContext
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -43,6 +71,22 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     };
   }, [isOpen, onClose]);
 
+  // When opened from the AI Architecture Studio, carry the generated blueprint
+  // into the real consultation form: pre-fill scope + project notes.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (aiContext?.blueprint) {
+      setPackageScope(aiContext.blueprint.title);
+      setDetails(formatBlueprintNotes(aiContext.blueprint));
+    } else if (!STANDARD_SCOPES.includes(packageScope)) {
+      setPackageScope('The Whole Package (Setup + Advertising + Funding)');
+    }
+    // Intentionally keyed on (isOpen, aiContext) only - running on every
+    // packageScope/details keystroke would clobber the user's edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, aiContext]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +107,8 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           budget: fundingGoal,
           timeline,
           message: details,
-          type: 'consultation'
+          type: 'consultation',
+          aiContext: aiContext ?? undefined
         })
       });
 
@@ -148,6 +193,37 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               </div>
             )}
 
+            {aiContext?.blueprint && (
+              <div className="mb-5 rounded-2xl border border-purple-500/30 bg-purple-500/[0.06] p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-purple-300 font-bold">
+                    AI Architecture Studio Blueprint Attached
+                  </span>
+                </div>
+                <h4 className="text-sm font-black text-white leading-snug">
+                  {aiContext.blueprint.title}
+                </h4>
+                <p className="text-[11px] font-mono text-white/50 mt-1">
+                  {aiContext.blueprint.domain}
+                </p>
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-white/60">
+                    <Gauge className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    Scale: {aiContext.scale}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-white/60">
+                    <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    Model: {aiContext.model}
+                  </div>
+                </div>
+                <p className="mt-3 text-[10px] text-white/40 leading-relaxed">
+                  The generated specification has been pre-filled into your project notes below —
+                  review it, add your goals, and transmit.
+                </p>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
@@ -187,6 +263,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                     onChange={(e) => setPackageScope(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]/70"
                   >
+                    {aiContext?.blueprint && (
+                      <option value={aiContext.blueprint.title}>🤖 {aiContext.blueprint.title}</option>
+                    )}
                     <option value="The Whole Package (Setup + Advertising + Funding)">★ The Whole Package (Setup + Ads + Funding)</option>
                     <option value="SME & Startup Kickstart (Up to £25k Grants & MVP)">SME & Startup Kickstart (Up to £25k Grants & MVP)</option>
                     <option value="The Setup (Product Architecture, AI Engine & Build)">01. The Setup (Product Architecture & MVP)</option>

@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
 import { Sparkles, Terminal, Cpu, Database, Server, Copy, Check, ArrowRight, Zap, RefreshCw, Bot } from 'lucide-react';
+import { ArchitectureBlueprint, AIStudioContext } from '../types';
 
 interface AiToolStudioProps {
-  onOpenConsultation: () => void;
-}
-
-interface ArchitectureBlueprint {
-  title: string;
-  domain: string;
-  frontend: string;
-  backend: string;
-  database: string;
-  aiEngine: string;
-  devops: string;
-  keyWorkflows: string[];
-  latencyTarget: string;
+  onOpenConsultation: (context: AIStudioContext) => void;
 }
 
 const PRESET_TEMPLATES = [
@@ -277,7 +266,14 @@ Architected by Christopher J. Callaghan (christopherjcallaghan.com)
                 </button>
 
                 <button
-                  onClick={onOpenConsultation}
+                  onClick={() =>
+                    onOpenConsultation({
+                      blueprint,
+                      prompt: customPrompt,
+                      model: modelType,
+                      scale: concurrency
+                    })
+                  }
                   className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#FF003C] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
                 >
                   <span>Build This</span>

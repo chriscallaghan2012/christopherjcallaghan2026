@@ -1,11 +1,47 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { generateAdminNotificationEmail, generateClientConfirmationEmail } from '@/lib/emailTemplates';
-import { submitContactForm, submitConsultationRequest } from '@/lib/supabase';
+import { submitContactForm, submitConsultationRequest, submitAiBlueprint } from '@/lib/supabase';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 const adminEmail = process.env.VITE_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'hello@christopherjcallaghan.com';
+
+/** Escapes user-generated content before injecting it into email HTML. */
+function escapeHtml(input: string): string {
+  return (input || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Builds a readable, escaped summary of an AI Studio blueprint for admin/client emails. */
+function formatBlueprintForEmail(ctx: { blueprint?: any; prompt?: string; model?: string; scale?: string }): string {
+  const bp = ctx?.blueprint;
+  if (!bp) return '';
+
+  return [
+    `[AI ARCHITECTURE STUDIO] ${escapeHtml(bp.title || 'Untitled Blueprint')}`,
+    `Domain: ${escapeHtml(bp.domain || '—')}`,
+    `Scale Target: ${escapeHtml(ctx.scale || '—')}`,
+    `Model: ${escapeHtml(ctx.model || '—')}`,
+    `Frontend: ${escapeHtml(bp.frontend || '—')}`,
+    `Backend: ${escapeHtml(bp.backend || '—')}`,
+    `Database: ${escapeHtml(bp.database || '—')}`,
+    `AI Engine: ${escapeHtml(bp.aiEngine || '—')}`,
+    `DevOps: ${escapeHtml(bp.devops || '—')}`,
+    `Latency Target: ${escapeHtml(bp.latencyTarget || '—')}`,
+    '',
+    'Recommended Execution Stages:',
+    ...(Array.isArray(bp.keyWorkflows)
+      ? bp.keyWorkflows.map((wf: string) => `  • ${escapeHtml(wf)}`)
+      : [])
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
 
 export async function POST(request: Request) {
   try {
@@ -20,6 +56,7 @@ export async function POST(request: Request) {
       timeline,
       message,
       details,
+      aiContext,
       type = 'contact',
       testRecipient,
       templateType,
@@ -39,12 +76,14 @@ export async function POST(request: Request) {
       fundingGoal,
       timeline: timeline || 'Flexible',
       message: message || details || '',
+      aiBlueprint: aiContext ? formatBlueprintForEmail(aiContext) : undefined,
       type,
       submittedAt: new Date().toISOString()
     };
 
     // 1. Database Persistence (Supabase / Local Fallback)
     let dbResult = null;
+    let blueprintResult = null;
     if (!isSandboxTest) {
       if (type === 'consultation') {
         dbResult = await submitConsultationRequest({
@@ -63,6 +102,17 @@ export async function POST(request: Request) {
           budget: payload.budget,
           timeline: payload.timeline,
           message: payload.message
+        });
+      }
+
+      // Archive the AI Studio blueprint with the lead when one is attached
+      if (aiContext?.blueprint) {
+        blueprintResult = await submitAiBlueprint({
+          title: aiContext.blueprint.title || 'AI Architecture Blueprint',
+          domain: aiContext.blueprint.domain || 'General',
+          user_prompt: aiContext.prompt || aiContext.blueprint.title || 'Generated via AI Architecture Studio',
+          model_used: aiContext.model || 'Gemini 2.0 Flash',
+          blueprint_json: aiContext.blueprint
         });
       }
     }
@@ -86,13 +136,15 @@ export async function POST(request: Request) {
           success: true,
           message: `Test email (${templateType}) sent successfully to ${recipient} via Resend API!`,
           resendId: emailRes.data?.id,
-          dbResult
+          dbResult,
+          blueprintResult
         });
       } else {
         return NextResponse.json({
           success: true,
           message: `[Simulated Sandbox Test] Email template (${templateType}) generated for ${recipient}. Add RESEND_API_KEY to .env to send live emails!`,
-          dbResult
+          dbResult,
+          blueprintResult
         });
       }
     }
@@ -140,7 +192,8 @@ export async function POST(request: Request) {
         adminEmailSent,
         clientEmailSent
       },
-      dbResult
+      dbResult,
+      blueprintResult
     });
 
   } catch (error: any) {
