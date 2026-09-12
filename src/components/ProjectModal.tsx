@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Project } from '../types';
 import { getHotlinkImageUrl } from '../data/portfolioData';
 import { X, ExternalLink, Cpu, Layers, Terminal, CheckCircle } from 'lucide-react';
@@ -10,6 +10,24 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, onOpenConsultation }) => {
+  // Lock page scroll + close on Escape while the modal is open.
+  useEffect(() => {
+    if (!project) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [project, onClose]);
+
   if (!project) return null;
 
   const imageUrl = getHotlinkImageUrl(project.imageUrls[0]);
@@ -20,10 +38,15 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
       <div 
         className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-3xl rounded-3xl border border-white/15 bg-[#0a0a0e] p-6 sm:p-8 md:p-10 shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 max-h-[90vh] overflow-y-auto text-left">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        className="relative w-full max-w-3xl rounded-3xl border border-white/15 bg-[#0a0a0e] p-6 sm:p-8 md:p-10 shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 max-h-[90vh] overflow-y-auto overscroll-contain text-left">
         {/* Close Button */}
         <button
           onClick={onClose}

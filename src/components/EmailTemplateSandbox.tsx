@@ -257,11 +257,11 @@ export const EmailTemplateSandbox: React.FC = () => {
             </div>
 
             {/* Preview Frame */}
-            <div className="w-full flex-grow rounded-2xl overflow-hidden border border-white/10 bg-[#060608] min-h-[600px] relative">
+            <div className="w-full flex-grow rounded-2xl overflow-hidden border border-white/10 bg-[#060608] min-h-[400px] sm:min-h-[600px] relative">
               <iframe
                 title="Email Preview"
                 srcDoc={currentHtml}
-                className="w-full h-full min-h-[600px] border-none"
+                className="w-full h-full min-h-[400px] sm:min-h-[600px] border-none"
               />
             </div>
           </div>

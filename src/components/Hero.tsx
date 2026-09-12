@@ -18,7 +18,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenConsultation }) =>
   ];
 
   return (
-    <section id="hero" className="relative w-full min-h-[92vh] flex flex-col justify-center items-center py-16 md:py-24 overflow-hidden">
+    <section id="hero" className="relative w-full min-h-[92svh] flex flex-col justify-center items-center py-16 md:py-24 overflow-hidden">
       {/* Dynamic Ambient Background Elements */}
       <div className="absolute inset-0 pointer-events-none z-0">
         {/* Glow Spheres */}
@@ -56,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenConsultation }) =>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10 text-center max-w-5xl">
         {/* Top Tagline Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 shadow-sm">
+        <div className="inline-flex flex-wrap justify-center items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 shadow-sm max-w-full">
           <Sparkles className="w-4 h-4 text-amber-400" />
           <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-white/90">
             The Whole Package // Setup • Advertising • Funding

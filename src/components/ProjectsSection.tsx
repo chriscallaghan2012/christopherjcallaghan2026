@@ -123,6 +123,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   <img
                     src={hotlinkUrl}
                     alt={project.title}
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80`;
                     }}

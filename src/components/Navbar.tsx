@@ -179,6 +179,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2.5 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -187,7 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
 
       {/* Mobile & iPad Drawer Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-20 bottom-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+        <div id="mobile-menu" className="lg:hidden fixed inset-x-0 top-20 bottom-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
           <div 
             className="border-b border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-5 sm:px-8 py-6 space-y-4 max-h-[calc(100vh-80px)] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}

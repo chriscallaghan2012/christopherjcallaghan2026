@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Send, CheckCircle2, RefreshCw } from 'lucide-react';
 import { ServiceItem } from '../types';
 
@@ -24,6 +24,24 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [refCode, setRefCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Lock page scroll + close on Escape while the modal is open.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -70,10 +88,15 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
       <div 
         className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-lg rounded-3xl border border-white/15 bg-[#0a0a0f] p-6 sm:p-8 shadow-[0_0_50px_rgba(255,0,60,0.2)] z-10 text-left">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Schedule a project consultation"
+        className="relative w-full max-w-lg rounded-3xl border border-white/15 bg-[#0a0a0f] p-6 sm:p-8 shadow-[0_0_50px_rgba(255,0,60,0.2)] z-10 overscroll-contain text-left">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-full border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-colors"

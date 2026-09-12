@@ -60,6 +60,10 @@ export const SkillsMarquee: React.FC = () => {
               <img
                 src={`https://cdn.simpleicons.org/${skill.slug}/ffffff`}
                 alt={skill.name}
+                loading="lazy"
+                decoding="async"
+                width={20}
+                height={20}
                 className="w-5 h-5 object-contain group-hover:scale-110 transition-transform opacity-80 group-hover:opacity-100"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
@@ -90,6 +94,10 @@ export const SkillsMarquee: React.FC = () => {
               <img
                 src={`https://cdn.simpleicons.org/${skill.slug}/ffffff`}
                 alt={skill.name}
+                loading="lazy"
+                decoding="async"
+                width={20}
+                height={20}
                 className="w-5 h-5 object-contain group-hover:scale-110 transition-transform opacity-80 group-hover:opacity-100"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';

@@ -9,8 +9,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://christopherjcallaghan.com'),
   title: 'Christopher J. Callaghan | Digital Architect & Senior Full-Stack Engineer',
   description: 'Senior Full-Stack Architect & AI Systems Engineer based in Manchester, UK. Specializing in Next.js 15, React 19, Supabase, Resend, Programmatic SEO, and AI Agentic Pipelines.',
+  applicationName: 'Christopher J. Callaghan — Digital Architect',
+  alternates: {
+    canonical: '/',
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   keywords: [
     'Christopher J. Callaghan',
     'Digital Architect',
@@ -32,12 +42,23 @@ export const metadata: Metadata = {
     title: 'Christopher J. Callaghan | Digital Architect & Senior Full-Stack Engineer',
     description: 'Senior Software Architect & AI Engineering Specialist. Architecting next-generation digital experiences, venture packages, and programmatic SaaS platforms.',
     siteName: 'Christopher J. Callaghan Portfolio',
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80',
+        width: 1200,
+        height: 630,
+        alt: 'Christopher J. Callaghan — Digital Architect & Senior Full-Stack Engineer',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Christopher J. Callaghan | Digital Architect',
     description: 'Senior Full-Stack & AI Systems Architect based in Manchester, UK.',
     creator: '@christopherjcallaghan',
+    images: [
+      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80',
+    ],
   },
   robots: {
     index: true,

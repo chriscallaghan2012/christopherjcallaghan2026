@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScreenTab, Project, ServiceItem } from './types';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -17,11 +17,48 @@ import { AiToolStudio } from './components/AiToolStudio';
 import { TheWholePackage } from './components/TheWholePackage';
 import { EmailTemplateSandbox } from './components/EmailTemplateSandbox';
 
+const VALID_TABS: ScreenTab[] = ['home', 'package', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox'];
+
+/** Reads the browser URL (pathname or ?tab=) and resolves the active tab. */
+function getTabFromBrowser(): ScreenTab {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname;
+  if (path === '/package') return 'package';
+  if (path === '/email-sandbox') return 'email-sandbox';
+  const requested = new URLSearchParams(window.location.search).get('tab');
+  if (requested && (VALID_TABS as string[]).includes(requested)) {
+    return requested as ScreenTab;
+  }
+  return 'home';
+}
+
+/** Builds a shareable, refresh-safe URL for a given tab. */
+function getUrlForTab(tab: ScreenTab): string {
+  if (tab === 'home') return '/';
+  if (tab === 'package' || tab === 'email-sandbox') return `/${tab}`;
+  return `/?tab=${tab}`;
+}
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ScreenTab>('home');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<ServiceItem | null>(null);
+
+  // Keep the SPA tab state in sync with the URL so direct visits to
+  // /package and /email-sandbox (and ?tab=... URLs) land on the right screen.
+  useEffect(() => {
+    setCurrentTab(getTabFromBrowser());
+
+    const handlePopState = () => setCurrentTab(getTabFromBrowser());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleSelectTab = (tab: ScreenTab) => {
+    setCurrentTab(tab);
+    window.history.replaceState(null, '', getUrlForTab(tab));
+  };
 
   const handleSelectServiceForInquiry = (service: ServiceItem) => {
     setPreselectedService(service);
@@ -38,7 +75,7 @@ export default function App() {
       {/* Top Navigation */}
       <Navbar
         currentTab={currentTab}
-        onSelectTab={setCurrentTab}
+        onSelectTab={handleSelectTab}
         onOpenConsultation={handleOpenConsultation}
       />
 
