@@ -1,42 +1,33 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { generateAdminNotificationEmail, generateClientConfirmationEmail } from '@/lib/emailTemplates';
-import { submitContactForm, submitConsultationRequest, submitAiBlueprint } from '@/lib/supabase';
+import { isDatabaseConfigured, saveAiBlueprint, saveContactSubmission, saveConsultationRequest } from '@/lib/database';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
-const adminEmail = process.env.VITE_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'hello@christopherjcallaghan.com';
+const adminEmail = process.env.ADMIN_EMAIL || 'christopher@christopherjcallaghan.com';
+const senderIdentity = 'Christopher J. Callaghan <christopher@christopherjcallaghan.com>';
 
-/** Escapes user-generated content before injecting it into email HTML. */
-function escapeHtml(input: string): string {
-  return (input || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/** Builds a readable, escaped summary of an AI Studio blueprint for admin/client emails. */
+/** Builds a plain-text AI Studio summary; the email template escapes it for HTML. */
 function formatBlueprintForEmail(ctx: { blueprint?: any; prompt?: string; model?: string; scale?: string }): string {
   const bp = ctx?.blueprint;
   if (!bp) return '';
 
   return [
-    `[AI ARCHITECTURE STUDIO] ${escapeHtml(bp.title || 'Untitled Blueprint')}`,
-    `Domain: ${escapeHtml(bp.domain || '—')}`,
-    `Scale Target: ${escapeHtml(ctx.scale || '—')}`,
-    `Model: ${escapeHtml(ctx.model || '—')}`,
-    `Frontend: ${escapeHtml(bp.frontend || '—')}`,
-    `Backend: ${escapeHtml(bp.backend || '—')}`,
-    `Database: ${escapeHtml(bp.database || '—')}`,
-    `AI Engine: ${escapeHtml(bp.aiEngine || '—')}`,
-    `DevOps: ${escapeHtml(bp.devops || '—')}`,
-    `Latency Target: ${escapeHtml(bp.latencyTarget || '—')}`,
+    `[AI ARCHITECTURE STUDIO] ${bp.title || 'Untitled Blueprint'}`,
+    `Domain: ${bp.domain || '—'}`,
+    `Scale Target: ${ctx.scale || '—'}`,
+    `Model: ${ctx.model || '—'}`,
+    `Frontend: ${bp.frontend || '—'}`,
+    `Backend: ${bp.backend || '—'}`,
+    `Database: ${bp.database || '—'}`,
+    `AI Engine: ${bp.aiEngine || '—'}`,
+    `DevOps: ${bp.devops || '—'}`,
+    `Latency Target: ${bp.latencyTarget || '—'}`,
     '',
     'Recommended Execution Stages:',
     ...(Array.isArray(bp.keyWorkflows)
-      ? bp.keyWorkflows.map((wf: string) => `  • ${escapeHtml(wf)}`)
+      ? bp.keyWorkflows.map((wf: string) => `  • ${wf}`)
       : [])
   ]
     .filter(Boolean)
@@ -67,6 +58,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Name and email are required fields.' }, { status: 400 });
     }
 
+    if (!isSandboxTest && !isDatabaseConfigured && !resend) {
+      return NextResponse.json({
+        success: false,
+        error: 'Project enquiries are not configured yet. Set DATABASE_URL for Neon or RESEND_API_KEY for email delivery.'
+      }, { status: 503 });
+    }
+
     const payload = {
       name,
       email,
@@ -80,40 +78,47 @@ export async function POST(request: Request) {
       type,
       submittedAt: new Date().toISOString()
     };
+    const safeSubjectName = String(payload.name).replace(/[\r\n]+/g, ' ').slice(0, 120);
+    const safeSubjectScope = String(payload.packageScope).replace(/[\r\n]+/g, ' ').slice(0, 160);
+    const submissionLabel = type === 'consultation' ? 'Project brief' : 'Contact enquiry';
 
-    // 1. Database Persistence (Supabase / Local Fallback)
+    // Persist on the server when Neon is configured; allow email-only intake before then.
     let dbResult = null;
     let blueprintResult = null;
-    if (!isSandboxTest) {
-      if (type === 'consultation') {
-        dbResult = await submitConsultationRequest({
-          name,
-          email,
-          package_scope: payload.packageScope,
-          funding_goal: fundingGoal || budget || 'N/A',
-          timeline: payload.timeline,
-          details: payload.message
-        });
-      } else {
-        dbResult = await submitContactForm({
-          name,
-          email,
-          project_type: payload.projectType,
-          budget: payload.budget,
-          timeline: payload.timeline,
-          message: payload.message
-        });
-      }
+    if (!isSandboxTest && isDatabaseConfigured) {
+      try {
+        if (type === 'consultation') {
+          dbResult = await saveConsultationRequest({
+            name,
+            email,
+            packageScope: payload.packageScope,
+            fundingGoal: fundingGoal || budget || 'N/A',
+            timeline: payload.timeline,
+            details: payload.message
+          });
+        } else {
+          dbResult = await saveContactSubmission({
+            name,
+            email,
+            projectType: payload.projectType,
+            budget: payload.budget,
+            timeline: payload.timeline,
+            message: payload.message
+          });
+        }
 
-      // Archive the AI Studio blueprint with the lead when one is attached
-      if (aiContext?.blueprint) {
-        blueprintResult = await submitAiBlueprint({
-          title: aiContext.blueprint.title || 'AI Architecture Blueprint',
-          domain: aiContext.blueprint.domain || 'General',
-          user_prompt: aiContext.prompt || aiContext.blueprint.title || 'Generated via AI Architecture Studio',
-          model_used: aiContext.model || 'Gemini 2.0 Flash',
-          blueprint_json: aiContext.blueprint
-        });
+        if (aiContext?.blueprint) {
+          blueprintResult = await saveAiBlueprint({
+            title: aiContext.blueprint.title || 'AI Architecture Blueprint',
+            domain: aiContext.blueprint.domain || 'General',
+            userPrompt: aiContext.prompt || aiContext.blueprint.title || 'Generated via AI Architecture Studio',
+            modelUsed: aiContext.model || 'Gemini 2.0 Flash',
+            blueprint: aiContext.blueprint
+          });
+        }
+      } catch (error) {
+        console.error('Neon submission failed:', error);
+        return NextResponse.json({ success: false, error: 'Your brief could not be saved. Please try again.' }, { status: 503 });
       }
     }
 
@@ -127,8 +132,9 @@ export async function POST(request: Request) {
 
       if (resend) {
         const emailRes = await resend.emails.send({
-          from: 'Christopher Callaghan Architect <onboarding@resend.dev>',
+          from: senderIdentity,
           to: [recipient],
+          replyTo: adminEmail,
           subject: `[SANDBOX TEST] ${templateType === 'client' ? 'Client Confirmation Receipt' : 'New Project Specification Alert'}`,
           html
         });
@@ -157,9 +163,10 @@ export async function POST(request: Request) {
       try {
         // Send Admin Notification
         await resend.emails.send({
-          from: 'CJC Signal Gateway <onboarding@resend.dev>',
+          from: senderIdentity,
           to: [adminEmail],
-          subject: `⚡ New Project Brief: ${payload.name} (${payload.packageScope})`,
+          replyTo: email,
+          subject: `⚡ New ${submissionLabel}: ${safeSubjectName} (${safeSubjectScope})`,
           html: generateAdminNotificationEmail(payload)
         });
         adminEmailSent = true;
@@ -170,9 +177,12 @@ export async function POST(request: Request) {
       try {
         // Send Client Confirmation Receipt
         await resend.emails.send({
-          from: 'Christopher J. Callaghan <onboarding@resend.dev>',
+          from: senderIdentity,
           to: [email],
-          subject: `Signal Received: Project Specification Review - Christopher J. Callaghan`,
+          replyTo: adminEmail,
+          subject: type === 'consultation'
+            ? 'We received your project brief - Christopher J. Callaghan'
+            : 'Thanks for your enquiry - Christopher J. Callaghan',
           html: generateClientConfirmationEmail(payload)
         });
         clientEmailSent = true;
@@ -180,13 +190,21 @@ export async function POST(request: Request) {
         console.error('Failed to send client confirmation email via Resend:', e);
       }
     } else {
-      console.log('RESEND_API_KEY not set in .env. Form stored successfully, email simulated.');
+      console.log('RESEND_API_KEY is not set. The submission was stored in Neon.');
+    }
+
+    if (!isSandboxTest && !isDatabaseConfigured && resend && !adminEmailSent) {
+      return NextResponse.json({
+        success: false,
+        error: 'Your enquiry could not be delivered. Please try again shortly.'
+      }, { status: 502 });
     }
 
     return NextResponse.json({
       success: true,
       message: 'Project specification transmitted successfully!',
       refCode: dbResult?.refCode || 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+      storage: isDatabaseConfigured ? 'neon' : 'email-only',
       emailStatus: {
         resendActive: Boolean(resend),
         adminEmailSent,

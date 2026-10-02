@@ -21,20 +21,95 @@ h3 {
   text-wrap: balance;
 }
 
-/* Hero floating badge animation (referenced by inline style in Hero.tsx) */
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-16px);
-  }
+.hero-scene {
+  isolation: isolate;
+}
+
+.hero-title-line {
+  opacity: 0.78;
+  transform: translateY(26px);
+  filter: blur(8px);
+  animation: heroHeadlineReveal 900ms cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+}
+
+.hero-title-line--first { animation-delay: 120ms; }
+.hero-title-line--second { animation-delay: 320ms; }
+
+.site-fiber-shade {
+  background: radial-gradient(ellipse 62% 70% at 50% 48%, rgba(6, 6, 8, 0.74) 0%, rgba(6, 6, 8, 0.62) 42%, rgba(6, 6, 8, 0.3) 76%, transparent 100%);
+}
+
+.hero-network-shade {
+  background: radial-gradient(ellipse 33% 48% at 50% 47%, rgba(3, 3, 3, 0.48) 0%, rgba(3, 3, 3, 0.26) 48%, rgba(3, 3, 3, 0.03) 100%);
+}
+
+.hero-network-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.page-enter {
+  animation: pageEnter 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.brief-step {
+  animation: briefStepEnter 420ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.scroll-writing-character {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.18em);
+  filter: blur(5px);
+  transition: opacity 260ms ease, transform 380ms ease, filter 380ms ease;
+  will-change: opacity, transform, filter;
+}
+
+.scroll-writing-title.is-visible .scroll-writing-character {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.work-details-shine {
+  color: #ff355f;
+  background-image: linear-gradient(100deg, #ff355f 0%, #ff355f 38%, #fff 49%, #ff8198 54%, #ff355f 66%, #ff355f 100%);
+  background-size: 240% 100%;
+  background-position: 110% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: workDetailsShine 8s ease-in-out infinite;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(14px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes heroHeadlineReveal {
+  from { opacity: 0.78; transform: translateY(26px); filter: blur(8px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes briefStepEnter {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes workDetailsShine {
+  0%, 20% { background-position: 110% 50%; }
+  82%, 100% { background-position: -140% 50%; }
 }
 
 :root {
   --primary: #ff003c;
   --primary-rgb: 255, 0, 60;
-  --accent: #9d4edd;
+  --accent: #df80ff;
+  --accent-purple: #df80ff;
+  --accent-orange: #ffb347;
+  --accent-teal: #00dfc9;
+  --accent-pink: #ff3e85;
 }
 
 body {
@@ -51,7 +126,7 @@ body {
 
 /* Moving gradient for titles */
 .text-moving-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #ff003c 75%, #a855f7 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #ff003c 75%, #9f0926 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -153,5 +228,20 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .work-details-shine {
+    animation: none !important;
+    background: none;
+    color: #ff5577;
+    -webkit-text-fill-color: #ff5577;
+  }
+
+  .scroll-writing-character {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+    will-change: auto;
   }
 }

@@ -9,6 +9,12 @@ export interface Project {
   carouselDataAiHints?: string[];
   liveUrl?: string;
   featured?: boolean;
+  caseStudy?: {
+    business: string;
+    built: string;
+    role: string;
+    outcome?: string;
+  };
 }
 
 export interface ServiceItem {
@@ -51,7 +57,9 @@ export interface Testimonial {
   avatarUrl: string;
 }
 
-export type ScreenTab = 'home' | 'package' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'contact' | 'email-sandbox';
+export type PublicPageTab = 'about' | 'contact' | 'seo' | 'google-maps' | 'ppc' | 'social-media';
+
+export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
 
 export interface ArchitectureBlueprint {
   title: string;

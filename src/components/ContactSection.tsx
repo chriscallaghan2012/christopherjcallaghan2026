@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 import { Send, MapPin, Mail, Linkedin, Github, CheckCircle2, Clock, Calculator, RefreshCw, Sparkles } from 'lucide-react';
+import { ScrollWritingTitle } from './ScrollWritingTitle';
 
 interface ContactSectionProps {
   initialService?: string;
 }
 
+const PROJECT_TYPES = [
+  'Build something',
+  'Start a business',
+  'Just a website',
+  'Website or app',
+  'Software or AI',
+  'SEO or Google Maps',
+  'PPC or advertising',
+  'Social media',
+  'Something else'
+];
+
+const BUDGET_RANGES = ['Not sure yet', '£0–£1,000', '£1,000–£5,000', '£5,000+'];
+
 export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    projectType: initialService || 'AI Solutions & Agent Pipelines',
-    budget: '£5k - £15k (Standard Build)',
-    timeline: '1 - 2 Months',
+    projectType: initialService || 'Build something',
+    budget: 'Not sure yet',
+    timeline: 'Flexible',
     message: ''
   });
 
@@ -62,15 +77,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
         {/* Section Header */}
         <div className="text-center mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/10 bg-white/5 text-white/70 text-[10px] font-mono font-bold uppercase tracking-[0.3em]">
-            Signal Transmission Gateway
+            Contact / Project Enquiry
           </div>
 
-          <h2 className="text-4xl md:text-7xl font-black tracking-tighter text-white">
-            <span className="text-moving-gradient">Start a Project</span>
-          </h2>
+          <ScrollWritingTitle text="LET'S TALK." accentWords={[{ word: 'TALK.', color: 'purple' }]} className="text-4xl md:text-7xl font-black tracking-tighter text-white" />
 
           <p className="text-white/60 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-            Have a project in mind or need an architectural consultation? Transmit your specs below.
+            Have an idea, existing site or growth challenge? Tell me what you want to build, improve or grow.
           </p>
         </div>
 
@@ -80,10 +93,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
             <div className="rounded-3xl border border-white/10 bg-black/60 backdrop-blur-2xl p-7 space-y-6">
               <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-[#FF003C]" />
-                HQ & Location
+                Based in Manchester
               </h3>
               <p className="text-white/60 text-sm leading-relaxed">
-                Based in Manchester, UK. Operating globally across London, New York, and European timezones.
+                Working with people building digital products and businesses.
               </p>
 
               <div className="space-y-4 pt-2 border-t border-white/5">
@@ -92,8 +105,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono text-white/40 block uppercase">Availability</span>
-                    <span className="font-bold text-xs">Accepting Q3/Q4 Project Scopes</span>
+                    <span className="text-[10px] font-mono text-white/65 block uppercase">Based in</span>
+                    <span className="font-bold text-xs">Manchester, UK</span>
                   </div>
                 </div>
 
@@ -102,16 +115,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     <Mail className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono text-white/40 block uppercase">Direct Inquiry</span>
-                    <span className="font-mono text-xs text-white/90">hello@christopherjcallaghan.com</span>
+                    <span className="text-[10px] font-mono text-white/65 block uppercase">Email</span>
+                    <span className="font-mono text-xs text-white/90">christopher@christopherjcallaghan.com</span>
                   </div>
                 </div>
               </div>
 
               {/* Social Channels */}
               <div className="pt-4 border-t border-white/5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-3">
-                  Verified Channels
+                <span className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-3">
+                  Find me online
                 </span>
                 <div className="flex gap-3">
                   <a
@@ -140,10 +153,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-black/80 to-purple-950/20 backdrop-blur-2xl p-6">
               <div className="flex items-center gap-2 mb-2 text-[#FF003C] text-xs font-mono font-bold uppercase tracking-wider">
                 <Calculator className="w-4 h-4" />
-                Guaranteed Response Time
+                Start with the idea
               </div>
               <p className="text-xs text-white/60 leading-relaxed">
-                All specifications receive an architectural review and timeline feasibility breakdown within 24 business hours.
+                A short note is enough. You do not need to know the technology before getting in touch.
               </p>
             </div>
           </div>
@@ -157,14 +170,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-black text-white tracking-tight">
-                    Signal Transmitted & Confirmed
+                    Enquiry sent.
                   </h3>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-emerald-400">
                     <span>Reference Code:</span>
                     <strong className="font-bold">{refCode}</strong>
                   </div>
                   <p className="text-white/60 text-sm max-w-md mx-auto leading-relaxed">
-                    Thank you, {formData.name}! Your technical specification has been stored securely in Supabase and emailed to Christopher. A confirmation receipt was dispatched to <strong className="text-white">{formData.email}</strong>.
+                    Thanks, {formData.name}. I&apos;ll be in touch at <strong className="text-white">{formData.email}</strong>.
                   </p>
                   <button
                     onClick={() => {
@@ -173,7 +186,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     }}
                     className="px-6 py-2.5 rounded-xl bg-white/10 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/20 transition-colors"
                   >
-                    Send Another Specification
+                    Send another enquiry
                   </button>
                 </div>
               ) : (
@@ -201,14 +214,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
 
                     <div>
                       <label className="text-[11px] font-mono uppercase tracking-widest text-white/50 block mb-2">
-                        Corporate Email *
+                        Email *
                       </label>
                       <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="alex@company.com"
+                        placeholder="you@example.com"
                         className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors"
                       />
                     </div>
@@ -217,20 +230,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-[11px] font-mono uppercase tracking-widest text-white/50 block mb-2">
-                        Project Archetype
+                        What are you looking to do?
                       </label>
                       <select
                         value={formData.projectType}
                         onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF003C]/70 transition-colors"
                       >
-                        <option value="The Whole Package (Setup + Advertising + Funding)">★ The Whole Package (Setup + Ads + Funding)</option>
-                        <option value="SME & Startup Kickstart (Up to £25k Grants & MVP)">SME & Startup Kickstart (Up to £25k Grants & MVP)</option>
-                        <option value="AI Solutions & Agent Pipelines">AI Solutions & Agent Pipelines</option>
-                        <option value="Full-Stack Web / SaaS">Full-Stack Web / Multi-Tenant SaaS</option>
-                        <option value="E-Commerce & WooCommerce">E-Commerce & Custom WooCommerce</option>
-                        <option value="APIs, Microservices & Data">APIs, Microservices & Data Sync</option>
-                        <option value="Architectural Advisory">Fractional CTO / Advisory</option>
+                        {PROJECT_TYPES.map((projectType) => <option key={projectType} value={projectType}>{projectType}</option>)}
                       </select>
                     </div>
 
@@ -243,24 +250,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                         onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF003C]/70 transition-colors"
                       >
-                        <option value="£3k - £5k (Sprint / MVP)">£3k - £5k (Sprint / MVP)</option>
-                        <option value="£5k - £15k (Standard Build)">£5k - £15k (Standard Build)</option>
-                        <option value="£15k - £30k (Comprehensive Platform)">£15k - £30k (Comprehensive Platform)</option>
-                        <option value="£30k+ (Enterprise Architecture)">£30k+ (Enterprise Architecture)</option>
+                        {BUDGET_RANGES.map((budget) => <option key={budget} value={budget}>{budget}</option>)}
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="text-[11px] font-mono uppercase tracking-widest text-white/50 block mb-2">
-                      Project Specification & Goals *
+                      Tell me about it *
                     </label>
                     <textarea
                       rows={4}
                       required
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Outline your tech stack, business objectives, existing systems, or key deadlines..."
+                      placeholder="What are you hoping to build, solve or change?"
                       className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors"
                     />
                   </div>
@@ -273,11 +277,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     {isSubmitting ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Transmitting Specification...</span>
+                        <span>Sending enquiry...</span>
                       </>
                     ) : (
                       <>
-                        <span>Transmit Specifications</span>
+                        <span>Send enquiry</span>
                         <Send className="w-4 h-4" />
                       </>
                     )}

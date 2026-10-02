@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#060608"/>
+  <path d="M0 122H1200M0 548H1200M72 0V630M1128 0V630" stroke="#ffffff" stroke-opacity=".08"/>
+  <path d="M0 490C210 405 286 560 478 458s305-79 423-173 200-76 299-125" stroke="#ff003c" stroke-opacity=".18" stroke-width="2"/>
+  <path d="M0 522C164 465 307 585 493 489s304-91 424-190 187-83 283-131" stroke="#ff003c" stroke-opacity=".25" stroke-width="2"/>
+  <rect x="80" y="70" width="48" height="48" fill="#ff003c" fill-opacity=".15" stroke="#ff003c" stroke-opacity=".65"/>
+  <text x="104" y="101" fill="#ffffff" font-family="monospace" font-size="15" font-weight="700" text-anchor="middle">CJC</text>
+  <text x="80" y="270" fill="#ffffff" font-family="Arial,sans-serif" font-size="106" font-weight="900" letter-spacing="-4">I BUILD</text>
+  <text x="80" y="380" fill="#ff3158" font-family="Arial,sans-serif" font-size="106" font-weight="900" letter-spacing="-4">THINGS.</text>
+  <text x="84" y="445" fill="#d5d5da" font-family="monospace" font-size="20" letter-spacing="4">ON THE INTERNET.</text>
+  <text x="84" y="585" fill="#9b9ba3" font-family="monospace" font-size="13" letter-spacing="3">CHRISTOPHER J. CALLAGHAN / FULL-STACK / AI / BUILDER</text>
+</svg>

@@ -10,9 +10,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://christopherjcallaghan.com'),
-  title: 'Christopher J. Callaghan | Digital Architect & Senior Full-Stack Engineer',
-  description: 'Senior Full-Stack Architect & AI Systems Engineer based in Manchester, UK. Specializing in Next.js 15, React 19, Supabase, Resend, Programmatic SEO, and AI Agentic Pipelines.',
-  applicationName: 'Christopher J. Callaghan — Digital Architect',
+  title: 'Christopher J. Callaghan | I Build Things',
+  description: 'Full-stack developer, AI builder and business creator. I turn ideas, problems and opportunities into working technology.',
+  applicationName: 'Christopher J. Callaghan',
   alternates: {
     canonical: '/',
   },
@@ -23,15 +23,15 @@ export const metadata: Metadata = {
   },
   keywords: [
     'Christopher J. Callaghan',
-    'Digital Architect',
-    'Senior Full-Stack Engineer',
+    'Full-Stack Developer',
+    'AI Builder',
     'Manchester Web Developer',
     'AI Engineer',
-    'Next.js Architect',
-    'Supabase Developer',
-    'Resend Email Specialist',
-    'Programmatic SEO',
-    'React 19 Architect'
+    'Software Developer',
+    'SEO Services',
+    'Google Maps Marketing',
+    'PPC Advertising',
+    'Social Media Marketing'
   ],
   authors: [{ name: 'Christopher J. Callaghan', url: 'https://christopherjcallaghan.com' }],
   creator: 'Christopher J. Callaghan',
@@ -39,25 +39,25 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     url: 'https://christopherjcallaghan.com',
-    title: 'Christopher J. Callaghan | Digital Architect & Senior Full-Stack Engineer',
-    description: 'Senior Software Architect & AI Engineering Specialist. Architecting next-generation digital experiences, venture packages, and programmatic SaaS platforms.',
+    title: 'Christopher J. Callaghan | I Build Things',
+    description: 'I turn ideas, problems and opportunities into working technology.',
     siteName: 'Christopher J. Callaghan Portfolio',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80',
+        url: '/assets/cjc-social-preview.svg',
         width: 1200,
         height: 630,
-        alt: 'Christopher J. Callaghan — Digital Architect & Senior Full-Stack Engineer',
+        alt: 'Christopher J. Callaghan — Full-stack developer and builder',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Christopher J. Callaghan | Digital Architect',
-    description: 'Senior Full-Stack & AI Systems Architect based in Manchester, UK.',
+    title: 'Christopher J. Callaghan | I Build Things',
+    description: 'Full-stack developer, AI builder and business creator.',
     creator: '@christopherjcallaghan',
     images: [
-      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80',
+      '/assets/cjc-social-preview.svg',
     ],
   },
   robots: {
@@ -82,7 +82,7 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Christopher J. Callaghan',
-    jobTitle: 'Digital Architect & Senior Full-Stack Engineer',
+    jobTitle: 'Full-Stack Developer, AI Builder and Business Creator',
     url: 'https://christopherjcallaghan.com',
     sameAs: [
       'https://www.linkedin.com/in/webdevelopermanchester/',
@@ -97,11 +97,11 @@ export default function RootLayout({
       'Next.js 15',
       'React 19',
       'TypeScript',
-      'AI Agent Architectures',
-      'Supabase',
-      'Resend Email API',
-      'Programmatic SEO',
-      'Stripe Integration'
+      'Websites and Applications',
+      'Custom Software',
+      'Artificial Intelligence',
+      'Digital Businesses',
+      'Automation'
     ]
   };
 

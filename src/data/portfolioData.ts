@@ -1,26 +1,21 @@
 import { Project, ServiceItem, RoleExpertise, TimelineMilestone, SkillItem, Testimonial, VenturePackageModule, VentureStageConfig } from '../types';
 
 const FALLBACK_PROJECT_IMAGES: Record<string, string> = {
-  'secure-api.png': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-  'multi-tenant-college.png': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-  'schoo-management.png': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
-  'genafize-logo.png': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-  'matchdayparking.png': 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=80',
-  'tutors-directory.png': 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80'
+  'secure-api.png': '/assets/projects/secure-api.svg',
+  'multi-tenant-college.png': '/assets/projects/schools-platform.svg',
+  'schoo-management.png': '/assets/projects/schools-platform.svg',
+  'genafize-logo.png': '/assets/projects/ai-products.svg',
+  'matchdayparking.png': '/assets/matchdayparking.png',
+  'tutors-directory.png': '/assets/projects/tutors-directory.svg'
 };
 
-export function getHotlinkImageUrl(imagePath: string, width = 1200): string {
-  if (!imagePath) {
-    return 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80';
-  }
+export function getProjectImageUrl(imagePath: string): string {
+  if (!imagePath) return '/assets/projects/project-preview.svg';
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
+    return '/assets/projects/project-preview.svg';
   }
-  const fileName = imagePath.replace('/images/', '').replace('images/', '');
-  if (FALLBACK_PROJECT_IMAGES[fileName]) {
-    return FALLBACK_PROJECT_IMAGES[fileName];
-  }
-  return imagePath;
+  const fileName = imagePath.split('/').pop() ?? '';
+  return FALLBACK_PROJECT_IMAGES[fileName] ?? imagePath;
 }
 
 export const VENTURE_STAGES: VentureStageConfig[] = [
@@ -186,11 +181,16 @@ export const PROJECTS_DATA: Project[] = [
     id: 13,
     title: "Secure API for Health Diagnostics",
     category: "APIs & Integrations",
-    description: "A secure REST API for a blood testing company to manage patient data and test results.",
-    longDescription: "Built a robust and secure REST API to serve as the backbone for a blood testing company's diagnostic services. The API handles patient data intake, manages test sample tracking, and delivers results securely to a client-facing application. The system was designed with HIPAA compliance considerations, ensuring patient data is encrypted at rest and in transit, with role-based JWT access controls and audit logging.",
+    description: "An API connecting athlete blood-test records, sample tracking and results to a client-facing service.",
+    longDescription: "The service needed a reliable way to move athlete testing data between sample intake and the client-facing results experience.",
     techStack: ["Node.js", "Express", "PostgreSQL", "Prisma", "Docker", "REST APIs", "JWT"],
     imageUrls: ["/images/secure-api.png"],
     carouselDataAiHints: ["secure data dashboard", "healthcare API"],
+    caseStudy: {
+      business: 'A blood-testing service supporting athlete testing.',
+      built: 'A REST API for test records, sample status and results, connecting the service with its client-facing application.',
+      role: 'I built the API and data flows for handling test information and delivering results.'
+    },
     featured: true
   },
   {
@@ -202,7 +202,7 @@ export const PROJECTS_DATA: Project[] = [
     techStack: ["Laravel", "PHP", "MySQL", "React", "WordPress", "SaaS", "REST APIs"],
     imageUrls: ["/images/multi-tenant-college.png"],
     carouselDataAiHints: ["education saas platform", "school admin console"],
-    featured: true
+    featured: false
   },
   {
     id: 11,
@@ -213,6 +213,12 @@ export const PROJECTS_DATA: Project[] = [
     techStack: ["Laravel", "PHP", "React", "MySQL", "Node.js", "Redis", "Firebase"],
     imageUrls: ["/images/schoo-management.png"],
     carouselDataAiHints: ["education dashboard analytics", "teacher student portal"],
+    caseStudy: {
+      business: 'A school-support organisation working with more than 70 schools.',
+      built: 'School applications and a management portal for staff, student records, role-based access and individual or bulk notifications.',
+      role: 'I built the platform, data model, portal and communication workflows.',
+      outcome: 'The platform supported operations across 70+ schools.'
+    },
     featured: true
   },
   {
@@ -233,29 +239,44 @@ export const PROJECTS_DATA: Project[] = [
     description: "A system for live event data integration with WooCommerce stores allowing real-time booking.",
     longDescription: "A system for live event data integration with WooCommerce stores. It pulls live event product availability and pricing into multiple WordPress sites to allow real-time booking.\n\nKey Features / Work Done:\n• Developed WooCommerce plugin for live product sync across sites.\n• Integrated third-party API data for event availability.\n• Implemented real-time product updates with caching and batching for performance.\n• Ensured secure handling of API keys and product data.",
     techStack: ["WordPress", "WooCommerce", "PHP", "REST APIs", "JavaScript", "MySQL"],
-    imageUrls: ["https://picsum.photos/seed/131/1200/800"],
+    imageUrls: ["/assets/projects/project-preview.svg"],
     carouselDataAiHints: ["e-commerce dashboard", "live event booking"]
   },
   {
     id: 4,
     title: "Matchday Parking Platform",
     category: "E-Commerce",
-    description: "A website and plugin for live event parking services, displaying real-time availability for matchdays.",
-    longDescription: "A dedicated website and plugin for live event parking services, displaying available parking for matchdays. Users can search, filter, and book parking slots in real-time.\n\nKey Features / Work Done:\n• Built custom WordPress templates for displaying live parking availability.\n• Created WooCommerce integration to fetch event-specific parking products.\n• Added filtering and dynamic search functionality for users.",
-    techStack: ["WordPress", "WooCommerce", "PHP", "JavaScript", "MySQL"],
-    imageUrls: ["/images/matchdayparking.png"],
+    description: "A pre-bookable parking service for football and rugby events at major UK venues.",
+    longDescription: "Matchday Parking helps supporters find and pre-book parking near football and rugby venues, with venue-specific pages and a direct booking journey.",
+    techStack: ["Next.js", "WordPress", "WooCommerce", "Headless"],
+    imageUrls: ["/assets/matchdayparking.png", "/assets/concertparking.png"],
     carouselDataAiHints: ["event parking website", "stadium booking portal"],
+    liveUrl: 'https://matchdayparking.com/',
+    caseStudy: {
+      business: 'Pre-bookable parking for football and rugby events at major UK venues.',
+      built: 'A parking website with venue discovery, event-specific pages and a clear booking journey.',
+      role: 'I built the customer-facing website and booking flow.',
+      outcome: '£1M+ turnover.'
+    },
     featured: true
   },
   {
     id: 5,
     title: "Concert Parking Platform",
     category: "E-Commerce",
-    description: "A website and plugin for live event parking services, displaying real-time availability for concerts.",
-    longDescription: "A dedicated website and plugin for live event parking services, displaying available parking for concerts and other live events. Users can search, filter, and book parking slots in real-time.\n\nKey Features / Work Done:\n• Built custom WordPress templates for displaying live parking availability.\n• Created WooCommerce integration to fetch event-specific parking products.\n• Implemented event-specific buttons (e.g., Concert Parking, Wembley) with conditional visibility.",
-    techStack: ["WordPress", "WooCommerce", "PHP", "JavaScript", "MySQL"],
-    imageUrls: ["/images/matchdayparking.png"],
-    carouselDataAiHints: ["concert parking booking"]
+    description: "Pre-bookable parking for concerts and major live events across the UK.",
+    longDescription: "Concert Parking helps visitors find parking near major live-event venues and book before they travel.",
+    techStack: ["Next.js", "WordPress", "WooCommerce", "Headless"],
+    imageUrls: ["/assets/concertparking.png"],
+    carouselDataAiHints: ["concert parking booking"],
+    liveUrl: 'https://concertparking.co.uk/',
+    caseStudy: {
+      business: 'Pre-bookable parking for concerts and major live events across the UK.',
+      built: 'An event-parking website with venue discovery and a direct path into booking.',
+      role: 'I built the website and customer journey for finding event parking.',
+      outcome: '£1M+ turnover.'
+    },
+    featured: true
   },
   {
     id: 6,
@@ -266,6 +287,11 @@ export const PROJECTS_DATA: Project[] = [
     techStack: ["React", "Tailwind CSS", "Node.js", "Express", "MongoDB", "WordPress"],
     imageUrls: ["/images/tutors-directory.png"],
     carouselDataAiHints: ["online learning platform", "tutor search results"],
+    caseStudy: {
+      business: 'An education directory connecting students with tutors.',
+      built: 'Tutor profiles, subject and level filters, price and location search, online or in-person options, booking and an admin area.',
+      role: 'I built the full-stack directory, search experience and management tools.'
+    },
     featured: true
   },
   {
@@ -275,7 +301,7 @@ export const PROJECTS_DATA: Project[] = [
     description: "The public-facing marketing website for the Genafize AI tool suite, designed to drive user acquisition.",
     longDescription: "Built the primary marketing website for genafize.com, focusing on clear value propositions, engaging visuals, and a strong call-to-action to convert visitors into platform users. The site showcases the full range of AI capabilities offered by the Genafize toolkit.",
     techStack: ["Next.js", "React", "Tailwind CSS", "Vercel", "SEO"],
-    imageUrls: ["https://picsum.photos/seed/142/1200/800"],
+    imageUrls: ["/assets/projects/project-preview.svg"],
     carouselDataAiHints: ["modern website homepage", "AI tools pricing page"]
   },
   {
@@ -283,10 +309,15 @@ export const PROJECTS_DATA: Project[] = [
     title: "WooCommerce Integration Plugins Suite",
     category: "E-Commerce",
     description: "A suite of plugins for WooCommerce including batch email sending and Stripe API synchronization.",
-    longDescription: "Developed several custom plugins to extend WooCommerce functionality. Key plugins include:\n\n• Batch Order Email Sender: Allows admins to select and send emails for multiple orders at once, saving significant time.\n• Stripe API Sync: A robust integration that synchronizes transaction data, customer information, and subscription statuses between WooCommerce and Stripe, ensuring data consistency.",
+    longDescription: "Developed custom WooCommerce plugins for batch order email handling and Stripe data synchronisation.",
     techStack: ["WordPress", "WooCommerce", "PHP", "Stripe API"],
-    imageUrls: ["https://picsum.photos/seed/153/1200/800"],
-    carouselDataAiHints: ["e-commerce admin panel"]
+    imageUrls: ["/assets/projects/project-preview.svg"],
+    carouselDataAiHints: ["e-commerce admin panel"],
+    caseStudy: {
+      business: 'E-commerce teams managing orders and payment data across WooCommerce and Stripe.',
+      built: 'Admin tools for batch order emails and synchronising customer, transaction and subscription records.',
+      role: 'I developed the custom WooCommerce plugins and Stripe API integration.'
+    }
   },
   {
     id: 9,
@@ -295,7 +326,7 @@ export const PROJECTS_DATA: Project[] = [
     description: "A custom integration to connect e-commerce platforms with the Royal Mail API for shipping and tracking.",
     longDescription: "Built a seamless integration between e-commerce systems and the Royal Mail API. This tool automates the process of generating shipping labels, calculating postage costs based on weight and destination, and providing real-time tracking information to customers.",
     techStack: ["PHP", "REST APIs", "WooCommerce", "JavaScript"],
-    imageUrls: ["https://picsum.photos/seed/164/1200/800"],
+    imageUrls: ["/assets/projects/project-preview.svg"],
     carouselDataAiHints: ["shipping logistics dashboard"]
   },
   {
@@ -303,10 +334,63 @@ export const PROJECTS_DATA: Project[] = [
     title: "Stripe Payments for Tutors Directory",
     category: "APIs & Integrations",
     description: "Integrated Stripe payments into the Node.js and React-based Tutors Directory platform.",
-    longDescription: "Engineered a complete payment solution for the Tutors Directory using Stripe. This involved building a secure backend with Node.js and Prisma to handle payment intents, webhooks for subscription management, and creating a seamless checkout experience on the React frontend. The entire application is deployed on Vercel.",
+    longDescription: "Integrated Stripe checkout and payment processing into the Tutors Directory platform.",
     techStack: ["Node.js", "React", "Prisma", "Stripe API", "Vercel"],
-    imageUrls: ["https://picsum.photos/seed/175/1200/800"],
-    carouselDataAiHints: ["online payment checkout"]
+    imageUrls: ["/assets/projects/project-preview.svg"],
+    carouselDataAiHints: ["online payment checkout"],
+    caseStudy: {
+      business: 'A tutor directory that needed to support online payments.',
+      built: 'Stripe payment intents, backend handling and webhooks connected to a React checkout.',
+      role: 'I integrated Stripe across the Node.js backend and the product checkout.'
+    }
+  },
+  {
+    id: 14,
+    title: 'MWFitnessUK',
+    category: 'Full-Stack',
+    description: 'A personal training and online coaching website for busy people in Stockport.',
+    longDescription: 'MWFitnessUK presents local personal training and online coaching, with clear package information and paths for prospective clients to get in touch.',
+    techStack: [],
+    imageUrls: ['/assets/mwfitnessuk-hero.jpg'],
+    liveUrl: 'https://mwfitnessuk.com/',
+    caseStudy: {
+      business: 'Personal training and online coaching based in Stockport.',
+      built: 'A responsive website presenting coaching, training packages and nutrition support with clear enquiry and booking actions.',
+      role: 'I built the website and shaped the content around the coach’s services.'
+    },
+    featured: true
+  },
+  {
+    id: 15,
+    title: 'Toastylicious',
+    category: 'E-Commerce',
+    description: 'An online storefront for a made-to-order toasted sandwich business.',
+    longDescription: 'Toastylicious lets customers browse the menu, customize orders and build a basket for freshly made toasted sandwiches.',
+    techStack: [],
+    imageUrls: ['/assets/toastylicious.png'],
+    liveUrl: 'https://toastylicious.com/',
+    caseStudy: {
+      business: 'A food brand selling made-to-order toasted sandwiches.',
+      built: 'A digital storefront with menu discovery, product customization, a build-your-own flow and basket ordering.',
+      role: 'I built the storefront and customer ordering experience.'
+    },
+    featured: true
+  },
+  {
+    id: 16,
+    title: 'Dapper Man',
+    category: 'E-Commerce',
+    description: 'A grooming and barbering brand combining products with mobile appointments.',
+    longDescription: 'Dapper Man brings its grooming products and mobile barbering service together in one online experience.',
+    techStack: [],
+    imageUrls: ['/assets/dapperman.png'],
+    liveUrl: 'https://dapperman.co.uk/',
+    caseStudy: {
+      business: 'A men’s grooming brand offering products and mobile barbering.',
+      built: 'An online shop with product discovery, basket and clear paths to book a barber visit.',
+      role: 'I built the e-commerce website and connected the service and product journeys.'
+    },
+    featured: true
   }
 ];
 

@@ -10,13 +10,20 @@ interface ConsultationModalProps {
 }
 
 const STANDARD_SCOPES = [
-  'The Whole Package (Setup + Advertising + Funding)',
-  'SME & Startup Kickstart (Up to £25k Grants & MVP)',
-  'The Setup (Product Architecture, AI Engine & Build)',
-  'The Advertising (Programmatic SEO, CAPI & Growth)',
-  'Getting Funded (Investor Demo, Pitch Moat & Data Room)',
-  'Advisory / Bespoke Architecture'
+  'Build something',
+  'Start a business',
+  'Just a website',
+  'Build a website or app',
+  'Build software or AI',
+  'Grow an existing business',
+  'Marketing',
+  'SEO',
+  'Google visibility',
+  'Social media',
+  'Something else'
 ];
+
+const BUDGET_RANGES = ['Not sure yet', '£0–£1,000', '£1,000–£5,000', '£5,000+'];
 
 /** Renders an AI Studio blueprint as editable project notes in the form. */
 function formatBlueprintNotes(bp: ArchitectureBlueprint): string {
@@ -43,9 +50,8 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [packageScope, setPackageScope] = useState('The Whole Package (Setup + Advertising + Funding)');
-  const [fundingGoal, setFundingGoal] = useState('Up to £25k (SME Micro-Grant / Early Startup)');
-  const [timeline, setTimeline] = useState('Within 30 days');
+  const [packageScope, setPackageScope] = useState('Build something');
+  const [budgetRange, setBudgetRange] = useState('Not sure yet');
   const [details, setDetails] = useState('');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,7 +86,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
       setPackageScope(aiContext.blueprint.title);
       setDetails(formatBlueprintNotes(aiContext.blueprint));
     } else if (!STANDARD_SCOPES.includes(packageScope)) {
-      setPackageScope('The Whole Package (Setup + Advertising + Funding)');
+      setPackageScope('Build something');
     }
     // Intentionally keyed on (isOpen, aiContext) only - running on every
     // packageScope/details keystroke would clobber the user's edits.
@@ -103,9 +109,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           email,
           packageScope: preselectedService ? preselectedService.title : packageScope,
           projectType: preselectedService ? preselectedService.title : packageScope,
-          fundingGoal,
-          budget: fundingGoal,
-          timeline,
+          fundingGoal: budgetRange,
+          budget: budgetRange,
+          timeline: 'Flexible',
           message: details,
           type: 'consultation',
           aiContext: aiContext ?? undefined
@@ -140,7 +146,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Schedule a project consultation"
+        aria-label="Start a conversation"
         className="relative w-full max-w-lg rounded-3xl border border-white/15 bg-[#0a0a0f] p-6 sm:p-8 shadow-[0_0_50px_rgba(255,0,60,0.2)] z-10 overscroll-contain text-left">
         <button
           onClick={onClose}
@@ -155,13 +161,13 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.3)]">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-black text-white">Consultation Transmitted</h3>
+            <h3 className="text-2xl font-black text-white">Message received.</h3>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-emerald-400">
               <span>Reference Code:</span>
               <strong className="font-bold">{refCode}</strong>
             </div>
             <p className="text-white/60 text-sm max-w-sm mx-auto leading-relaxed">
-              Thank you, {name}! Your specification was saved to Supabase and dispatched to Christopher. An SLA confirmation receipt was sent to <strong className="text-white">{email}</strong>.
+              Thanks, {name}. I&apos;ll be in touch at <strong className="text-white">{email}</strong>.
             </p>
             <button
               onClick={() => {
@@ -176,15 +182,15 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
         ) : (
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF003C]/10 border border-[#FF003C]/30 text-[#FF003C] text-[10px] font-mono font-bold uppercase tracking-[0.2em] mb-3">
-              Direct Architectural Access
+              A good place to start
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
-              Start a Project
+              What are you building?
             </h2>
             <p className="text-white/60 text-xs sm:text-sm mb-6 leading-relaxed">
               {preselectedService
                 ? `Discussing scope for: ${preselectedService.title}`
-                : "Transmit your technical specs to schedule a 1-on-1 architecture consultation with Christopher."}
+                : "You don't need the technical plan. Start with the idea, problem or goal."}
             </p>
 
             {errorMessage && (
@@ -217,7 +223,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                     Model: {aiContext.model}
                   </div>
                 </div>
-                <p className="mt-3 text-[10px] text-white/40 leading-relaxed">
+                <p className="mt-3 text-[10px] text-white/55 leading-relaxed">
                   The generated specification has been pre-filled into your project notes below —
                   review it, add your goals, and transmit.
                 </p>
@@ -226,7 +232,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">
                   Name *
                 </label>
                 <input
@@ -240,7 +246,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               </div>
 
               <div>
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">
                   Work Email *
                 </label>
                 <input
@@ -255,8 +261,8 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
               {!preselectedService && (
                 <div>
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
-                    Package Scope *
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">
+                    What are you looking to do? *
                   </label>
                   <select
                     value={packageScope}
@@ -266,58 +272,31 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                     {aiContext?.blueprint && (
                       <option value={aiContext.blueprint.title}>🤖 {aiContext.blueprint.title}</option>
                     )}
-                    <option value="The Whole Package (Setup + Advertising + Funding)">★ The Whole Package (Setup + Ads + Funding)</option>
-                    <option value="SME & Startup Kickstart (Up to £25k Grants & MVP)">SME & Startup Kickstart (Up to £25k Grants & MVP)</option>
-                    <option value="The Setup (Product Architecture, AI Engine & Build)">01. The Setup (Product Architecture & MVP)</option>
-                    <option value="The Advertising (Programmatic SEO, CAPI & Growth)">02. The Advertising (SEO, Funnels & Growth)</option>
-                    <option value="Getting Funded (Investor Demo, Pitch Moat & Data Room)">03. Getting Funded (Live Demo & Pitch Tech)</option>
-                    <option value="Advisory / Bespoke Architecture">Bespoke Technical Architecture</option>
+                    {STANDARD_SCOPES.map((scope) => <option key={scope} value={scope}>{scope}</option>)}
                   </select>
                 </div>
               )}
 
               <div>
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
-                  Funding Stage / Target Capital
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">
+                  Budget range (optional)
                 </label>
                 <select
-                  value={fundingGoal}
-                  onChange={(e) => setFundingGoal(e.target.value)}
+                  value={budgetRange}
+                  onChange={(e) => setBudgetRange(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]/70"
                 >
-                  <option value="Up to £25k (SME Micro-Grant / Early Startup)">Up to £25k (SME Micro-Grant / Early Angel)</option>
-                  <option value="£25k - £150k (Pre-Seed / Innovate UK)">£25k - £150k (Pre-Seed / Innovate UK Grant)</option>
-                  <option value="£150k - £500k (Angel / Pre-Seed Round)">£150k - £500k (Angel / Seed Round)</option>
-                  <option value="£500k - £2.5M+ (Series A / Scale)">£500k - £2.5M+ (Series A / Scale)</option>
-                  <option value="Bootstrapped / Self-Funded (Day 1 Profit)">Bootstrapped / Self-Funded (Day 1 Profit)</option>
+                  {BUDGET_RANGES.map((range) => <option key={range} value={range}>{range}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
-                  Expected Timeline
-                </label>
-                <select
-                  value={timeline}
-                  onChange={(e) => setTimeline(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]/70"
-                >
-                  <option value="Immediate (< 2 weeks)">Immediate (&lt; 2 weeks)</option>
-                  <option value="Within 30 days">Within 30 days</option>
-                  <option value="1 - 3 Months">1 - 3 Months</option>
-                  <option value="Exploratory / Advisory">Exploratory / Advisory</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1.5">
-                  Project Notes & Stack Requirements
-                </label>
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">A little more about it</label>
                 <textarea
                   rows={3}
                   value={details}
                   onChange={(e) => setDetails(e.target.value)}
-                  placeholder="Tell Christopher what you are building or the problem to be solved..."
+                  placeholder="What are you hoping to build, solve or change?"
                   className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 resize-none"
                 />
               </div>
@@ -330,11 +309,11 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 {isSubmitting ? (
                   <>
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Transmitting Consultation...</span>
+                    <span>Sending...</span>
                   </>
                 ) : (
                   <>
-                    <span>Submit Specification</span>
+                    <span>Send message</span>
                     <Send className="w-3.5 h-3.5" />
                   </>
                 )}

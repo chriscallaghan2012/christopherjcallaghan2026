@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Project } from '../types';
-import { getHotlinkImageUrl } from '../data/portfolioData';
+import { getProjectImageUrl } from '../data/portfolioData';
 import { X, ExternalLink, Cpu, Layers, Terminal, CheckCircle } from 'lucide-react';
 
 interface ProjectModalProps {
@@ -30,7 +30,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
 
   if (!project) return null;
 
-  const imageUrl = getHotlinkImageUrl(project.imageUrls[0]);
+  const imageUrls = project.imageUrls.map((imageUrl) => getProjectImageUrl(imageUrl));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -70,29 +70,25 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
         </div>
 
         {/* Preview Image */}
-        <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 mb-8 bg-black/40">
-          <img
-            src={imageUrl}
-            alt={project.title}
-            onError={(e) => {
-              // Graceful fallback to dark tech placeholder
-              (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80`;
-            }}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white/70">
-            <span>Client Deployment</span>
-            <span className="text-emerald-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Production Verified
-            </span>
-          </div>
+        <div className={`mb-8 grid gap-3 ${imageUrls.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+          {imageUrls.map((imageUrl, index) => (
+            <div key={imageUrl} className="group/image relative aspect-video overflow-hidden border border-white/10 bg-black/40">
+              <img
+                src={imageUrl}
+                alt={`${project.title} preview ${index + 1}`}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/assets/projects/project-preview.svg';
+                }}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover/image:scale-[1.02]"
+              />
+              {index === 0 && project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer" className="absolute bottom-3 right-3 inline-flex items-center gap-2 bg-black/80 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-wider text-white transition-colors hover:text-[#FF003C]">Open live site <ExternalLink className="h-3.5 w-3.5" /></a>}
+            </div>
+          ))}
         </div>
 
         {/* Tech Stack Pills */}
-        <div className="mb-8">
-          <h4 className="text-xs font-mono uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2">
+        {project.techStack.length > 0 && <div className="mb-8">
+          <h4 className="text-xs font-mono uppercase tracking-widest text-white/65 mb-3 flex items-center gap-2">
             <Cpu className="w-3.5 h-3.5 text-[#FF003C]" />
             Technology Architecture
           </h4>
@@ -106,23 +102,35 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
               </span>
             ))}
           </div>
-        </div>
+        </div>}
 
         {/* Detailed Breakdown */}
         <div className="space-y-4 mb-8">
-          <h4 className="text-xs font-mono uppercase tracking-widest text-white/40 flex items-center gap-2">
+          <h4 className="text-xs font-mono uppercase tracking-widest text-white/65 flex items-center gap-2">
             <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-            Engineering Case Study
+            Case Study
           </h4>
-          <div className="text-white/70 text-sm sm:text-base leading-relaxed whitespace-pre-line bg-white/[0.02] p-5 rounded-2xl border border-white/5 font-sans">
-            {project.longDescription}
-          </div>
+          {project.caseStudy ? <div className="grid gap-3 sm:grid-cols-2">
+            <div className="border border-white/10 bg-white/[0.02] p-5">
+              <h5 className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF003C]">The business</h5>
+              <p className="text-sm leading-relaxed text-white/70">{project.caseStudy.business}</p>
+            </div>
+            <div className="border border-white/10 bg-white/[0.02] p-5">
+              <h5 className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF003C]">What I built</h5>
+              <p className="text-sm leading-relaxed text-white/70">{project.caseStudy.built}</p>
+            </div>
+            <div className="border border-white/10 bg-white/[0.02] p-5 sm:col-span-2">
+              <h5 className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF003C]">My role</h5>
+              <p className="text-sm leading-relaxed text-white/70">{project.caseStudy.role}</p>
+              {project.caseStudy.outcome && <p className="mt-4 border-t border-white/10 pt-4 text-sm font-semibold text-white">{project.caseStudy.outcome}</p>}
+            </div>
+          </div> : <div className="text-white/70 text-sm sm:text-base leading-relaxed whitespace-pre-line bg-white/[0.02] p-5 rounded-2xl border border-white/5 font-sans">{project.longDescription}</div>}
         </div>
 
         {/* Modal Actions */}
         <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-xs font-mono text-white/40">
-            Interested in an architecture like this?
+          <span className="text-xs font-mono text-white/65">
+            Have something similar in mind?
           </span>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -139,7 +147,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
               }}
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#FF003C] text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,0,60,0.4)] hover:scale-105 transition-all"
             >
-              Discuss Similar Project
+              Build something similar
             </button>
           </div>
         </div>

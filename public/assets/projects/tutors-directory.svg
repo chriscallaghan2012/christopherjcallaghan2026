@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#090a0d"/>
+  <rect x="44" y="38" width="1112" height="598" rx="8" fill="#0f1014" stroke="#ffffff" stroke-opacity=".1"/>
+  <rect x="44" y="38" width="1112" height="70" rx="8" fill="#131419"/>
+  <text x="76" y="82" fill="#f3f3f5" font-family="Arial,sans-serif" font-size="22" font-weight="700">Tutor finder</text>
+  <text x="1020" y="80" fill="#ff5574" font-family="monospace" font-size="12">DIRECTORY</text>
+  <text x="78" y="157" fill="#ffffff" font-family="Arial,sans-serif" font-size="28" font-weight="700">Find the right tutor.</text>
+  <text x="78" y="185" fill="#8f9099" font-family="Arial,sans-serif" font-size="14">Search by subject, level and location.</text>
+  <rect x="78" y="211" width="1044" height="62" rx="6" fill="#090a0d" stroke="#ffffff" stroke-opacity=".12"/>
+  <circle cx="108" cy="242" r="10" stroke="#ff5574" stroke-width="2"/>
+  <path d="m115 249 8 8" stroke="#ff5574" stroke-width="2"/>
+  <text x="143" y="248" fill="#85868f" font-family="Arial,sans-serif" font-size="14">Subject, level or postcode</text>
+  <rect x="78" y="296" width="1044" height="92" rx="6" fill="#15161b" stroke="#ffffff" stroke-opacity=".08"/>
+  <circle cx="126" cy="342" r="23" fill="#312027"/>
+  <text x="167" y="333" fill="#ececf0" font-family="Arial,sans-serif" font-size="17" font-weight="700">Mathematics tutor</text>
+  <text x="167" y="359" fill="#8d8e97" font-family="Arial,sans-serif" font-size="13">GCSE · Online or in person</text>
+  <text x="972" y="350" fill="#ffffff" font-family="monospace" font-size="15">£30 / hr</text>
+  <rect x="78" y="404" width="1044" height="92" rx="6" fill="#15161b" stroke="#ffffff" stroke-opacity=".08"/>
+  <circle cx="126" cy="450" r="23" fill="#241c20"/>
+  <text x="167" y="441" fill="#ececf0" font-family="Arial,sans-serif" font-size="17" font-weight="700">English language tutor</text>
+  <text x="167" y="467" fill="#8d8e97" font-family="Arial,sans-serif" font-size="13">A-level · Online sessions</text>
+  <text x="972" y="458" fill="#ffffff" font-family="monospace" font-size="15">£25 / hr</text>
+  <rect x="78" y="512" width="1044" height="66" rx="6" fill="#101116" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="102" y="552" fill="#ff6480" font-family="monospace" font-size="12" letter-spacing="1">FILTER BY SUBJECT / LEVEL / PRICE / LOCATION</text>
+  <text x="58" y="618" fill="#777780" font-family="monospace" font-size="11" letter-spacing="2">LOCAL PROJECT PREVIEW / EDUCATION / TUTOR DIRECTORY</text>
+</svg>

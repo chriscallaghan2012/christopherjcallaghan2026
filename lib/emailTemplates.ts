@@ -12,232 +12,156 @@ export interface EmailPayload {
   submittedAt?: string;
 }
 
-/**
- * Generates high-impact HTML email sent to Admin (Christopher J. Callaghan)
- */
-export function generateAdminNotificationEmail(data: EmailPayload): string {
-  const timestamp = data.submittedAt || new Date().toISOString();
-  const isConsultation = data.type === 'consultation';
+const BRAND = {
+  background: '#060608',
+  panel: '#101014',
+  red: '#ff003c',
+  orange: '#ffb347',
+  purple: '#df80ff',
+  text: '#f5f5f5',
+  muted: '#a4a4ad',
+  border: '#2a2a31'
+};
 
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Signal Transmitted</title>
-</head>
-<body style="margin: 0; padding: 0; background-color: #060608; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #ededed;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #060608; padding: 40px 10px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: #0d0d12; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-          
-          <!-- Header -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #180509 0%, #0d0d12 100%); padding: 30px; border-bottom: 1px solid rgba(255, 0, 60, 0.3);">
-              <table role="presentation" width="100%">
-                <tr>
-                  <td>
-                    <span style="display: inline-block; padding: 4px 12px; background-color: rgba(255, 0, 60, 0.15); border: 1px solid rgba(255, 0, 60, 0.4); border-radius: 50px; color: #FF003C; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; font-family: monospace;">
-                      ${isConsultation ? '★ CONSULTATION REQUEST' : '⚡ INCOMING PROJECT SPEC'}
-                    </span>
-                    <h1 style="margin: 15px 0 5px 0; color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: -0.5px;">
-                      New Client Inquiry Received
-                    </h1>
-                    <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 13px;">
-                      Transmitted via christopherjcallaghan.com
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Client Details Grid -->
-          <tr>
-            <td style="padding: 30px;">
-              <table role="presentation" width="100%" style="margin-bottom: 25px;">
-                <tr>
-                  <td width="50%" style="padding-bottom: 15px;">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Client Name</span>
-                    <strong style="color: #ffffff; font-size: 16px;">${data.name}</strong>
-                  </td>
-                  <td width="50%" style="padding-bottom: 15px;">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Corporate Email</span>
-                    <a href="mailto:${data.email}" style="color: #FF003C; font-size: 15px; font-weight: bold; text-decoration: none;">${data.email}</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td width="50%" style="padding-bottom: 15px;">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Archetype / Scope</span>
-                    <span style="color: #ffffff; font-size: 14px; font-weight: 600;">${data.packageScope || data.projectType}</span>
-                  </td>
-                  <td width="50%" style="padding-bottom: 15px;">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Budget / Funding</span>
-                    <span style="color: #10b981; font-size: 14px; font-weight: 700;">${data.budget || data.fundingGoal || 'N/A'}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td width="50%">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Expected Timeline</span>
-                    <span style="color: rgba(255,255,255,0.8); font-size: 13px;">${data.timeline || 'Flexible'}</span>
-                  </td>
-                  <td width="50%">
-                    <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">Submission Time</span>
-                    <span style="color: rgba(255,255,255,0.6); font-size: 12px; font-family: monospace;">${timestamp.substring(0, 19).replace('T', ' ')} UTC</span>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Specification Message Box -->
-              <div style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                <span style="color: #FF003C; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">Technical Specification & Goals</span>
-                <p style="margin: 0; color: #ffffff; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${data.message || data.message || 'No additional notes provided.'}</p>
-              </div>
-
-              ${data.aiBlueprint ? `
-              <!-- AI Architecture Studio Blueprint Attachment -->
-              <div style="background-color: rgba(168, 85, 247, 0.06); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                <span style="color: #a855f7; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">🤖 AI Architecture Studio Blueprint Attached</span>
-                <p style="margin: 0; color: #e9d5ff; font-size: 13px; line-height: 1.7; white-space: pre-wrap; font-family: monospace;">${data.aiBlueprint}</p>
-              </div>` : ''/* aiBlueprint */}
-
-              <!-- Action Button -->
-              <table role="presentation" width="100%">
-                <tr>
-                  <td align="center">
-                    <a href="mailto:${data.email}?subject=Re:%20Architectural%20Consultation%20-%20Christopher%20J.%20Callaghan" style="display: inline-block; padding: 14px 32px; background-color: #FF003C; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border-radius: 12px; box-shadow: 0 0 25px rgba(255, 0, 60, 0.5);">
-                      Reply to ${data.name.split(' ')[0]} Now
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: rgba(0, 0, 0, 0.4); padding: 20px 30px; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
-              <p style="margin: 0; color: rgba(255,255,255,0.4); font-size: 11px; font-family: monospace;">
-                Christopher J. Callaghan • Digital Architect & Senior Full-Stack Engineer • Manchester, UK
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-  `.trim();
+function escapeHtml(value: string | undefined): string {
+  return (value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-/**
- * Generates automated acknowledgment receipt sent to the Client
- */
-export function generateClientConfirmationEmail(data: EmailPayload): string {
-  return `
-<!DOCTYPE html>
-<html>
+function firstName(name: string): string {
+  return name.trim().split(/\s+/)[0] || 'there';
+}
+
+function detailRow(label: string, value: string, accent = BRAND.text): string {
+  return `<tr>
+    <td style="padding:9px 10px 9px 0;color:${BRAND.muted};font-size:12px;vertical-align:top;width:34%;">${escapeHtml(label)}</td>
+    <td style="padding:9px 0;color:${accent};font-size:13px;font-weight:600;line-height:1.5;vertical-align:top;">${escapeHtml(value)}</td>
+  </tr>`;
+}
+
+function contentSection(title: string, content: string, accent = BRAND.red): string {
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0;border:1px solid ${BRAND.border};background:#0b0b0f;">
+    <tr><td style="padding:15px 17px 7px;color:${accent};font-family:monospace;font-size:10px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;">${escapeHtml(title)}</td></tr>
+    <tr><td style="padding:0 17px 17px;color:${BRAND.text};font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;">${content}</td></tr>
+  </table>`;
+}
+
+function renderEmail(data: EmailPayload, options: {
+  preheader: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  body: string;
+  action?: { label: string; href: string };
+}): string {
+  const action = options.action
+    ? `<table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0 4px;"><tr><td bgcolor="${BRAND.red}" style="background:${BRAND.red};"><a href="${escapeHtml(options.action.href)}" style="display:inline-block;padding:13px 19px;color:#ffffff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:1px;text-decoration:none;text-transform:uppercase;">${escapeHtml(options.action.label)}</a></td></tr></table>`
+    : '';
+
+  return `<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Specification Received</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>${escapeHtml(options.title)}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #060608; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #ededed;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #060608; padding: 40px 10px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: #0d0d12; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-          
-          <!-- Header -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #0d0d12 0%, #15050a 100%); padding: 35px 30px; border-bottom: 1px solid rgba(255, 0, 60, 0.3);">
-              <table role="presentation" width="100%">
-                <tr>
-                  <td>
-                    <div style="display: inline-block; width: 36px; height: 36px; background-color: #FF003C; border-radius: 50%; text-align: center; line-height: 36px; color: #ffffff; font-weight: 900; font-size: 14px; margin-bottom: 15px;">
-                      CJC
-                    </div>
-                    <h1 style="margin: 0 0 8px 0; color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: -0.5px;">
-                      Signal Transmitted Successfully
-                    </h1>
-                    <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.5;">
-                      Hello ${data.name}, thank you for reaching out.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Body Content -->
-          <tr>
-            <td style="padding: 30px;">
-              <p style="margin: 0 0 20px 0; color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">
-                I have received your project specification for <strong style="color: #ffffff;">${data.packageScope || data.projectType}</strong>. Every architectural brief is directly reviewed by me to evaluate technical feasibility and scope requirements.
-              </p>
-
-              <!-- Response Time Commitment Box -->
-              <div style="background: linear-gradient(135deg, rgba(255,0,60,0.1) 0%, rgba(0,0,0,0.3) 100%); border: 1px solid rgba(255, 0, 60, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 25px;">
-                <div style="color: #FF003C; font-size: 11px; font-family: monospace; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">
-                  ⚡ Guaranteed Response SLA
-                </div>
-                <div style="color: #ffffff; font-size: 13px; font-weight: 600;">
-                  You will receive a direct technical response & breakdown within 24 business hours.
-                </div>
-              </div>
-
-              <!-- Brief Overview -->
-              <div style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px; margin-bottom: 25px;">
-                <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Submitted Brief Overview</span>
-                <table role="presentation" width="100%" style="font-size: 13px; color: rgba(255,255,255,0.8);">
-                  <tr>
-                    <td style="padding: 3px 0; color: rgba(255,255,255,0.5);">Scope:</td>
-                    <td style="padding: 3px 0; font-weight: 600; color: #ffffff;">${data.packageScope || data.projectType}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 3px 0; color: rgba(255,255,255,0.5);">Budget / Target:</td>
-                    <td style="padding: 3px 0; font-weight: 600; color: #10b981;">${data.budget || data.fundingGoal || 'Standard Scope'}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 3px 0; color: rgba(255,255,255,0.5);">Timeline:</td>
-                    <td style="padding: 3px 0; color: #ffffff;">${data.timeline || 'Flexible'}</td>
-                  </tr>
-                </table>
-              </div>
-
-              ${data.aiBlueprint ? `
-              <!-- AI Blueprint Receipt -->
-              <div style="background-color: rgba(168, 85, 247, 0.06); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 25px;">
-                <span style="color: #a855f7; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; display: block; margin-bottom: 8px;">Your AI Architecture Studio Blueprint</span>
-                <p style="margin: 0; color: #e9d5ff; font-size: 12px; line-height: 1.65; white-space: pre-wrap; font-family: monospace;">${data.aiBlueprint}</p>
-              </div>` : ''/* aiBlueprint */}
-
-              <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.5;">
-                In the meantime, feel free to explore my full engineering portfolio and interactive tools at <a href="https://christopherjcallaghan.com" style="color: #FF003C; text-decoration: none; font-weight: bold;">christopherjcallaghan.com</a>.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Signature & Footer -->
-          <tr>
-            <td style="background-color: rgba(0, 0, 0, 0.5); padding: 25px 30px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-              <strong style="color: #ffffff; font-size: 14px; display: block; margin-bottom: 2px;">Christopher J. Callaghan</strong>
-              <span style="color: rgba(255,255,255,0.5); font-size: 12px; font-family: monospace; display: block; margin-bottom: 12px;">Digital Architect & Senior Full-Stack Engineer</span>
-              <div style="font-size: 11px; color: rgba(255,255,255,0.3); font-family: monospace;">
-                Manchester, UK • London • New York • Global Timezones
-              </div>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
+<body style="margin:0;padding:0;background:${BRAND.background};font-family:Arial,Helvetica,sans-serif;color:${BRAND.text};">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(options.preheader)}</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;background:${BRAND.background};">
+    <tr><td align="center" style="padding:28px 12px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;max-width:620px;background:${BRAND.panel};border:1px solid ${BRAND.border};">
+        <tr><td style="padding:24px 26px;border-bottom:1px solid ${BRAND.border};">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
+            <td width="44" valign="middle"><div style="width:38px;height:38px;background:${BRAND.red};color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;line-height:38px;text-align:center;">CJC</div></td>
+            <td valign="middle" style="padding-left:12px;color:${BRAND.text};font-size:13px;font-weight:bold;">Christopher J. Callaghan<br><span style="color:${BRAND.muted};font-family:monospace;font-size:10px;font-weight:normal;">DIGITAL BUILDER / MANCHESTER, UK</span></td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="height:3px;background:${BRAND.red};font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr><td style="padding:28px 26px 30px;">
+          <p style="margin:0 0 10px;color:${BRAND.orange};font-family:monospace;font-size:10px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;">${escapeHtml(options.eyebrow)}</p>
+          <h1 style="margin:0 0 12px;color:${BRAND.text};font-size:26px;line-height:1.2;">${escapeHtml(options.title)}</h1>
+          <p style="margin:0;color:${BRAND.muted};font-size:14px;line-height:1.65;">${options.intro}</p>
+          ${options.body}
+          ${action}
+        </td></tr>
+        <tr><td style="padding:17px 26px;border-top:1px solid ${BRAND.border};color:${BRAND.muted};font-family:monospace;font-size:10px;line-height:1.7;">
+          <span style="color:${BRAND.purple};">christopherjcallaghan.com</span><br>
+          © ${new Date().getFullYear()} Christopher J. Callaghan
+        </td></tr>
+      </table>
+    </td></tr>
   </table>
 </body>
-</html>
-  `.trim();
+</html>`;
+}
+
+function getScope(data: EmailPayload): string {
+  return data.packageScope || data.projectType || 'General enquiry';
+}
+
+function renderBlueprint(data: EmailPayload): string {
+  if (!data.aiBlueprint) return '';
+  return contentSection('AI architecture notes', escapeHtml(data.aiBlueprint), BRAND.purple);
+}
+
+export function generateAdminNotificationEmail(data: EmailPayload): string {
+  const isConsultation = data.type === 'consultation';
+  const scope = getScope(data);
+  const timestamp = data.submittedAt ? new Date(data.submittedAt) : new Date();
+  const submittedAt = Number.isNaN(timestamp.getTime()) ? 'Unknown' : timestamp.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }) + ' UTC';
+  const subject = encodeURIComponent(`Re: ${isConsultation ? 'Project brief' : 'Enquiry'} - Christopher J. Callaghan`);
+  const body = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;border-top:1px solid ${BRAND.border};border-bottom:1px solid ${BRAND.border};">
+    ${detailRow('Name', data.name)}
+    ${detailRow('Email', data.email, BRAND.orange)}
+    ${detailRow('Submission', isConsultation ? 'Project brief' : 'Contact enquiry', BRAND.purple)}
+    ${detailRow('Scope', scope)}
+    ${detailRow('Budget', data.budget || data.fundingGoal || 'Not specified', BRAND.orange)}
+    ${detailRow('Timeline', data.timeline || 'Flexible')}
+    ${detailRow('Received', submittedAt)}
+  </table>
+  ${data.message ? contentSection('Project details', escapeHtml(data.message)) : ''}
+  ${renderBlueprint(data)}`;
+
+  return renderEmail(data, {
+    preheader: `New ${isConsultation ? 'project brief' : 'contact enquiry'} from ${data.name}`,
+    eyebrow: isConsultation ? 'New project brief' : 'New contact enquiry',
+    title: isConsultation ? 'A new project brief has arrived.' : 'A new enquiry has arrived.',
+    intro: 'Review the details below and reply directly to the sender.',
+    body,
+    action: {
+      label: `Reply to ${firstName(data.name)}`,
+      href: `mailto:${encodeURIComponent(data.email)}?subject=${subject}`
+    }
+  });
+}
+
+export function generateClientConfirmationEmail(data: EmailPayload): string {
+  const isConsultation = data.type === 'consultation';
+  const scope = getScope(data);
+  const body = `<p style="margin:22px 0 0;padding:15px 17px;border-left:3px solid ${BRAND.orange};background:#0b0b0f;color:${BRAND.text};font-size:13px;line-height:1.7;">
+    I’ll review what you sent and reply within one business day. No technical plan needed to get started.
+  </p>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;border-top:1px solid ${BRAND.border};border-bottom:1px solid ${BRAND.border};">
+    ${detailRow('What you sent', scope)}
+    ${detailRow('Budget', data.budget || data.fundingGoal || 'Not specified', BRAND.orange)}
+    ${detailRow('Timing', data.timeline || 'Flexible')}
+  </table>
+  ${data.message ? contentSection('Your notes', escapeHtml(data.message)) : ''}
+  ${renderBlueprint(data)}`;
+
+  return renderEmail(data, {
+    preheader: 'Your message has been received by Christopher J. Callaghan.',
+    eyebrow: isConsultation ? 'Project brief received' : 'Enquiry received',
+    title: `Thanks, ${firstName(data.name)}.`,
+    intro: isConsultation
+      ? 'Your project brief has reached me. I’ll look over the idea, scope, and goals you shared.'
+      : 'Thanks for getting in touch. Your message has reached me and I’ll take a look shortly.',
+    body,
+    action: { label: 'Visit the website', href: 'https://christopherjcallaghan.com' }
+  });
 }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#08090c"/>
+  <path d="M0 116H1200" stroke="#ffffff" stroke-opacity=".08"/>
+  <rect x="56" y="42" width="32" height="32" rx="6" fill="#ff003c" fill-opacity=".16" stroke="#ff003c" stroke-opacity=".55"/>
+  <path d="M72 50v16m-8-8h16" stroke="#ff6480" stroke-width="2"/>
+  <text x="106" y="64" fill="#f3f3f5" font-family="monospace" font-size="16" font-weight="700" letter-spacing="2">AI PRODUCT STUDIO</text>
+  <text x="57" y="165" fill="#ffffff" font-family="Arial,sans-serif" font-size="34" font-weight="700">One place to make things.</text>
+  <text x="58" y="195" fill="#91929b" font-family="Arial,sans-serif" font-size="15">A workspace for prompts, creative tools and connected AI services.</text>
+  <rect x="58" y="232" width="704" height="348" rx="8" fill="#101116" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="88" y="272" fill="#ff6480" font-family="monospace" font-size="11" letter-spacing="2">START WITH A PROMPT</text>
+  <rect x="88" y="296" width="644" height="82" rx="5" fill="#090a0d" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="110" y="333" fill="#dedee3" font-family="Arial,sans-serif" font-size="14">Describe what you want to create...</text>
+  <rect x="88" y="400" width="196" height="136" rx="5" fill="#15161b" stroke="#ffffff" stroke-opacity=".08"/>
+  <rect x="302" y="400" width="196" height="136" rx="5" fill="#15161b" stroke="#ffffff" stroke-opacity=".08"/>
+  <rect x="516" y="400" width="216" height="136" rx="5" fill="#15161b" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="108" y="435" fill="#f0f0f3" font-family="monospace" font-size="12">TEXT</text>
+  <text x="108" y="465" fill="#85868f" font-family="Arial,sans-serif" font-size="12">Writing tools</text>
+  <text x="322" y="435" fill="#f0f0f3" font-family="monospace" font-size="12">AUDIO</text>
+  <text x="322" y="465" fill="#85868f" font-family="Arial,sans-serif" font-size="12">Music creation</text>
+  <text x="536" y="435" fill="#f0f0f3" font-family="monospace" font-size="12">WORKFLOWS</text>
+  <text x="536" y="465" fill="#85868f" font-family="Arial,sans-serif" font-size="12">Connected tools</text>
+  <rect x="800" y="232" width="344" height="348" rx="8" fill="#101116" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="832" y="272" fill="#f0f0f3" font-family="monospace" font-size="12" letter-spacing="1">RECENT OUTPUT</text>
+  <rect x="832" y="296" width="280" height="160" rx="5" fill="#191116"/>
+  <path d="M848 423c36-82 58-11 91-66s58 63 99-10 51 18 60-22" stroke="#ff3158" stroke-width="3" stroke-linecap="round"/>
+  <text x="832" y="496" fill="#d3d3d8" font-family="Arial,sans-serif" font-size="14">Generated content</text>
+  <text x="832" y="523" fill="#85868f" font-family="monospace" font-size="11">SAVED TO YOUR WORKSPACE</text>
+  <text x="58" y="636" fill="#777780" font-family="monospace" font-size="11" letter-spacing="2">LOCAL PROJECT PREVIEW / AI TOOLS / CREATIVE WORKFLOWS</text>
+</svg>

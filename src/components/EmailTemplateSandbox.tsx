@@ -17,6 +17,7 @@ export const EmailTemplateSandbox: React.FC = () => {
     budget: '£15k - £30k (Comprehensive Platform)',
     fundingGoal: 'Up to £25k (SME Micro-Grant / Early Startup)',
     timeline: 'Within 30 days',
+    type: 'consultation',
     message: 'We are scaling an AI-assisted programmatic SaaS platform. We need Next.js architecture, Stripe multi-tier billing, Meta/Google CAPI funnels, and a live working investor demo sandbox for our upcoming Innovate UK grant and angel syndicate pitch.',
     submittedAt: new Date().toISOString()
   });
@@ -126,6 +127,18 @@ export const EmailTemplateSandbox: React.FC = () => {
                   <div className="text-[10px] text-white/40 mt-1">Sent to applicant SLA confirmation</div>
                 </button>
               </div>
+
+              <label className="block text-[10px] font-mono uppercase text-white/40">
+                Submission type
+                <select
+                  value={sampleData.type || 'contact'}
+                  onChange={(event) => setSampleData({ ...sampleData, type: event.target.value as EmailPayload['type'] })}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-[#111118] px-3 py-2 text-xs normal-case text-white focus:border-[#FF003C] focus:outline-none"
+                >
+                  <option value="consultation">Project brief</option>
+                  <option value="contact">Contact enquiry</option>
+                </select>
+              </label>
             </div>
 
             {/* Test Data Inputs */}

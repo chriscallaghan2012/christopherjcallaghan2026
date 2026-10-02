@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#08090c"/>
+  <rect x="42" y="34" width="1116" height="607" rx="8" fill="#0c0d11" stroke="#ffffff" stroke-opacity=".1"/>
+  <rect x="42" y="34" width="1116" height="68" rx="8" fill="#101116"/>
+  <rect x="42" y="94" width="1116" height="8" fill="#101116"/>
+  <rect x="70" y="53" width="30" height="30" fill="#ff003c" fill-opacity=".15" stroke="#ff003c" stroke-opacity=".55"/>
+  <path d="M77 74v-9l8-6 8 6v9h-5v-6h-6v6z" fill="#ff5675"/>
+  <text x="116" y="74" fill="#f1f1f4" font-family="monospace" font-size="15" font-weight="700" letter-spacing="2">SCHOOL PLATFORM</text>
+  <text x="1006" y="74" fill="#7f8089" font-family="monospace" font-size="12">STAFF PORTAL</text>
+  <rect x="70" y="126" width="245" height="474" fill="#090a0d" stroke="#ffffff" stroke-opacity=".06"/>
+  <text x="95" y="174" fill="#ff5574" font-family="monospace" font-size="11" letter-spacing="2">WORKSPACE</text>
+  <text x="95" y="222" fill="#e9e9ed" font-family="monospace" font-size="13">Overview</text>
+  <text x="95" y="266" fill="#90919a" font-family="monospace" font-size="13">Schools</text>
+  <text x="95" y="310" fill="#90919a" font-family="monospace" font-size="13">Student records</text>
+  <text x="95" y="354" fill="#90919a" font-family="monospace" font-size="13">Notifications</text>
+  <text x="348" y="160" fill="#f5f5f7" font-family="Arial,sans-serif" font-size="27" font-weight="700">School overview</text>
+  <text x="349" y="188" fill="#85868f" font-family="Arial,sans-serif" font-size="14">Manage school information and day-to-day updates.</text>
+  <rect x="348" y="218" width="244" height="118" rx="6" fill="#14151a" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="372" y="253" fill="#a1a1aa" font-family="monospace" font-size="11" letter-spacing="1">SCHOOLS</text>
+  <text x="372" y="307" fill="#ffffff" font-family="Arial,sans-serif" font-size="38" font-weight="700">70+</text>
+  <rect x="612" y="218" width="244" height="118" rx="6" fill="#14151a" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="636" y="253" fill="#a1a1aa" font-family="monospace" font-size="11" letter-spacing="1">PORTAL</text>
+  <text x="636" y="304" fill="#ff5574" font-family="monospace" font-size="17">STAFF ACCESS</text>
+  <rect x="876" y="218" width="244" height="118" rx="6" fill="#14151a" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="900" y="253" fill="#a1a1aa" font-family="monospace" font-size="11" letter-spacing="1">MESSAGING</text>
+  <text x="900" y="304" fill="#e6e6eb" font-family="monospace" font-size="15">EMAIL / PUSH</text>
+  <rect x="348" y="359" width="772" height="216" rx="6" fill="#111217" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="374" y="396" fill="#f0f0f2" font-family="monospace" font-size="12" letter-spacing="2">RECENT SCHOOL ACTIVITY</text>
+  <path d="M374 418h720M374 464h720M374 510h720" stroke="#ffffff" stroke-opacity=".08"/>
+  <text x="374" y="448" fill="#cacad0" font-family="Arial,sans-serif" font-size="14">School records updated</text>
+  <text x="374" y="494" fill="#cacad0" font-family="Arial,sans-serif" font-size="14">Staff notification sent</text>
+  <text x="374" y="540" fill="#cacad0" font-family="Arial,sans-serif" font-size="14">New portal activity</text>
+  <text x="54" y="666" fill="#777780" font-family="monospace" font-size="11" letter-spacing="2">LOCAL PROJECT PREVIEW / EDUCATION / MULTI-SCHOOL TOOLS</text>
+</svg>

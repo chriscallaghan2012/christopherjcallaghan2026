@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#07080b"/>
+  <path d="M0 120H1200M0 568H1200" stroke="#ffffff" stroke-opacity=".08"/>
+  <rect x="52" y="42" width="30" height="30" fill="#ff003c" fill-opacity=".16" stroke="#ff003c" stroke-opacity=".65"/>
+  <path d="M62 57h10M67 52v10" stroke="#ff4268" stroke-width="2"/>
+  <text x="100" y="63" fill="#f5f5f5" font-family="monospace" font-size="17" font-weight="700" letter-spacing="2">ATHLETE TESTING / API</text>
+  <text x="1040" y="63" fill="#ff496d" font-family="monospace" font-size="12" letter-spacing="2">LIVE DATA FLOW</text>
+  <rect x="52" y="150" width="710" height="350" rx="8" fill="#0d0e12" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="84" y="194" fill="#ffffff" font-family="monospace" font-size="13" letter-spacing="2">RESULT DELIVERY</text>
+  <text x="84" y="250" fill="#8b8b94" font-family="monospace" font-size="14">SAMPLE RECEIVED</text>
+  <text x="84" y="294" fill="#e7e7eb" font-family="monospace" font-size="16">POST  /v1/samples</text>
+  <path d="M84 328H704" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="84" y="370" fill="#8b8b94" font-family="monospace" font-size="14">RESULT READY</text>
+  <text x="84" y="414" fill="#e7e7eb" font-family="monospace" font-size="16">GET   /v1/results/:id</text>
+  <rect x="566" y="347" width="138" height="38" rx="4" fill="#ff003c" fill-opacity=".13" stroke="#ff003c" stroke-opacity=".45"/>
+  <text x="599" y="372" fill="#ff6a86" font-family="monospace" font-size="13">200 OK</text>
+  <rect x="800" y="150" width="348" height="350" rx="8" fill="#0d0e12" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="836" y="194" fill="#ffffff" font-family="monospace" font-size="13" letter-spacing="2">CONNECTED SYSTEMS</text>
+  <circle cx="853" cy="255" r="5" fill="#ff003c"/><text x="874" y="260" fill="#c7c7ce" font-family="monospace" font-size="14">Sample intake</text>
+  <circle cx="853" cy="315" r="5" fill="#ff003c"/><text x="874" y="320" fill="#c7c7ce" font-family="monospace" font-size="14">Test records</text>
+  <circle cx="853" cy="375" r="5" fill="#ff003c"/><text x="874" y="380" fill="#c7c7ce" font-family="monospace" font-size="14">Client results</text>
+  <path d="M853 260v50m0 10v50" stroke="#7c1028" stroke-width="2"/>
+  <text x="54" y="618" fill="#777780" font-family="monospace" font-size="12" letter-spacing="2">LOCAL PROJECT PREVIEW / REST API / RESULTS DELIVERY</text>
+</svg>

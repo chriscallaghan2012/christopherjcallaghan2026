@@ -65,7 +65,7 @@ Return ONLY a valid JSON object matching this TypeScript interface:
         domain: "Lean MVP • Local Ads & SEO • Grants & Pre-Seed Capital",
         frontend: "Next.js 15 App Router + React 19, Tailwind CSS, Localized Micro-SEO pages",
         backend: "Node.js (TypeScript) / Express API, Stripe Checkout, Meta CAPI",
-        database: "Supabase / PostgreSQL serverless with automated backups",
+        database: "Neon serverless PostgreSQL",
         aiEngine: "Gemini 2.0 Flash for automated marketing copy and grant drafting",
         devops: "Vercel zero-idle cost deployment, Cloudflare CDN with WAF",
         keyWorkflows: [

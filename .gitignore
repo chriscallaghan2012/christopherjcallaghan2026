@@ -1,6 +1,8 @@
 node_modules/
 .next/
 build/
+!app/build/
+!app/build/page.tsx
 dist/
 coverage/
 .DS_Store
@@ -12,3 +14,4 @@ coverage/
 .env.production.local
 !.env.example
 .vercel
+.env.example
