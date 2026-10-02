@@ -66,8 +66,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           <span className="hero-title-line hero-title-line--second block text-[#FF003C]">THINGS</span>
         </h1>
         <p className="mt-7 text-2xl font-black uppercase tracking-[0.08em] text-[#FF003C] sm:text-3xl md:text-4xl">ON THE INTERNET.</p>
-        <p className="mx-auto mt-5 max-w-2xl font-mono text-[11px] uppercase tracking-[0.12em] text-white/55 sm:text-sm">Businesses <span className="text-[#FF003C]">·</span> Apps <span className="text-[#FF003C]">·</span> Software <span className="text-[#FF003C]">·</span> AI <span className="text-[#FF003C]">·</span> Websites</p>
-        <p className="mx-auto mt-7 max-w-lg text-sm leading-relaxed text-white/65 md:text-base">I turn ideas, problems and opportunities into working technology.</p>
+        <p className="mx-auto mt-5 max-w-2xl font-mono text-[11px] uppercase tracking-[0.12em] text-white/90 sm:text-sm">Businesses <span className="text-[#FF003C]">·</span> Apps <span className="text-[#FF003C]">·</span> Software <span className="text-[#FF003C]">·</span> AI <span className="text-[#FF003C]">·</span> Websites</p>
+        <p className="mx-auto mt-7 max-w-lg text-sm leading-relaxed text-white/90 md:text-base">I turn ideas, problems and opportunities into working technology.</p>
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button id="hero-start-project-btn" onClick={() => onNavigate('build')} className="group flex min-h-12 w-full items-center justify-center gap-3 bg-[#FF003C] px-7 text-xs font-black tracking-[0.18em] text-white shadow-[0_0_32px_rgba(255,0,60,0.35)] transition-all hover:shadow-[0_0_45px_rgba(255,0,60,0.55)] sm:w-auto">
             BUILD SOMETHING <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
