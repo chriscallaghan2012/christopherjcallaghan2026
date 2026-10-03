@@ -41,6 +41,12 @@ const technologies = [
   'LLMs', 'Automation'
 ];
 
+const growthServices = [
+  { label: 'SEO', href: '/seo', description: 'Build long-term visibility in search.' },
+  { label: 'Google Maps', href: '/google-maps', description: 'Help nearby customers find you.' },
+  { label: 'PPC', href: '/ppc', description: 'Reach people ready to take action.' }
+];
+
 export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, onNavigate }) => (
   <>
     <section id="ways-to-work" className="relative border-y border-white/10 bg-white/[0.015] py-24 md:py-32">
@@ -57,9 +63,6 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
               <div>
                 <p className="max-w-xl text-sm leading-relaxed text-white/65 md:text-base">{way.description}</p>
                 <p className="work-details-shine mt-3 max-w-xl font-mono text-[11px] leading-relaxed">{way.details}</p>
-                {way.id === 'grow' && <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-3" aria-label="Growth services">
-                  {[['SEO', '/seo'], ['Google Maps', '/google-maps'], ['PPC', '/ppc'], ['Social media', '/social-media']].map(([label, href]) => <a key={href} href={href} className="border-b border-[#FF003C]/50 pb-1 font-mono text-xs font-bold text-white/80 transition-colors hover:border-[#FF003C] hover:text-white">{label}</a>)}
-                </nav>}
               </div>
               <button onClick={() => way.id === 'build' || way.id === 'start' ? onNavigate(way.id) : onOpenConsultation()} className="inline-flex items-center gap-2 justify-self-start whitespace-nowrap text-xs font-black tracking-[0.12em] text-white transition-colors hover:text-[#FF003C] md:justify-self-end">
                 {way.action}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -93,6 +96,27 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
           </div>
           <p className="mt-5 text-sm font-semibold text-white">I use whatever technology makes sense for the project.</p>
         </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="growth-services-title" className="border-y border-white/10 bg-white/[0.015] py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
+            <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility and paid campaigns, connected to your business goals.</p>
+        </div>
+        <nav aria-label="SEO, Google Maps and PPC services" className="grid gap-3 sm:grid-cols-3">
+          {growthServices.map((service) => <a key={service.href} href={service.href} className="group flex min-h-36 flex-col justify-between border border-white/10 bg-white/[0.025] p-5 transition-colors hover:border-[#00DFC9]/50 hover:bg-white/[0.045]">
+            <span>
+              <span className="block text-xl font-black text-white transition-colors group-hover:text-[#00DFC9]">{service.label}</span>
+              <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
+            </span>
+            <span className="mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#00DFC9]">Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+          </a>)}
+        </nav>
       </div>
     </section>
   </>
