@@ -112,9 +112,9 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
           {growthServices.map((service) => {
             const Icon = service.icon;
             return (
-              <a key={service.href} href={service.href} className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 sm:items-start sm:text-left ${service.border} ${service.wash}`}>
+              <a key={service.href} href={service.href} className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}>
               <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
-                <span className="flex w-full flex-col items-center text-center sm:items-start sm:text-left">
+                <span className="flex w-full flex-col items-center text-center">
                 <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
                   <Icon aria-hidden="true" className="h-5 w-5" />
                 </span>
