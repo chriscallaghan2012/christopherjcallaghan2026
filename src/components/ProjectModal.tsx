@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Project } from '../types';
-import { getProjectImageUrl } from '../data/portfolioData';
-import { X, ExternalLink, Cpu, Layers, Terminal, CheckCircle } from 'lucide-react';
+import { X, Cpu, Terminal, CheckCircle } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -10,12 +9,6 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, onNavigateToBuild }) => {
-  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
-
-  useEffect(() => {
-    setActiveGalleryIndex(0);
-  }, [project?.id]);
-
   // Lock page scroll + close on Escape while the modal is open.
   useEffect(() => {
     if (!project) return;
@@ -35,17 +28,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
   }, [project, onClose]);
 
   if (!project) return null;
-
-  const gallery = project.caseStudy?.gallery ?? project.imageUrls.map((src, index) => ({
-    src,
-    alt: `${project.title} preview ${index + 1}`,
-    caption: `Project view ${index + 1}`,
-    href: project.liveUrl ?? '#'
-  }));
-  const activeGalleryItem = gallery[Math.min(activeGalleryIndex, gallery.length - 1)];
-  const activeGalleryImage = activeGalleryItem.src.startsWith('http')
-    ? activeGalleryItem.src
-    : getProjectImageUrl(activeGalleryItem.src);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -83,39 +65,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
             {project.description}
           </p>
         </div>
-
-        {gallery.length > 0 && <section className="mb-8" aria-label={`${project.title} image gallery`}>
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="font-mono text-xs uppercase tracking-widest text-white/70">Project gallery</h3>
-              <p className="mt-1 text-xs text-white/45">Homepage and venue pages from the live experience.</p>
-            </div>
-            <span className="font-mono text-[10px] text-white/45">{activeGalleryIndex + 1} / {gallery.length}</span>
-          </div>
-          <figure>
-            <div className="group/image relative aspect-video overflow-hidden border border-white/10 bg-black/40">
-              <img
-                src={activeGalleryImage}
-                alt={activeGalleryItem.alt}
-                onError={(event) => {
-                  (event.target as HTMLImageElement).src = '/assets/projects/project-preview.svg';
-                }}
-                className="h-full w-full object-cover"
-              />
-              <a href={activeGalleryItem.href} target="_blank" rel="noreferrer" className="absolute bottom-3 right-3 inline-flex min-h-9 items-center gap-2 bg-black/85 px-3 font-mono text-[9px] font-bold uppercase tracking-wider text-white transition-colors hover:text-[#FF003C]">View live page <ExternalLink className="h-3.5 w-3.5" /></a>
-            </div>
-            <figcaption className="mt-2 text-sm font-semibold text-white/80">{activeGalleryItem.caption}</figcaption>
-          </figure>
-          {gallery.length > 1 && <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {gallery.map((item, index) => {
-              const thumbnailSrc = item.src.startsWith('http') ? item.src : getProjectImageUrl(item.src);
-              return <button key={`${item.src}-${index}`} type="button" onClick={() => setActiveGalleryIndex(index)} aria-pressed={activeGalleryIndex === index} className={`min-w-0 border text-left transition-colors ${activeGalleryIndex === index ? 'border-[#00DFC9]' : 'border-white/10 hover:border-white/35'}`}>
-                <span className="block aspect-video overflow-hidden bg-black/40"><img src={thumbnailSrc} alt="" loading="lazy" className="h-full w-full object-cover" /></span>
-                <span className="block truncate px-2 py-2 text-[10px] text-white/65">{item.caption}</span>
-              </button>;
-            })}
-          </div>}
-        </section>}
 
         {/* Tech Stack Pills */}
         {project.techStack.length > 0 && <div className="mb-8">

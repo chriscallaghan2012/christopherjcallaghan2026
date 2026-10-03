@@ -12,17 +12,6 @@ interface SimpleNavbarProps {
 export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const scrollToSection = (id: string) => {
-    const scroll = () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (currentTab !== 'home') {
-      onSelectTab('home');
-      window.setTimeout(scroll, 80);
-    } else {
-      scroll();
-    }
-    setMenuOpen(false);
-  };
-
   const selectWork = () => {
     onSelectTab('projects');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -33,16 +22,14 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     { label: 'HOME', href: '/' },
     { label: 'BUILD', href: '/build' },
     { label: 'START', href: '/start' },
-    { label: 'GROW', action: () => scrollToSection('grow') },
     { label: 'WORK', action: selectWork },
     { label: 'BLOG', href: '/blog' },
     { label: 'ABOUT', href: '/about' },
-    { label: 'CONTACT', href: '/contact' }
-  ];
-  const growthLinks = [
     { label: 'SEO', href: '/seo' },
     { label: 'GOOGLE MAPS', href: '/google-maps' },
-    { label: 'PPC', href: '/ppc' }
+    { label: 'PPC', href: '/ppc' },
+    { label: 'SOCIAL', href: '/social-media' },
+    { label: 'CONTACT', href: '/contact' }
   ];
 
   return (
@@ -53,18 +40,11 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           <span className="hidden text-sm font-bold tracking-tight text-white sm:block">Christopher J. Callaghan</span>
         </a>
 
-        <nav className="hidden items-center gap-5 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-3 2xl:flex" aria-label="Main navigation">
           {links.map((link) => (
-            link.label === 'GROW'
-              ? <details key={link.label} className="group relative">
-                  <summary className="cursor-pointer list-none font-mono text-[10px] font-bold tracking-[0.16em] text-white/60 transition-colors hover:text-[#FF003C]">GROW</summary>
-                  <div className="absolute left-0 top-full z-50 hidden min-w-40 border border-white/10 bg-[#08080a] p-2 shadow-xl group-open:block">
-                    {growthLinks.map((service) => <a key={service.href} href={service.href} className="flex min-h-10 items-center px-3 font-mono text-[10px] font-bold tracking-[0.12em] text-white/70 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{service.label}</a>)}
-                  </div>
-                </details>
-              : link.href
-              ? <a key={link.label} href={link.href} className="font-mono text-[10px] font-bold tracking-[0.16em] text-white/60 transition-colors hover:text-[#FF003C]">{link.label}</a>
-              : <button key={link.label} onClick={link.action} className={`font-mono text-[10px] font-bold tracking-[0.16em] transition-colors hover:text-[#FF003C] ${link.label === 'WORK' && currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
+            link.href
+              ? <a key={link.label} href={link.href} className="whitespace-nowrap font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:text-[#FF003C]">{link.label}</a>
+              : <button key={link.label} onClick={link.action} className={`whitespace-nowrap font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:text-[#FF003C] ${link.label === 'WORK' && currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
           ))}
         </nav>
 
@@ -72,19 +52,16 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           <button onClick={() => { onSelectTab('build'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="group flex min-h-10 items-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.12em] text-white shadow-[0_0_22px_rgba(255,0,60,0.25)] transition-all hover:shadow-[0_0_32px_rgba(255,0,60,0.45)]">
             LET&apos;S BUILD <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
           </button>
-          <button className="flex h-10 w-10 items-center justify-center border border-white/15 text-white lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen}>
+          <button className="flex h-10 w-10 items-center justify-center border border-white/15 text-white 2xl:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen}>
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 lg:hidden" aria-label="Mobile navigation">
+      {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 2xl:hidden" aria-label="Mobile navigation">
         {links.map((link) => link.href
           ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center border-b border-white/[0.07] font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
-          : <React.Fragment key={link.label}>
-              <button onClick={link.action} className="block min-h-12 w-full border-b border-white/[0.07] text-left font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
-              {link.label === 'GROW' && growthLinks.map((service) => <a key={service.href} href={service.href} onClick={() => setMenuOpen(false)} className="flex min-h-11 w-full items-center border-b border-white/[0.07] pl-4 font-mono text-[11px] font-bold tracking-[0.14em] text-white/60 transition-colors hover:text-[#FF003C]">{service.label}</a>)}
-            </React.Fragment>
+          : <button key={link.label} onClick={() => { link.action?.(); setMenuOpen(false); }} className="block min-h-12 w-full border-b border-white/[0.07] text-left font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
         )}
       </nav>}
     </header>
