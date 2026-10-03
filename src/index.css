@@ -56,6 +56,135 @@ h3 {
   animation: briefStepEnter 420ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
+@property --brief-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.brief-control {
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.03);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.brief-control:focus {
+  border-color: transparent;
+  background-image:
+    linear-gradient(#0b0b0f, #0b0b0f),
+    conic-gradient(from var(--brief-angle), #ffb347, #df80ff, #00dfc9, #ff3e85, #ffb347);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: briefBorderSweep 2.6s linear infinite;
+}
+
+.brief-option {
+  border-radius: 2px;
+}
+
+.brief-option:has(.brief-checkbox:checked) {
+  border-color: transparent;
+  background-image:
+    linear-gradient(#0b0b0f, #0b0b0f),
+    conic-gradient(from var(--brief-angle), #ffb347, #df80ff, #00dfc9, #ff3e85, #ffb347);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: briefBorderSweep 7s linear infinite;
+}
+
+.brief-checkbox {
+  display: grid;
+  appearance: none;
+  place-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.04);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.brief-checkbox::before {
+  width: 8px;
+  height: 5px;
+  border-bottom: 2px solid #101014;
+  border-left: 2px solid #101014;
+  content: '';
+  transform: rotate(-45deg) scale(0);
+  transition: transform 140ms ease;
+}
+
+.brief-checkbox:checked {
+  border-color: #ffb347;
+  background-color: #ffb347;
+  box-shadow: 0 0 12px rgba(255, 179, 71, 0.28);
+}
+
+.brief-checkbox:checked::before {
+  transform: rotate(-45deg) scale(1);
+}
+
+.brief-checkbox:focus-visible {
+  outline: 2px solid #00dfc9;
+  outline-offset: 3px;
+}
+
+.brief-shine-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.brief-shine-button::after {
+  position: absolute;
+  z-index: 0;
+  top: -35%;
+  bottom: -35%;
+  left: -45%;
+  width: 28%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transform: skewX(-18deg);
+}
+
+.brief-shine-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brief-shine-button:hover::after,
+.brief-shine-button:focus-visible::after {
+  animation: briefButtonShine 850ms ease-out;
+}
+
+.brief-shine-button:disabled::after {
+  animation: none;
+}
+
+@keyframes briefBorderSweep {
+  to { --brief-angle: 1turn; }
+}
+
+@keyframes briefButtonShine {
+  0% { left: -45%; opacity: 0; }
+  18% { opacity: 1; }
+  100% { left: 125%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brief-control:focus,
+  .brief-option:has(.brief-checkbox:checked) {
+    animation: none;
+  }
+
+  .brief-shine-button:hover::after,
+  .brief-shine-button:focus-visible::after {
+    animation: none;
+  }
+}
+
 .scroll-writing-character {
   display: inline-block;
   opacity: 0;

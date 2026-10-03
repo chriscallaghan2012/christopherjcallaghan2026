@@ -212,7 +212,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
             <div>
               <ScrollWritingTitle text="What are you trying to do?" accentWords={[{ word: 'trying', color: 'orange' }, { word: 'do?', color: 'purple' }]} className="mb-6 text-2xl font-black text-white md:text-3xl" />
               <div className="grid gap-3 sm:grid-cols-2">
-                {goals.map((item) => <button key={item.title} onClick={() => selectGoal(item.title)} className={`group flex min-h-28 flex-col items-start justify-center border bg-white/[0.02] p-5 text-left transition-colors ${colorClasses[item.color]}`}>
+                {goals.map((item) => <button key={item.title} onClick={() => selectGoal(item.title)} className={`brief-shine-button group flex min-h-28 flex-col items-start justify-center border bg-white/[0.02] p-5 text-left transition-colors ${colorClasses[item.color]}`}>
                   <span className={`text-lg font-black ${colorClasses[item.color].split(' ')[3]}`}>{item.title}</span>
                   <span className="mt-2 text-sm text-white/55">{item.detail}</span>
                   <ArrowRight className="mt-3 h-4 w-4 opacity-65 transition-transform group-hover:translate-x-1" />
@@ -227,7 +227,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
               <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#DF80FF]">{goal}</p>
               <ScrollWritingTitle text="What would help most?" accentWords={[{ word: 'help', color: 'orange' }, { word: 'most?', color: 'purple' }]} className="mb-6 text-2xl font-black text-white md:text-3xl" />
               <div className="divide-y divide-white/10 border-y border-white/10">
-                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setFocusDetails(''); setStep(2); }} className="group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#00DFC9] md:text-base">
+                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setFocusDetails(''); setStep(2); }} className="brief-shine-button group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#00DFC9] md:text-base">
                   <span><span className="mr-4 font-mono text-xs text-[#00DFC9]">0{index + 1}</span>{item}</span>
                   <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
                 </button>)}
@@ -250,12 +250,12 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                     <div><dt className="text-xs text-white/45">Budget and timing</dt><dd className="mt-1 text-white/85">{budget} / {timeline}</dd></div>
                   </dl>
                 </section>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Name *<input required value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" className="mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Email *<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" className="mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#DF80FF]" /></label>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Budget<select value={budget} onChange={(event) => setBudget(event.target.value)} className="mt-2 min-h-12 w-full border border-white/15 bg-[#111118] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]">{BUDGETS.map((item) => <option key={item}>{item}</option>)}</select></label>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Timing<select value={timeline} onChange={(event) => setTimeline(event.target.value)} className="mt-2 min-h-12 w-full border border-white/15 bg-[#111118] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#FF3E85]"><option>Flexible</option><option>As soon as possible</option><option>Within 1–3 months</option><option>More than 3 months</option><option>Just exploring</option></select></label>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{goalPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={goalDetails} onChange={(event) => setGoalDetails(event.target.value)} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#DF80FF]" /></label>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{focusPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={focusDetails} onChange={(event) => setFocusDetails(event.target.value)} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#00DFC9]" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Name *<input required value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Email *<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Budget<select value={budget} onChange={(event) => setBudget(event.target.value)} className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none">{BUDGETS.map((item) => <option key={item}>{item}</option>)}</select></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65">Timing<select value={timeline} onChange={(event) => setTimeline(event.target.value)} className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none"><option>Flexible</option><option>As soon as possible</option><option>Within 1–3 months</option><option>More than 3 months</option><option>Just exploring</option></select></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{goalPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={goalDetails} onChange={(event) => setGoalDetails(event.target.value)} className="brief-control mt-2 w-full resize-y px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{focusPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={focusDetails} onChange={(event) => setFocusDetails(event.target.value)} className="brief-control mt-2 w-full resize-y px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30" /></label>
                 <details className="group border-y border-white/10 py-4 lg:col-span-2">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-white/85 marker:hidden">
                     <span>Explore useful options <span className="font-normal text-white/45">(optional)</span></span>
@@ -265,16 +265,16 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                     <legend className="sr-only">Optional project options</legend>
                     <div className="grid gap-2 sm:grid-cols-2">
                       {extraOptions.map((item) => <div key={item} className="space-y-2">
-                        <label className="flex min-h-12 cursor-pointer items-start gap-3 border border-white/10 px-3 py-3 text-sm text-white/75 transition-colors hover:border-[#FFB347]/60 hover:text-white">
-                          <input type="checkbox" checked={selectedExtras.includes(item)} onChange={() => toggleExtra(item)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FFB347]" />
+                        <label className="brief-option flex min-h-12 cursor-pointer items-start gap-3 border border-white/10 px-3 py-3 text-sm text-white/75 transition-colors hover:border-[#FFB347]/60 hover:text-white">
+                          <input type="checkbox" checked={selectedExtras.includes(item)} onChange={() => toggleExtra(item)} className="brief-checkbox mt-0.5 h-4 w-4 shrink-0" />
                           <span>{item}</span>
                         </label>
-                        {selectedExtras.includes(item) && <label className="block text-[10px] font-mono uppercase tracking-widest text-white/55">A little more about this option <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea aria-label={`Details for ${item}`} rows={2} value={optionDetails[item] ?? ''} onChange={(event) => setOptionDetails((current) => ({ ...current, [item]: event.target.value }))} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-3 py-2 text-sm font-sans normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#FFB347]" /></label>}
+                        {selectedExtras.includes(item) && <label className="block text-[10px] font-mono uppercase tracking-widest text-white/55">A little more about this option <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea aria-label={`Details for ${item}`} rows={2} value={optionDetails[item] ?? ''} onChange={(event) => setOptionDetails((current) => ({ ...current, [item]: event.target.value }))} className="brief-control mt-2 w-full resize-y px-3 py-2 text-sm font-sans normal-case tracking-normal text-white outline-none placeholder:text-white/30" /></label>}
                       </div>)}
                     </div>
                   </fieldset>
                 </details>
-                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">Anything else you want me to know<textarea rows={5} value={details} onChange={(event) => setDetails(event.target.value)} placeholder="The idea, the problem, who it is for, or what a good outcome looks like..." className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#FFB347]" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">Anything else you want me to know<textarea rows={5} value={details} onChange={(event) => setDetails(event.target.value)} placeholder="The idea, the problem, who it is for, or what a good outcome looks like..." className="brief-control mt-2 w-full resize-y px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30" /></label>
                 <div className="lg:col-span-2">
                   <label className="flex min-h-14 cursor-pointer items-center gap-3 border border-dashed border-white/20 px-4 py-3 text-sm text-white/75 transition-colors hover:border-[#FFB347]/70 hover:text-white">
                     <Paperclip className="h-4 w-4 text-[#FFB347]" />
@@ -290,7 +290,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                   </ul>}
                 </div>
                 {error && <p role="alert" className="text-sm text-[#FF3E85] lg:col-span-2">{error}</p>}
-                <button disabled={isSubmitting} className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FFB347] px-6 text-xs font-black tracking-[0.15em] text-black transition-colors hover:bg-[#ffc875] disabled:opacity-60 lg:col-span-2 lg:justify-self-start">
+                <button disabled={isSubmitting} className="brief-shine-button inline-flex min-h-12 items-center justify-center gap-3 bg-[#FFB347] px-6 text-xs font-black tracking-[0.15em] text-black transition-colors hover:bg-[#ffc875] disabled:opacity-60 lg:col-span-2 lg:justify-self-start">
                   {isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{isSubmitting ? 'SENDING' : 'SEND YOUR BRIEF'}<ArrowRight className="h-4 w-4" />
                 </button>
               </form>
