@@ -60,8 +60,8 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
 
       {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 2xl:hidden" aria-label="Mobile navigation">
         {links.map((link) => link.href
-          ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center border-b border-white/[0.07] font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
-          : <button key={link.label} onClick={() => { link.action?.(); setMenuOpen(false); }} className="block min-h-12 w-full border-b border-white/[0.07] text-left font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
+              ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center justify-center border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
+              : <button key={link.label} onClick={() => { link.action?.(); setMenuOpen(false); }} className="block min-h-12 w-full border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
         )}
       </nav>}
     </header>
