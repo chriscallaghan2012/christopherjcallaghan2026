@@ -180,7 +180,7 @@ export const AdminWorkspace: React.FC = () => {
       <h1 className="mt-4 text-4xl font-black text-white">Admin sign in.</h1>
       <form onSubmit={handleLogin} className="mt-8 space-y-4 border-y border-white/10 py-7">
         <label className="block font-mono text-xs uppercase tracking-widest text-white/60">Admin password
-          <input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" />
+          <input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="admin-login-input mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" />
         </label>
         {error && <p role="alert" className="text-sm text-[#FF6F91]">{error}</p>}
         <button disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-white disabled:opacity-60">{isWorking && <LoaderCircle className="h-4 w-4 animate-spin" />}SIGN IN</button>

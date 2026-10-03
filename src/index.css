@@ -342,6 +342,11 @@ body {
   border-radius: 4px;
 }
 
+.admin-login-input:focus-visible {
+  outline-color: #00dfc9;
+  border-radius: 2px;
+}
+
 /* Honour reduced-motion preferences for marquees, gradients and floats */
 @media (prefers-reduced-motion: reduce) {
   *,
