@@ -24,6 +24,66 @@ export interface BlogPost {
 
 export type BlogPostInput = Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt'> & { id?: string };
 
+export type SocialChannel = 'instagram' | 'facebook' | 'linkedin' | 'tiktok' | 'youtube' | 'pinterest' | 'x' | 'threads';
+export type SocialDraftStatus = 'draft' | 'approved';
+
+export interface AdminSocialDraft {
+  id: string;
+  title: string;
+  prompt: string;
+  channels: SocialChannel[];
+  copyByChannel: Partial<Record<SocialChannel, string>>;
+  imagePrompt: string;
+  scheduledAt: string | null;
+  timeZone: string;
+  status: SocialDraftStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AdminSocialDraftInput = Omit<AdminSocialDraft, 'id' | 'createdAt' | 'updatedAt'> & { id?: string };
+
+export type ResearchScope = 'google' | 'local' | 'ai_search' | 'competitors';
+export type ResearchCadence = 'manual' | 'daily' | 'weekly' | 'monthly';
+
+export interface AdminResearchTrack {
+  id: string;
+  name: string;
+  query: string;
+  scopes: ResearchScope[];
+  cadence: ResearchCadence;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AdminResearchTrackInput = Omit<AdminResearchTrack, 'id' | 'createdAt' | 'updatedAt'> & { id?: string };
+
+const SOCIAL_DRAFT_COLUMNS = `
+  id::text AS id,
+  title,
+  prompt,
+  channels,
+  copy_by_channel AS "copyByChannel",
+  image_prompt AS "imagePrompt",
+  scheduled_at::text AS "scheduledAt",
+  time_zone AS "timeZone",
+  status,
+  created_at::text AS "createdAt",
+  updated_at::text AS "updatedAt"
+`;
+
+const RESEARCH_TRACK_COLUMNS = `
+  id::text AS id,
+  name,
+  query_text AS query,
+  scopes,
+  cadence,
+  enabled,
+  created_at::text AS "createdAt",
+  updated_at::text AS "updatedAt"
+`;
+
 const BLOG_POST_COLUMNS = `
   id::text AS id,
   title,
@@ -178,5 +238,91 @@ export async function saveBlogPost(data: BlogPostInput): Promise<BlogPost> {
 export async function deleteBlogPost(id: string): Promise<boolean> {
   if (!sql) throw new Error('DATABASE_URL is not configured.');
   const rows = await sql`DELETE FROM blog_posts WHERE id = ${id}::bigint RETURNING id`;
+  return rows.length > 0;
+}
+
+export async function listAdminSocialDrafts(): Promise<AdminSocialDraft[]> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    SELECT ${sql.unsafe(SOCIAL_DRAFT_COLUMNS)}
+    FROM admin_social_drafts
+    ORDER BY updated_at DESC
+    LIMIT 200
+  `;
+  return rows as unknown as AdminSocialDraft[];
+}
+
+export async function saveAdminSocialDraft(data: AdminSocialDraftInput): Promise<AdminSocialDraft> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const contentJson = JSON.stringify(data.copyByChannel);
+  const rows = data.id
+    ? await sql`
+        UPDATE admin_social_drafts SET
+          title = ${data.title},
+          prompt = ${data.prompt},
+          channels = ${data.channels},
+          copy_by_channel = ${contentJson}::jsonb,
+          image_prompt = ${data.imagePrompt},
+          scheduled_at = ${data.scheduledAt},
+          time_zone = ${data.timeZone},
+          status = ${data.status},
+          updated_at = NOW()
+        WHERE id = ${data.id}::bigint
+        RETURNING ${sql.unsafe(SOCIAL_DRAFT_COLUMNS)}
+      `
+    : await sql`
+        INSERT INTO admin_social_drafts (title, prompt, channels, copy_by_channel, image_prompt, scheduled_at, time_zone, status)
+        VALUES (${data.title}, ${data.prompt}, ${data.channels}, ${contentJson}::jsonb, ${data.imagePrompt}, ${data.scheduledAt}, ${data.timeZone}, ${data.status})
+        RETURNING ${sql.unsafe(SOCIAL_DRAFT_COLUMNS)}
+      `;
+  const saved = rows[0] as unknown as AdminSocialDraft | undefined;
+  if (!saved) throw new Error('Social draft could not be saved.');
+  return saved;
+}
+
+export async function deleteAdminSocialDraft(id: string): Promise<boolean> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`DELETE FROM admin_social_drafts WHERE id = ${id}::bigint RETURNING id`;
+  return rows.length > 0;
+}
+
+export async function listAdminResearchTracks(): Promise<AdminResearchTrack[]> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    SELECT ${sql.unsafe(RESEARCH_TRACK_COLUMNS)}
+    FROM admin_research_tracks
+    ORDER BY updated_at DESC
+    LIMIT 200
+  `;
+  return rows as unknown as AdminResearchTrack[];
+}
+
+export async function saveAdminResearchTrack(data: AdminResearchTrackInput): Promise<AdminResearchTrack> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = data.id
+    ? await sql`
+        UPDATE admin_research_tracks SET
+          name = ${data.name},
+          query_text = ${data.query},
+          scopes = ${data.scopes},
+          cadence = ${data.cadence},
+          enabled = ${data.enabled},
+          updated_at = NOW()
+        WHERE id = ${data.id}::bigint
+        RETURNING ${sql.unsafe(RESEARCH_TRACK_COLUMNS)}
+      `
+    : await sql`
+        INSERT INTO admin_research_tracks (name, query_text, scopes, cadence, enabled)
+        VALUES (${data.name}, ${data.query}, ${data.scopes}, ${data.cadence}, ${data.enabled})
+        RETURNING ${sql.unsafe(RESEARCH_TRACK_COLUMNS)}
+      `;
+  const saved = rows[0] as unknown as AdminResearchTrack | undefined;
+  if (!saved) throw new Error('Research monitor could not be saved.');
+  return saved;
+}
+
+export async function deleteAdminResearchTrack(id: string): Promise<boolean> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`DELETE FROM admin_research_tracks WHERE id = ${id}::bigint RETURNING id`;
   return rows.length > 0;
 }
