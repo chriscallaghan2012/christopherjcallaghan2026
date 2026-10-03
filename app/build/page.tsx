@@ -13,7 +13,13 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title, description }
 };
 
-export default function BuildPage() {
+type BuildPageProps = {
+  searchParams: Promise<{ service?: string | string[] }>;
+};
+
+export default async function BuildPage({ searchParams }: BuildPageProps) {
+  const { service } = await searchParams;
+  const initialService = service === 'seo' || service === 'google-maps' || service === 'ppc' ? service : undefined;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -36,5 +42,5 @@ export default function BuildPage() {
     ]
   };
 
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /><App initialTab="build" /></>;
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /><App initialTab="build" initialService={initialService} /></>;
 }

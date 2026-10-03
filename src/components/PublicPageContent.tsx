@@ -22,6 +22,9 @@ interface PublicPageContentProps {
 export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNavigateToProjects }) => {
   const content = PUBLIC_PAGES[page];
   const isAbout = page === 'about';
+  const buildHref = page === 'seo' || page === 'google-maps' || page === 'ppc'
+    ? `/build?service=${page}`
+    : '/build';
 
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
@@ -49,9 +52,12 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
             <ol className="divide-y divide-white/10">
               {content.points.map((point, index) => (
-                <li key={point} className="grid gap-3 py-6 sm:grid-cols-[64px_1fr] sm:gap-5">
+                <li key={point.title} className="grid gap-3 py-6 sm:grid-cols-[64px_1fr] sm:gap-5">
                   <span className="font-mono text-xs text-[#FF003C]">{String(index + 1).padStart(2, '0')}</span>
-                  <p className="max-w-3xl text-base leading-relaxed text-white/75">{point}</p>
+                  <div>
+                    <h2 className="text-base font-bold text-white">{point.title}</h2>
+                    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">{point.description}</p>
+                  </div>
                 </li>
               ))}
             </ol>
@@ -59,7 +65,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         )}
 
         <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-          <a href="/build" className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FF003C] px-6 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_28px_rgba(255,0,60,0.24)] transition-all hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]">
+          <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FF003C] px-6 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_28px_rgba(255,0,60,0.24)] transition-all hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]">
             LET&apos;S BUILD <ArrowRight className="h-4 w-4" />
           </a>
           {isAbout ? (

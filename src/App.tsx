@@ -28,6 +28,7 @@ const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'projects'
 
 interface AppProps {
   initialTab?: ScreenTab;
+  initialService?: 'seo' | 'google-maps' | 'ppc';
 }
 
 /** Reads the browser URL (pathname or ?tab=) and resolves the active tab. */
@@ -55,7 +56,7 @@ function getUrlForTab(tab: ScreenTab): string {
   return `/?tab=${tab}`;
 }
 
-export default function App({ initialTab = 'home' }: AppProps) {
+export default function App({ initialTab = 'home', initialService }: AppProps) {
   const [currentTab, setCurrentTab] = useState<ScreenTab>(initialTab);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
@@ -126,7 +127,7 @@ export default function App({ initialTab = 'home' }: AppProps) {
         )}
 
         {(currentTab === 'build' || currentTab === 'start') && (
-          <ProjectBriefPage key={currentTab} mode={currentTab} />
+          <ProjectBriefPage key={currentTab} mode={currentTab} initialService={initialService} />
         )}
 
         {currentTab === 'package' && (

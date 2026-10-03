@@ -57,8 +57,8 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
               <div>
                 <p className="max-w-xl text-sm leading-relaxed text-white/65 md:text-base">{way.description}</p>
                 <p className="work-details-shine mt-3 max-w-xl font-mono text-[11px] leading-relaxed">{way.details}</p>
-                {way.id === 'grow' && <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-2" aria-label="Growth services">
-                  {[['SEO', '/seo'], ['Google Maps', '/google-maps'], ['PPC', '/ppc'], ['Social media', '/social-media']].map(([label, href]) => <a key={href} href={href} className="font-mono text-[11px] font-bold text-white/70 transition-colors hover:text-[#FF003C]">{label}</a>)}
+                {way.id === 'grow' && <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-3" aria-label="Growth services">
+                  {[['SEO', '/seo'], ['Google Maps', '/google-maps'], ['PPC', '/ppc'], ['Social media', '/social-media']].map(([label, href]) => <a key={href} href={href} className="border-b border-[#FF003C]/50 pb-1 font-mono text-xs font-bold text-white/80 transition-colors hover:border-[#FF003C] hover:text-white">{label}</a>)}
                 </nav>}
               </div>
               <button onClick={() => way.id === 'build' || way.id === 'start' ? onNavigate(way.id) : onOpenConsultation()} className="inline-flex items-center gap-2 justify-self-start whitespace-nowrap text-xs font-black tracking-[0.12em] text-white transition-colors hover:text-[#FF003C] md:justify-self-end">

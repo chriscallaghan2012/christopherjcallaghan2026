@@ -39,6 +39,11 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     { label: 'ABOUT', href: '/about' },
     { label: 'CONTACT', href: '/contact' }
   ];
+  const growthLinks = [
+    { label: 'SEO', href: '/seo' },
+    { label: 'GOOGLE MAPS', href: '/google-maps' },
+    { label: 'PPC', href: '/ppc' }
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060608]/90 backdrop-blur-2xl">
@@ -50,7 +55,14 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
 
         <nav className="hidden items-center gap-5 lg:flex" aria-label="Main navigation">
           {links.map((link) => (
-            link.href
+            link.label === 'GROW'
+              ? <details key={link.label} className="group relative">
+                  <summary className="cursor-pointer list-none font-mono text-[10px] font-bold tracking-[0.16em] text-white/60 transition-colors hover:text-[#FF003C]">GROW</summary>
+                  <div className="absolute left-0 top-full z-50 hidden min-w-40 border border-white/10 bg-[#08080a] p-2 shadow-xl group-open:block">
+                    {growthLinks.map((service) => <a key={service.href} href={service.href} className="flex min-h-10 items-center px-3 font-mono text-[10px] font-bold tracking-[0.12em] text-white/70 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{service.label}</a>)}
+                  </div>
+                </details>
+              : link.href
               ? <a key={link.label} href={link.href} className="font-mono text-[10px] font-bold tracking-[0.16em] text-white/60 transition-colors hover:text-[#FF003C]">{link.label}</a>
               : <button key={link.label} onClick={link.action} className={`font-mono text-[10px] font-bold tracking-[0.16em] transition-colors hover:text-[#FF003C] ${link.label === 'WORK' && currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
           ))}
@@ -69,7 +81,10 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
       {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 lg:hidden" aria-label="Mobile navigation">
         {links.map((link) => link.href
           ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center border-b border-white/[0.07] font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
-          : <button key={link.label} onClick={link.action} className="block min-h-12 w-full border-b border-white/[0.07] text-left font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
+          : <React.Fragment key={link.label}>
+              <button onClick={link.action} className="block min-h-12 w-full border-b border-white/[0.07] text-left font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
+              {link.label === 'GROW' && growthLinks.map((service) => <a key={service.href} href={service.href} onClick={() => setMenuOpen(false)} className="flex min-h-11 w-full items-center border-b border-white/[0.07] pl-4 font-mono text-[11px] font-bold tracking-[0.14em] text-white/60 transition-colors hover:text-[#FF003C]">{service.label}</a>)}
+            </React.Fragment>
         )}
       </nav>}
     </header>

@@ -71,13 +71,8 @@ h3 {
 }
 
 .brief-control:focus {
-  border-color: transparent;
-  background-image:
-    linear-gradient(#0b0b0f, #0b0b0f),
-    conic-gradient(from var(--brief-angle), #ffb347, #df80ff, #00dfc9, #ff3e85, #ffb347);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  animation: briefBorderSweep 2.6s linear infinite;
+  border-color: #00dfc9;
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .brief-option {
@@ -174,7 +169,6 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brief-control:focus,
   .brief-option:has(.brief-checkbox:checked) {
     animation: none;
   }

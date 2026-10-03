@@ -5,13 +5,18 @@ import { ArrowLeft, ArrowRight, Check, ChevronDown, LoaderCircle, Paperclip, X }
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 
 type BriefMode = 'build' | 'start';
+type GrowthServiceSlug = 'seo' | 'google-maps' | 'ppc';
 
 interface ProjectBriefPageProps {
   mode: BriefMode;
+  initialService?: GrowthServiceSlug;
 }
 
 const BUILD_GOALS = [
   { title: 'A website', detail: 'A new site, redesign or online shop', color: 'orange' },
+  { title: 'SEO', detail: 'Improve search visibility and attract the right visitors', color: 'teal' },
+  { title: 'Google Maps', detail: 'Help nearby customers find your business', color: 'orange' },
+  { title: 'PPC', detail: 'Reach customers through paid search and advertising', color: 'pink' },
   { title: 'An app or platform', detail: 'A digital product people can use', color: 'purple' },
   { title: 'Software or AI', detail: 'A custom tool, workflow or AI feature', color: 'teal' },
   { title: 'Automation or integration', detail: 'Connect systems and remove repeat work', color: 'pink' },
@@ -25,9 +30,17 @@ const START_GOALS = [
 ];
 
 const BUILD_FOCUS = ['Plan and scope the idea', 'Design and build the first version', 'Improve something that already exists', 'Connect tools or automate a process', 'Explore the right approach together'];
+const GROWTH_FOCUS: Record<string, string[]> = {
+  SEO: ['Improve technical SEO and site structure', 'Create useful search-focused content', 'Improve local search visibility', 'Measure search traffic and enquiries', 'Review the right SEO approach together'],
+  'Google Maps': ['Set up or improve my Google Business Profile', 'Improve local visibility and service areas', 'Make business details consistent online', 'Turn Maps views into calls and enquiries', 'Review local search together'],
+  PPC: ['Plan a Google Ads campaign', 'Improve landing pages and conversion tracking', 'Review or optimise existing ads', 'Reach a specific audience or location', 'Work out whether paid ads are right for me']
+};
 const START_FOCUS = ['Business plan and setup', 'Brand, website or online shop', 'Marketing and customer growth', 'Funding options and launch planning', 'A joined-up plan from idea to launch'];
 const BUILD_EXTRAS: Record<string, string[]> = {
   'A website': ['Content management', 'Online shop and payments', 'Bookings or enquiries', 'Search visibility and analytics', 'Accessibility and performance'],
+  SEO: ['Technical site audit', 'Search-focused service pages', 'Content and keyword planning', 'Structured data and indexing', 'Analytics and conversion tracking'],
+  'Google Maps': ['Google Business Profile setup', 'Business details and categories', 'Service areas and location pages', 'Reviews and customer actions', 'Local search measurement'],
+  PPC: ['Google Ads setup', 'Campaign and keyword structure', 'Landing page improvements', 'Conversion tracking', 'Ongoing campaign optimisation'],
   'An app or platform': ['User accounts and permissions', 'Admin dashboards', 'Payments or subscriptions', 'Notifications and messaging', 'Third-party integrations', 'Reporting and analytics'],
   'Software or AI': ['AI assistant or smart search', 'Workflow automation', 'Data and reporting dashboards', 'API or systems integration', 'Internal admin tools', 'Cloud deployment and support'],
   'Automation or integration': ['Connect existing tools', 'Automate repeat workflows', 'CRM or email integration', 'Move or synchronise data', 'Custom API integration', 'Alerts and reporting'],
@@ -40,6 +53,9 @@ const START_EXTRAS: Record<string, string[]> = {
 };
 const GOAL_CONTEXT_PROMPTS: Record<string, string> = {
   'A website': 'What is the site for? Share an existing URL, business, or example if you have one.',
+  SEO: 'Which website or search visibility would you like to improve? Share a URL or target area if useful.',
+  'Google Maps': 'What is your business and service area? Share your Google Business Profile or website if available.',
+  PPC: 'What do you offer, who do you want to reach, and are you running ads already?',
   'An app or platform': 'What should people be able to do with the app or platform?',
   'Software or AI': 'What task or problem should the software or AI help with?',
   'Automation or integration': 'Which tools or systems do you use, and what would you like to connect or automate?',
@@ -54,6 +70,21 @@ const FOCUS_CONTEXT_PROMPTS: Record<string, string> = {
   'Improve something that already exists': 'What should be improved? Share a site, app, or current process if you can.',
   'Connect tools or automate a process': 'What tools are involved, and what happens in the process today?',
   'Explore the right approach together': 'What are you unsure about or hoping to decide?',
+  'Improve technical SEO and site structure': 'Share your website and any search issues you have noticed.',
+  'Create useful search-focused content': 'Which services, products or questions should your content focus on?',
+  'Improve local search visibility': 'Which locations or service areas matter most?',
+  'Measure search traffic and enquiries': 'What actions would you like to measure from search?',
+  'Review the right SEO approach together': 'What have you tried so far, and what would you like to improve?',
+  'Set up or improve my Google Business Profile': 'Share your business name and profile link if you have one.',
+  'Improve local visibility and service areas': 'Which locations and services should customers find you for?',
+  'Make business details consistent online': 'Are there any incorrect or inconsistent details you already know about?',
+  'Turn Maps views into calls and enquiries': 'What should customers do after finding your business?',
+  'Review local search together': 'What is working or not working with your local presence today?',
+  'Plan a Google Ads campaign': 'What service or offer should the campaign promote, and where?',
+  'Improve landing pages and conversion tracking': 'Share the landing page and the conversion you want to track.',
+  'Review or optimise existing ads': 'Which campaigns are running, and what results do you want to improve?',
+  'Reach a specific audience or location': 'Who do you want to reach, and where are they based?',
+  'Work out whether paid ads are right for me': 'What are you hoping to achieve, and what have you tried so far?',
   'Business plan and setup': 'What kind of business are you considering, and where are you in the process?',
   'Brand, website or online shop': 'What are you selling or offering, and do you have an existing site or brand?',
   'Marketing and customer growth': 'How do you currently reach customers, and what would you like to improve?',
@@ -72,12 +103,15 @@ const colorClasses: Record<string, string> = {
   pink: 'border-[#FF3E85]/35 hover:border-[#FF3E85] hover:bg-[#FF3E85]/[0.07] text-[#FF3E85]'
 };
 
-export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
+export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initialService }) => {
   const isStart = mode === 'start';
   const goals = isStart ? START_GOALS : BUILD_GOALS;
-  const focusOptions = isStart ? START_FOCUS : BUILD_FOCUS;
-  const [step, setStep] = useState(0);
-  const [goal, setGoal] = useState('');
+  const initialGoal = !isStart && initialService
+    ? { seo: 'SEO', 'google-maps': 'Google Maps', ppc: 'PPC' }[initialService]
+    : '';
+  const [step, setStep] = useState(initialGoal ? 1 : 0);
+  const [goal, setGoal] = useState(initialGoal);
+  const focusOptions = isStart ? START_FOCUS : GROWTH_FOCUS[goal] ?? BUILD_FOCUS;
   const [focus, setFocus] = useState('');
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [goalDetails, setGoalDetails] = useState('');
