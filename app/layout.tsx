@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   },
   keywords: [
     'Christopher J. Callaghan',
+    'Christopher J Callaghan',
     'Full-Stack Developer',
     'AI Builder',
     'Manchester Web Developer',
@@ -83,11 +84,12 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Christopher J. Callaghan',
+    alternateName: ['Christopher J Callaghan', 'Christopher Callaghan'],
+    description: 'Manchester-based full-stack developer, AI builder and business creator building websites, applications, software, integrations and digital products.',
     jobTitle: 'Full-Stack Developer, AI Builder and Business Creator',
     url: 'https://christopherjcallaghan.com',
     sameAs: [
-      'https://www.linkedin.com/in/webdevelopermanchester/',
-      'https://github.com'
+      'https://www.linkedin.com/in/webdevelopermanchester/'
     ],
     address: {
       '@type': 'PostalAddress',
@@ -95,7 +97,7 @@ export default function RootLayout({
       addressCountry: 'UK'
     },
     knowsAbout: [
-      'Next.js 15',
+      'Next.js 16',
       'React 19',
       'TypeScript',
       'Websites and Applications',
