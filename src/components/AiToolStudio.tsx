@@ -168,7 +168,7 @@ Architected by Christopher J. Callaghan (christopherjcallaghan.com)
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Describe your desired system, user volume, compliance rules, or AI agent workflow..."
-              className="w-full px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors resize-none"
+              className="w-full px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors resize-none"
             />
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
@@ -177,7 +177,7 @@ Architected by Christopher J. Callaghan (christopherjcallaghan.com)
                 <select
                   value={modelType}
                   onChange={(e) => setModelType(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl bg-[#111118] border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-[#FF003C]"
+                  className="px-3 py-1.5 rounded-xl bg-[#111118] border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-[#00DFC9]"
                 >
                   <option value="Gemini 2.0 Flash">Gemini 2.0 Flash (Recommended)</option>
                   <option value="Gemini 2.0 Pro">Gemini 2.0 Pro (High Reasoning)</option>

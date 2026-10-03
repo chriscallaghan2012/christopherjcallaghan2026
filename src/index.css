@@ -247,6 +247,24 @@ body {
   color: #ffffff;
 }
 
+.admin-interface :is(
+  [class~="text-white/35"],
+  [class~="text-white/40"],
+  [class~="text-white/45"],
+  [class~="text-white/50"],
+  [class~="text-white/55"],
+  [class~="text-white/60"],
+  [class~="text-white/65"]
+) {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #00dfc9 !important;
+}
+
 /* Moving gradient for titles */
 .text-moving-gradient {
   background: linear-gradient(135deg, #ffffff 0%, #ffffff 40%, #ff003c 75%, #9f0926 100%);
@@ -337,7 +355,7 @@ body {
 
 /* Keyboard visibility: consistent focus ring across the site */
 :focus-visible {
-  outline: 2px solid #ff003c;
+  outline: 2px solid #00dfc9;
   outline-offset: 2px;
   border-radius: 4px;
 }

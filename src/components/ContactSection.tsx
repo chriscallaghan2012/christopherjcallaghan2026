@@ -208,7 +208,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Alex Morgan"
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                       />
                     </div>
 
@@ -222,7 +222,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="you@example.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                       />
                     </div>
                   </div>
@@ -235,7 +235,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                       <select
                         value={formData.projectType}
                         onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF003C]/70 transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                       >
                         {PROJECT_TYPES.map((projectType) => <option key={projectType} value={projectType}>{projectType}</option>)}
                       </select>
@@ -248,7 +248,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                       <select
                         value={formData.budget}
                         onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF003C]/70 transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-[#0e0e14] border border-white/10 text-sm text-white focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                       >
                         {BUDGET_RANGES.map((budget) => <option key={budget} value={budget}>{budget}</option>)}
                       </select>
@@ -265,7 +265,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="What are you hoping to build, solve or change?"
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                     />
                   </div>
 

@@ -241,7 +241,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your full name"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70"
                 />
               </div>
 
@@ -255,7 +255,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70"
                 />
               </div>
 
@@ -267,7 +267,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   <select
                     value={packageScope}
                     onChange={(e) => setPackageScope(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]/70"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]/70"
                   >
                     {aiContext?.blueprint && (
                       <option value={aiContext.blueprint.title}>🤖 {aiContext.blueprint.title}</option>
@@ -284,7 +284,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 <select
                   value={budgetRange}
                   onChange={(e) => setBudgetRange(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]/70"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#111118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]/70"
                 >
                   {BUDGET_RANGES.map((range) => <option key={range} value={range}>{range}</option>)}
                 </select>
@@ -297,7 +297,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   value={details}
                   onChange={(e) => setDetails(e.target.value)}
                   placeholder="What are you hoping to build, solve or change?"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#FF003C]/70 resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 resize-none"
                 />
               </div>
 

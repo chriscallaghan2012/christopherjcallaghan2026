@@ -133,7 +133,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                 <select
                   value={sampleData.type || 'contact'}
                   onChange={(event) => setSampleData({ ...sampleData, type: event.target.value as EmailPayload['type'] })}
-                  className="mt-1 w-full rounded-xl border border-white/10 bg-[#111118] px-3 py-2 text-xs normal-case text-white focus:border-[#FF003C] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-[#111118] px-3 py-2 text-xs normal-case text-white focus:border-[#00DFC9] focus:outline-none"
                 >
                   <option value="consultation">Project brief</option>
                   <option value="contact">Contact enquiry</option>
@@ -154,7 +154,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                     type="text"
                     value={sampleData.name}
                     onChange={(e) => setSampleData({ ...sampleData, name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]"
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]"
                   />
                 </div>
 
@@ -164,7 +164,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                     type="email"
                     value={sampleData.email}
                     onChange={(e) => setSampleData({ ...sampleData, email: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]"
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]"
                   />
                 </div>
 
@@ -174,7 +174,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                     type="text"
                     value={sampleData.packageScope}
                     onChange={(e) => setSampleData({ ...sampleData, packageScope: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]"
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]"
                   />
                 </div>
 
@@ -184,7 +184,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                     type="text"
                     value={sampleData.budget}
                     onChange={(e) => setSampleData({ ...sampleData, budget: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C]"
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9]"
                   />
                 </div>
 
@@ -194,7 +194,7 @@ export const EmailTemplateSandbox: React.FC = () => {
                     rows={3}
                     value={sampleData.message}
                     onChange={(e) => setSampleData({ ...sampleData, message: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#FF003C] resize-none"
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white focus:outline-none focus:border-[#00DFC9] resize-none"
                   />
                 </div>
               </div>
