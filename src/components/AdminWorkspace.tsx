@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ExternalLink, LoaderCircle, LogOut, Plus, Save, Send, Sparkles, Trash2 } from 'lucide-react';
+import { ExternalLink, LoaderCircle, Plus, Save, Send, Sparkles, Trash2 } from 'lucide-react';
 import type { BlogPost, BlogPostInput, BlogPostStatus } from '../../lib/database';
 import { AdminControlCenter } from './AdminControlCenter';
 
@@ -26,7 +26,6 @@ export const AdminWorkspace: React.FC = () => {
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [isWorking, setIsWorking] = useState(false);
-  const [controlCenterOpen, setControlCenterOpen] = useState(false);
 
   const loadPosts = async () => {
     const response = await fetch('/api/admin/posts', { cache: 'no-store' });
@@ -188,23 +187,12 @@ export const AdminWorkspace: React.FC = () => {
     </main>;
   }
 
-  if (controlCenterOpen) {
-    return <AdminControlCenter onBackToBlog={() => setControlCenterOpen(false)} onLogout={handleLogout} />;
-  }
-
-  return <main className="mx-auto min-h-[75svh] max-w-7xl px-5 py-10 md:px-8 md:py-14">
-    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-6">
-      <div>
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#FF003C]">Private / publishing desk</p>
-        <h1 className="mt-2 text-3xl font-black text-white md:text-4xl">Blog posts</h1>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => setControlCenterOpen(true)} className="inline-flex min-h-10 items-center gap-2 border border-[#00DFC9]/45 px-4 font-mono text-[10px] font-bold tracking-widest text-[#00DFC9] hover:bg-[#00DFC9]/10">CONTROL CENTER</button>
-        <button onClick={handleLogout} className="inline-flex min-h-10 items-center gap-2 border border-white/15 px-4 font-mono text-[10px] font-bold tracking-widest text-white/70 hover:text-white"><LogOut className="h-4 w-4" /> SIGN OUT</button>
-      </div>
+  const blogContent = <section className="mt-7">
+    <div className="mb-5 border-b border-white/10 pb-4">
+      <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Blog posts</h2>
+      <p className="mt-2 text-sm text-white/55">Write, review, and publish articles alongside your other command-center work.</p>
     </div>
-
-    <div className="mt-7 grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div className="grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">All posts</h2>
@@ -250,5 +238,7 @@ export const AdminWorkspace: React.FC = () => {
         </div>
       </section>
     </div>
-  </main>;
+  </section>;
+
+  return <AdminControlCenter blogContent={blogContent} onLogout={handleLogout} />;
 };

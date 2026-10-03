@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, CalendarClock, LoaderCircle, Plus, Save, Sparkles, Trash2 } from 'lucide-react';
+import { Activity, BarChart3, CalendarClock, Database, Link2, LoaderCircle, MapPin, Plus, Save, Search, Sparkles, Trash2 } from 'lucide-react';
 import type {
   AdminResearchTrack,
   AdminResearchTrackInput,
-  AdminRankObservation,
+  AdminGoogleSnapshot,
   AdminSubmission,
   AdminSocialDraft,
   AdminSocialDraftInput,
@@ -15,11 +15,26 @@ import type {
 } from '../../lib/database';
 
 interface AdminControlCenterProps {
-  onBackToBlog: () => void;
+  blogContent: React.ReactNode;
   onLogout: () => void;
 }
 
-type ControlTab = 'social' | 'schedule' | 'platforms' | 'rankings' | 'research' | 'submissions';
+type ControlTab = 'blog' | 'social' | 'schedule' | 'connectors' | 'research' | 'submissions';
+
+interface GoogleConnectorState {
+  configured: boolean;
+  connected: boolean;
+  accountEmail: string | null;
+  connectedAt: string | null;
+  lastSyncedAt: string | null;
+  lastSyncStatus: string;
+}
+
+interface SiteServiceState {
+  database: boolean;
+  gemini: boolean;
+  email: boolean;
+}
 
 const channels: { id: SocialChannel; label: string }[] = [
   { id: 'instagram', label: 'Instagram' },
@@ -45,6 +60,18 @@ const cadenceLabels: Record<ResearchCadence, string> = {
   weekly: 'Weekly',
   monthly: 'Monthly'
 };
+
+const googleConnectors = [
+  { label: 'Google Analytics 4', detail: 'Users, sessions, landing pages, events, and conversions.', icon: BarChart3 },
+  { label: 'Search Console', detail: 'Search queries and pages with clicks, impressions, CTR, and average position.', icon: Search },
+  { label: 'Google Business Profile', detail: 'Locations and available profile performance such as calls, directions, and website clicks.', icon: MapPin }
+];
+
+const siteConnectors = [
+  { label: 'Neon', detail: 'Database for content, integrations, and form submissions.', icon: Database, key: 'database' as const },
+  { label: 'Gemini', detail: 'AI generation for social copy and image prompts.', icon: Sparkles, key: 'gemini' as const },
+  { label: 'Email delivery', detail: 'Transactional confirmations and admin alerts.', icon: Activity, key: 'email' as const }
+];
 
 const newDraft = (): AdminSocialDraftInput => ({
   title: '',
@@ -73,20 +100,27 @@ const newRankObservation = () => ({
   resultUrl: '',
   evidence: ''
 });
-
 function toLocalDateTime(value: string): string {
   return value.replace(' ', 'T').slice(0, 16);
 }
 
-export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackToBlog, onLogout }) => {
-  const [tab, setTab] = useState<ControlTab>('social');
+export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogContent, onLogout }) => {
+  const [tab, setTab] = useState<ControlTab>('blog');
   const [drafts, setDrafts] = useState<AdminSocialDraft[]>([]);
   const [tracks, setTracks] = useState<AdminResearchTrack[]>([]);
-  const [observations, setObservations] = useState<AdminRankObservation[]>([]);
   const [submissions, setSubmissions] = useState<AdminSubmission[]>([]);
+  const [googleConnector, setGoogleConnector] = useState<GoogleConnectorState>({
+    configured: false,
+    connected: false,
+    accountEmail: null,
+    connectedAt: null,
+    lastSyncedAt: null,
+    lastSyncStatus: ''
+  });
+  const [googleSnapshots, setGoogleSnapshots] = useState<AdminGoogleSnapshot[]>([]);
+  const [siteServices, setSiteServices] = useState<SiteServiceState>({ database: false, gemini: false, email: false });
   const [draft, setDraft] = useState<AdminSocialDraftInput>(newDraft());
   const [track, setTrack] = useState<AdminResearchTrackInput>(newTrack());
-  const [rankForm, setRankForm] = useState(newRankObservation());
   const [scheduledLocal, setScheduledLocal] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
@@ -94,29 +128,28 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackTo
   const [notice, setNotice] = useState('');
 
   const loadData = async () => {
-    const [draftResponse, researchResponse, rankingResponse, submissionResponse] = await Promise.all([
+    const [draftResponse, researchResponse, submissionResponse, connectorResponse] = await Promise.all([
       fetch('/api/admin/control-center/drafts', { cache: 'no-store' }),
       fetch('/api/admin/control-center/research', { cache: 'no-store' }),
-      fetch('/api/admin/control-center/rankings', { cache: 'no-store' }),
-      fetch('/api/admin/control-center/submissions', { cache: 'no-store' })
+      fetch('/api/admin/control-center/submissions', { cache: 'no-store' }),
+      fetch('/api/admin/control-center/connectors', { cache: 'no-store' })
     ]);
-    const [draftResult, researchResult, rankingResult, submissionResult] = await Promise.all([
+    const [draftResult, researchResult, submissionResult, connectorResult] = await Promise.all([
       draftResponse.json(),
       researchResponse.json(),
-      rankingResponse.json(),
-      submissionResponse.json()
+      submissionResponse.json(),
+      connectorResponse.json()
     ]);
     if (!draftResponse.ok) throw new Error(draftResult.error || 'Could not load social drafts.');
     if (!researchResponse.ok) throw new Error(researchResult.error || 'Could not load research monitors.');
-    if (!rankingResponse.ok) throw new Error(rankingResult.error || 'Could not load ranking history.');
     if (!submissionResponse.ok) throw new Error(submissionResult.error || 'Could not load form submissions.');
+    if (!connectorResponse.ok) throw new Error(connectorResult.error || 'Could not load connector status.');
     setDrafts(draftResult.drafts);
     setTracks(researchResult.tracks);
-    setObservations(rankingResult.observations);
     setSubmissions(submissionResult.submissions);
-    setRankForm((current) => current.trackId || !researchResult.tracks.length
-      ? current
-      : { ...current, trackId: researchResult.tracks[0].id });
+    setGoogleConnector(connectorResult.google);
+    setGoogleSnapshots(connectorResult.snapshots);
+    setSiteServices(connectorResult.services);
   };
 
   useEffect(() => {
@@ -267,49 +300,6 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackTo
     }
   };
 
-  const saveObservation = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsWorking(true);
-    setError('');
-    setNotice('');
-    try {
-      const response = await fetch('/api/admin/control-center/rankings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...rankForm,
-          position: rankForm.position ? Number(rankForm.position) : null
-        })
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Could not save the ranking observation.');
-      setObservations((current) => [result.observation, ...current]);
-      setRankForm((current) => ({ ...newRankObservation(), trackId: current.trackId }));
-      setNotice('Ranking observation saved with its source and timestamp.');
-    } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : 'Could not save the ranking observation.');
-    } finally {
-      setIsWorking(false);
-    }
-  };
-
-  const deleteObservation = async (id: string) => {
-    if (!window.confirm('Delete this ranking observation? This cannot be undone.')) return;
-    setIsWorking(true);
-    try {
-      const response = await fetch(`/api/admin/control-center/rankings?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Could not delete the ranking observation.');
-      setObservations((current) => current.filter((item) => item.id !== id));
-      setNotice('Ranking observation deleted.');
-      setError('');
-    } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : 'Could not delete the ranking observation.');
-    } finally {
-      setIsWorking(false);
-    }
-  };
-
   const updateSubmission = async (submission: AdminSubmission, status: 'pending' | 'reviewed') => {
     setIsWorking(true);
     setError('');
@@ -347,22 +337,59 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackTo
     }
   };
 
+  const syncGoogle = async () => {
+    setIsWorking(true);
+    setError('');
+    setNotice('Syncing GA4, Search Console, and Business Profile…');
+    try {
+      const response = await fetch('/api/admin/control-center/connectors/sync', { method: 'POST' });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Could not sync Google data.');
+      const sourceSummary = Object.entries(result.sources as Record<string, { count: number; error?: string }>)
+        .map(([source, status]) => `${source.toUpperCase()}: ${status.count} resources${status.error ? ` (${status.error})` : ''}`)
+        .join(' · ');
+      setNotice(`Sync complete. ${sourceSummary}`);
+      await loadData();
+    } catch (syncError) {
+      setNotice('');
+      setError(syncError instanceof Error ? syncError.message : 'Could not sync Google data.');
+    } finally {
+      setIsWorking(false);
+    }
+  };
+
+  const disconnectGoogle = async () => {
+    if (!window.confirm('Disconnect this Google account? Imported snapshots will be kept.')) return;
+    setIsWorking(true);
+    setError('');
+    try {
+      const response = await fetch('/api/admin/control-center/connectors', { method: 'DELETE' });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Could not disconnect Google.');
+      await loadData();
+      setNotice('Google disconnected. Existing snapshots were kept.');
+    } catch (disconnectError) {
+      setError(disconnectError instanceof Error ? disconnectError.message : 'Could not disconnect Google.');
+    } finally {
+      setIsWorking(false);
+    }
+  };
+
   return <main className="mx-auto min-h-[75svh] max-w-7xl px-5 py-10 md:px-8 md:py-14">
     <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-6">
       <div>
-        <button onClick={onBackToBlog} className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest text-white/55 hover:text-white"><ArrowLeft className="h-3.5 w-3.5" /> BLOG POSTS</button>
         <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#00DFC9]">Private / control center</p>
-        <h1 className="mt-2 text-3xl font-black text-white md:text-4xl">Content & research</h1>
+        <h1 className="mt-2 text-3xl font-black text-white md:text-4xl">Admin command center</h1>
       </div>
       <button onClick={onLogout} className="min-h-10 border border-white/15 px-4 font-mono text-[10px] font-bold tracking-widest text-white/70 hover:text-white">SIGN OUT</button>
     </div>
 
     <nav className="scrollbar-none mt-6 flex gap-5 overflow-x-auto border-b border-white/10" aria-label="Control center sections">
       {([
+        ['blog', 'BLOG POSTS'],
         ['social', 'DRAFTS'],
         ['schedule', 'SCHEDULE'],
-        ['platforms', 'PLATFORMS'],
-        ['rankings', 'RANKINGS'],
+        ['connectors', 'CONNECTORS'],
         ['research', 'RESEARCH SETUP'],
         ['submissions', 'SUBMISSIONS']
       ] as const).map(([id, label]) => <button key={id} onClick={() => { setTab(id); setError(''); setNotice(''); }} className={`min-h-11 shrink-0 border-b-2 px-1 font-mono text-[10px] font-bold tracking-[0.14em] ${tab === id ? 'border-[#00DFC9] text-white' : 'border-transparent text-white/45 hover:text-white/75'}`}>{label}</button>)}
@@ -370,16 +397,18 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackTo
 
     <p className="mt-5 text-xs leading-relaxed text-white/45">
       {tab === 'schedule' && 'Saved times appear in this queue. Automatic publishing and retry handling need connected platform APIs.'}
-      {tab === 'platforms' && 'Choose channels per draft. No social accounts are connected yet; publishing requires each platform’s OAuth and API permissions.'}
-      {tab === 'rankings' && 'Record dated observations here. Automated Google and AI-search checks need a connected search-data provider.'}
+      {tab === 'connectors' && 'Manage analytics, search, business-profile, social publishing, and site-service connections from one place.'}
       {tab === 'research' && 'Define the searches and competitors you want to track. These monitor definitions do not run automatically yet.'}
       {tab === 'submissions' && 'Contact enquiries and project briefs are read from Neon. You can mark them reviewed or delete them.'}
       {tab === 'social' && 'Generated copy and image prompts stay as drafts until you approve them.'}
+      {tab === 'blog' && 'Create, review, publish, and delete site articles from the same command center.'}
     </p>
     {error && <p role="alert" className="mt-5 text-sm text-[#FF6F91]">{error}</p>}
     {notice && <p role="status" className="mt-5 text-sm text-[#00DFC9]">{notice}</p>}
 
-    {isLoading ? <div className="flex min-h-48 items-center gap-3 text-sm text-white/55"><LoaderCircle className="h-4 w-4 animate-spin" />Loading control center…</div> : tab === 'social' ? (
+    {isLoading ? <div className="flex min-h-48 items-center gap-3 text-sm text-white/55"><LoaderCircle className="h-4 w-4 animate-spin" />Loading control center…</div> : tab === 'blog' ? (
+      <div className="mt-4">{blogContent}</div>
+    ) : tab === 'social' ? (
       <div className="mt-7 grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside>
           <div className="mb-4 flex items-center justify-between">
@@ -448,58 +477,71 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ onBackTo
           {!drafts.some((item) => item.scheduledAt) && <p className="py-8 text-sm text-white/45">Nothing scheduled yet. Add a date in a social draft to place it in this queue.</p>}
         </div>
       </section>
-    ) : tab === 'platforms' ? (
-      <section className="mt-7">
-        <div className="mb-5 border-b border-white/10 pb-4">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Social platforms</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/55">Channels can be selected on each draft now. Account authorization and publishing are separate integrations; none are connected yet.</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {channels.map((channel) => <article key={channel.id} className="flex min-h-24 items-center justify-between gap-4 border border-white/10 bg-white/[0.02] p-4">
-            <div>
-              <h3 className="text-sm font-bold text-white">{channel.label}</h3>
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-white/40">Not connected</p>
-            </div>
-            <span className="h-2 w-2 shrink-0 rounded-full bg-white/20" aria-label="Not connected" />
-          </article>)}
-        </div>
-      </section>
-    ) : tab === 'rankings' ? (
-      <div className="mt-7 grid gap-10 lg:grid-cols-[minmax(0,1fr)_1fr]">
+    ) : tab === 'connectors' ? (
+      <section className="mt-7 space-y-10">
         <section>
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Ranking observations</h2>
-              <p className="mt-2 text-sm text-white/55">Manual history for now; automatic checks need a search provider.</p>
-            </div>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-[#FFB347]">{observations.length} saved</span>
+          <div className="mb-5 border-b border-white/10 pb-4">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">API integration directory</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/60">Review every connected service and publishing platform together. Google Analytics, Search Console, and Business Profile share one Google account connection.</p>
           </div>
-          <div className="divide-y divide-white/10 border-y border-white/10">
-            {observations.map((item) => <article key={item.id} className="flex items-start justify-between gap-4 py-4">
-              <div className="min-w-0">
-                <p className="font-mono text-[9px] uppercase tracking-widest text-[#00DFC9]">{item.source.replace('_', ' ')} · {new Date(item.observedAt).toLocaleString('en-GB')}</p>
-                <h3 className="mt-2 text-sm font-semibold text-white">{item.trackName}</h3>
-                <p className="mt-1 text-xs text-white/55">{item.query}</p>
-                <p className="mt-2 text-xs text-white/70">{item.isPresent ? item.position ? `Position ${item.position}` : 'Mention found' : 'Not found'}</p>
-                {item.resultUrl && <a href={item.resultUrl} target="_blank" rel="noreferrer" className="mt-1 block truncate text-xs text-[#00DFC9] hover:underline">{item.resultUrl}</a>}
-                {item.evidence && <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-white/50">{item.evidence}</p>}
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {googleConnectors.map(({ label, detail, icon: Icon }) => <article key={label} className="flex min-h-40 flex-col justify-between border border-white/10 bg-white/[0.02] p-4">
+              <div>
+                <div className="mb-3 flex items-center justify-between gap-2"><span className="flex h-9 w-9 items-center justify-center border border-[#00DFC9]/30 bg-[#00DFC9]/[0.06] text-[#00DFC9]"><Icon className="h-4 w-4" /></span><span className={`font-mono text-[8px] uppercase tracking-widest ${googleConnector.connected ? 'text-[#00DFC9]' : googleConnector.configured ? 'text-[#FFB347]' : 'text-white/40'}`}>{googleConnector.connected ? 'Connected' : googleConnector.configured ? 'Ready to connect' : 'Setup required'}</span></div>
+                <h3 className="text-base font-bold text-white">{label}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">{detail}</p>
               </div>
-              <button onClick={() => deleteObservation(item.id)} aria-label="Delete ranking observation" className="flex h-9 w-9 shrink-0 items-center justify-center text-white/40 hover:text-[#FF6F91]"><Trash2 className="h-4 w-4" /></button>
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-widest text-white/40">Google API · OAuth</p>
             </article>)}
-            {!observations.length && <p className="py-6 text-sm text-white/45">No ranking observations yet.</p>}
+            {channels.map((channel) => <article key={channel.id} className="flex min-h-40 flex-col justify-between border border-white/10 bg-white/[0.02] p-4">
+              <div>
+                <div className="mb-3 flex items-center justify-between gap-2"><span className="flex h-9 w-9 items-center justify-center border border-white/10 text-white/55"><Link2 className="h-4 w-4" /></span><span className="font-mono text-[8px] uppercase tracking-widest text-white/40">Not connected</span></div>
+                <h3 className="text-base font-bold text-white">{channel.label}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">Draft destination only. Publishing API is not configured.</p>
+              </div>
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-widest text-white/40">Social publishing · API</p>
+            </article>)}
+            {siteConnectors.map(({ label, detail, icon: Icon, key }) => <article key={label} className="flex min-h-40 flex-col justify-between border border-white/10 bg-white/[0.02] p-4">
+              <div>
+                <div className="mb-3 flex items-center justify-between gap-2"><span className="flex h-9 w-9 items-center justify-center border border-white/10 text-[#00DFC9]"><Icon className="h-4 w-4" /></span><span className={`font-mono text-[8px] uppercase tracking-widest ${siteServices[key] ? 'text-[#00DFC9]' : 'text-[#FFB347]'}`}>{siteServices[key] ? 'Configured' : 'Setup required'}</span></div>
+                <h3 className="text-base font-bold text-white">{label}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">{detail}</p>
+              </div>
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-widest text-white/40">Site service · API</p>
+            </article>)}
           </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border border-white/10 px-4 py-4">
+            <div>
+              <p className={`font-mono text-[9px] uppercase tracking-widest ${googleConnector.connected ? 'text-[#00DFC9]' : 'text-[#FFB347]'}`}>
+                {googleConnector.connected ? `Connected / ${googleConnector.accountEmail}` : googleConnector.configured ? 'Google account not connected' : 'OAuth setup required'}
+              </p>
+              {googleConnector.lastSyncedAt && <p className="mt-1 text-xs text-white/55">Last sync: {new Date(googleConnector.lastSyncedAt).toLocaleString('en-GB')}</p>}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {googleConnector.connected ? <>
+                <button onClick={syncGoogle} disabled={isWorking} className="inline-flex min-h-9 items-center gap-2 bg-[#00DFC9] px-3 font-mono text-[9px] font-bold tracking-widest text-black disabled:opacity-50"><Activity className="h-3.5 w-3.5" /> SYNC GOOGLE DATA</button>
+                <button onClick={disconnectGoogle} disabled={isWorking} className="min-h-9 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/65 hover:text-white">DISCONNECT</button>
+              </> : <>
+                <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-2 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/70 hover:text-white">GOOGLE CLOUD <Link2 className="h-3.5 w-3.5" /></a>
+                <a href={googleConnector.configured ? '/api/admin/control-center/connectors/google/start' : undefined} aria-disabled={!googleConnector.configured} className={`inline-flex min-h-9 items-center gap-2 px-3 font-mono text-[9px] font-bold tracking-widest ${googleConnector.configured ? 'bg-[#00DFC9] text-black' : 'cursor-not-allowed border border-white/10 text-white/35'}`}>CONNECT GOOGLE</a>
+              </>}
+            </div>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-white/50">To enable Connect, add <code className="text-white/75">GOOGLE_CLIENT_ID</code>, <code className="text-white/75">GOOGLE_CLIENT_SECRET</code>, and <code className="text-white/75">GOOGLE_TOKEN_ENCRYPTION_KEY</code> to the server environment. Enable Analytics Data API, Search Console API, and Business Profile APIs in that Google Cloud project.</p>
+          {googleConnector.lastSyncStatus && <p className="mt-2 text-xs text-white/55">Sync status: {googleConnector.lastSyncStatus}</p>}
+          {!!googleSnapshots.length && <div className="mt-6 divide-y divide-white/10 border-y border-white/10">
+            <h3 className="py-3 font-mono text-[10px] uppercase tracking-widest text-white/60">Imported snapshots ({googleSnapshots.length})</h3>
+            {googleSnapshots.map((snapshot) => <details key={snapshot.id} className="py-3">
+              <summary className="cursor-pointer text-sm font-semibold text-white">{snapshot.source.toUpperCase()} / {snapshot.resourceName}<span className="ml-2 text-xs font-normal text-white/50">{snapshot.periodStart} to {snapshot.periodEnd}</span></summary>
+              <pre className="mt-3 max-h-80 overflow-auto border border-white/10 bg-black/30 p-3 text-[10px] leading-relaxed text-white/70">{JSON.stringify(snapshot.data, null, 2).slice(0, 12000)}</pre>
+            </details>)}
+          </div>}
         </section>
-        <form onSubmit={saveObservation} className="space-y-5 border-y border-white/10 py-5">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Record a check</h2>
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Research monitor<select required value={rankForm.trackId} onChange={(event) => setRankForm({ ...rankForm, trackId: event.target.value })} className="mt-2 min-h-11 w-full border border-white/15 bg-[#0b0b0f] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]"><option value="">Choose a saved monitor</option>{tracks.map((item) => <option key={item.id} value={item.id}>{item.name} / {item.query}</option>)}</select></label>
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Source<select value={rankForm.source} onChange={(event) => setRankForm({ ...rankForm, source: event.target.value as typeof rankForm.source })} className="mt-2 min-h-11 w-full border border-white/15 bg-[#0b0b0f] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]"><option value="google">Google Search</option><option value="local">Google Maps / local</option><option value="ai_search">AI search</option></select></label>
-          <label className="flex min-h-10 items-center gap-2 font-mono text-xs text-white/70"><input type="checkbox" checked={rankForm.isPresent} onChange={(event) => setRankForm({ ...rankForm, isPresent: event.target.checked, position: event.target.checked ? rankForm.position : '' })} className="accent-[#00DFC9]" /> Found in results</label>
-          {rankForm.isPresent && <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Position (optional)<input type="number" min={1} max={100} value={rankForm.position} onChange={(event) => setRankForm({ ...rankForm, position: event.target.value })} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]" /></label>}
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Result URL (optional)<input type="url" value={rankForm.resultUrl} onChange={(event) => setRankForm({ ...rankForm, resultUrl: event.target.value })} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]" /></label>
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Evidence / notes<textarea rows={3} value={rankForm.evidence} onChange={(event) => setRankForm({ ...rankForm, evidence: event.target.value })} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-3 py-3 font-sans text-sm normal-case leading-relaxed tracking-normal text-white outline-none focus:border-[#00DFC9]" /></label>
-          <button disabled={isWorking || !tracks.length} className="inline-flex min-h-11 items-center gap-2 bg-[#00DFC9] px-5 font-mono text-xs font-bold tracking-widest text-black disabled:opacity-50"><Plus className="h-4 w-4" /> SAVE OBSERVATION</button>
-        </form>
-      </div>
+
+        <section>
+          <p className="text-xs leading-relaxed text-white/45">Social platforms are available as draft destinations. Publishing requires separate platform API implementation and account authorization.</p>
+        </section>
+      </section>
     ) : tab === 'submissions' ? (
       <section className="mt-7">
         <div className="mb-4 flex items-end justify-between gap-4 border-b border-white/10 pb-4">

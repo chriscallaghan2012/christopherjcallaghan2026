@@ -100,6 +100,37 @@ export interface AdminRankObservationInput {
   evidence: string;
 }
 
+export interface AdminGoogleConnection {
+  accountEmail: string;
+  encryptedRefreshToken: string;
+  grantedScopes: string[];
+  connectedAt: string;
+  lastSyncedAt: string | null;
+  lastSyncStatus: string;
+}
+
+export type GoogleDataSource = 'ga4' | 'gsc' | 'gbp';
+
+export interface AdminGoogleSnapshotInput {
+  source: GoogleDataSource;
+  resourceId: string;
+  resourceName: string;
+  periodStart: string;
+  periodEnd: string;
+  data: unknown;
+}
+
+export interface AdminGoogleSnapshot {
+  id: string;
+  source: GoogleDataSource;
+  resourceId: string;
+  resourceName: string;
+  periodStart: string;
+  periodEnd: string;
+  data: unknown;
+  syncedAt: string;
+}
+
 const SOCIAL_DRAFT_COLUMNS = `
   id::text AS id,
   title,
@@ -466,4 +497,74 @@ export async function deleteAdminRankObservation(id: string): Promise<boolean> {
   if (!sql) throw new Error('DATABASE_URL is not configured.');
   const rows = await sql`DELETE FROM admin_rank_observations WHERE id = ${id}::bigint RETURNING id`;
   return rows.length > 0;
+}
+
+export async function getAdminGoogleConnection(): Promise<AdminGoogleConnection | null> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    SELECT account_email AS "accountEmail",
+      encrypted_refresh_token AS "encryptedRefreshToken",
+      granted_scopes AS "grantedScopes",
+      connected_at::text AS "connectedAt",
+      last_synced_at::text AS "lastSyncedAt",
+      last_sync_status AS "lastSyncStatus"
+    FROM admin_google_connection
+    WHERE id = 1
+    LIMIT 1
+  `;
+  return (rows[0] as unknown as AdminGoogleConnection | undefined) ?? null;
+}
+
+export async function saveAdminGoogleConnection(data: Omit<AdminGoogleConnection, 'connectedAt' | 'lastSyncedAt' | 'lastSyncStatus'>): Promise<void> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  await sql`
+    INSERT INTO admin_google_connection (id, account_email, encrypted_refresh_token, granted_scopes)
+    VALUES (1, ${data.accountEmail}, ${data.encryptedRefreshToken}, ${data.grantedScopes})
+    ON CONFLICT (id) DO UPDATE SET
+      account_email = EXCLUDED.account_email,
+      encrypted_refresh_token = EXCLUDED.encrypted_refresh_token,
+      granted_scopes = EXCLUDED.granted_scopes,
+      connected_at = NOW(),
+      last_synced_at = NULL,
+      last_sync_status = ''
+  `;
+}
+
+export async function disconnectAdminGoogle(): Promise<void> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  await sql`DELETE FROM admin_google_connection WHERE id = 1`;
+}
+
+export async function recordAdminGoogleSync(status: string): Promise<void> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  await sql`UPDATE admin_google_connection SET last_synced_at = NOW(), last_sync_status = ${status} WHERE id = 1`;
+}
+
+export async function saveAdminGoogleSnapshots(snapshots: AdminGoogleSnapshotInput[]): Promise<void> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  for (const snapshot of snapshots) {
+    await sql`
+      INSERT INTO admin_google_snapshots (source, resource_id, resource_name, period_start, period_end, data_json)
+      VALUES (${snapshot.source}, ${snapshot.resourceId}, ${snapshot.resourceName}, ${snapshot.periodStart}::date, ${snapshot.periodEnd}::date, ${JSON.stringify(snapshot.data)}::jsonb)
+    `;
+  }
+}
+
+export async function listAdminGoogleSnapshots(limit = 60): Promise<AdminGoogleSnapshot[]> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const safeLimit = Math.max(1, Math.min(Math.floor(limit), 200));
+  const rows = await sql`
+    SELECT id::text AS id,
+      source,
+      resource_id AS "resourceId",
+      resource_name AS "resourceName",
+      period_start::text AS "periodStart",
+      period_end::text AS "periodEnd",
+      data_json AS data,
+      synced_at::text AS "syncedAt"
+    FROM admin_google_snapshots
+    ORDER BY synced_at DESC
+    LIMIT ${safeLimit}
+  `;
+  return rows as unknown as AdminGoogleSnapshot[];
 }

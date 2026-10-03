@@ -247,16 +247,30 @@ export const PROJECTS_DATA: Project[] = [
     title: "Matchday Parking Platform",
     category: "E-Commerce",
     description: "A pre-bookable parking service for football and rugby events at major UK venues.",
-    longDescription: "Matchday Parking helps supporters find and pre-book parking near football and rugby venues, with venue-specific pages and a direct booking journey.",
+    longDescription: "Matchday Parking is a live event-commerce platform for supporters travelling to football and rugby fixtures. I owned the build beyond the public-facing website: the venue and event discovery experience, the WordPress and WooCommerce backend connections, the booking journey, and the technical work required to launch and operate the product. The platform guides customers from sport and league discovery into venue-specific event listings, availability and booking, with account, help and email touchpoints supporting the journey.",
     techStack: ["Next.js", "WordPress", "WooCommerce", "Headless"],
-    imageUrls: ["/assets/matchdayparking.png", "/assets/concertparking.png"],
+    imageUrls: ["/assets/matchdayparking.png"],
     carouselDataAiHints: ["event parking website", "stadium booking portal"],
     liveUrl: 'https://matchdayparking.com/',
     caseStudy: {
       business: 'Pre-bookable parking for football and rugby events at major UK venues.',
-      built: 'A parking website with venue discovery, event-specific pages and a clear booking journey.',
-      role: 'I built the customer-facing website and booking flow.',
-      outcome: '£1M+ turnover.'
+      built: 'A headless event-commerce platform connecting a Next.js customer experience with WordPress and WooCommerce operations. Customers can browse by sport, league and venue, review event-specific parking details and availability, then continue into booking and account journeys.',
+      role: 'I built and brought the full product together, not just the marketing site: frontend, backend integrations, data and booking flows, repository and branch setup, analytics, email touchpoints, deployment and launch checks.',
+      outcome: '£1M+ turnover.',
+      delivery: [
+        'Designed the sport, league and venue information architecture for football and rugby journeys.',
+        'Built venue landing pages with event schedules, parking information, availability and booking actions.',
+        'Connected the Next.js frontend to the WordPress and WooCommerce product and booking backend.',
+        'Implemented customer routes across discovery, event selection, checkout and account access.',
+        'Set up analytics and customer email touchpoints around the service and booking experience.',
+        'Established the project repositories and branch workflow, then handled deployment, release checks and launch support.'
+      ],
+      gallery: [
+        { src: '/assets/matchdayparking.png', alt: 'Matchday Parking homepage and sport discovery experience', caption: 'Homepage / football, rugby and event discovery', href: 'https://matchdayparking.com/' },
+        { src: 'https://matchdayparking.com/_next/image?url=%2Fimages%2Ftottenham.jpg&w=1200&q=80', alt: 'Tottenham Hotspur venue image from the Matchday Parking venue page', caption: 'Tottenham Hotspur / venue and fixture listings', href: 'https://matchdayparking.com/tottenham-hotspur' },
+        { src: 'https://matchdayparking.com/_next/image?url=%2Fimages%2Fbristol.jpg&w=1200&q=80', alt: 'Ashton Gate Stadium venue image from Matchday Parking', caption: 'Ashton Gate / venue discovery', href: 'https://matchdayparking.com/ashton-gate-stadium' },
+        { src: 'https://matchdayparking.com/_next/image?url=%2Fimages%2Fwembley.jpg&w=1200&q=80', alt: 'Wembley Stadium image from Matchday Parking event discovery', caption: 'Wembley / stadium discovery', href: 'https://matchdayparking.com/england' }
+      ]
     },
     featured: true
   },
@@ -265,16 +279,30 @@ export const PROJECTS_DATA: Project[] = [
     title: "Concert Parking Platform",
     category: "E-Commerce",
     description: "Pre-bookable parking for concerts and major live events across the UK.",
-    longDescription: "Concert Parking helps visitors find parking near major live-event venues and book before they travel.",
+    longDescription: "Concert Parking is the event-focused companion platform for visitors heading to major live shows. I built the complete customer and operational experience, including the venue-led discovery pages, backend commerce connections, booking routes and the project setup needed to ship and run it. The experience helps visitors compare venue options, understand practical parking details and move from a venue page into a booking, with account, support and email journeys around it.",
     techStack: ["Next.js", "WordPress", "WooCommerce", "Headless"],
     imageUrls: ["/assets/concertparking.png"],
     carouselDataAiHints: ["concert parking booking"],
     liveUrl: 'https://concertparking.co.uk/',
     caseStudy: {
       business: 'Pre-bookable parking for concerts and major live events across the UK.',
-      built: 'An event-parking website with venue discovery and a direct path into booking.',
-      role: 'I built the website and customer journey for finding event parking.',
-      outcome: '£1M+ turnover.'
+      built: 'A headless event-commerce platform connecting a Next.js venue experience with WordPress and WooCommerce operations. Visitors can discover major venues, review venue-specific parking information and follow a direct route into booking and account support.',
+      role: 'I delivered the end-to-end platform: customer-facing website, backend integrations, booking and operational flows, repository and branch setup, analytics, email touchpoints, deployment and launch checks.',
+      outcome: '£1M+ turnover.',
+      delivery: [
+        'Created a dedicated concert and live-event discovery experience across major UK venues.',
+        'Built venue pages that bring parking information, practical details and booking actions together.',
+        'Connected the Next.js frontend to the WordPress and WooCommerce backend and its event-commerce flows.',
+        'Handled the visitor journey through venue selection, booking, account access and customer support.',
+        'Set up analytics and email touchpoints to support customer communications and day-to-day operations.',
+        'Set up repositories and branches, managed deployment and release checks, and supported the production launch.'
+      ],
+      gallery: [
+        { src: '/assets/concertparking.png', alt: 'Concert Parking homepage and venue discovery experience', caption: 'Homepage / concert and event discovery', href: 'https://concertparking.co.uk/' },
+        { src: 'https://concertparking.co.uk/_next/image?url=https%3A%2F%2Fapp.concertparking.co.uk%2Fwp-content%2Fuploads%2F2026%2F03%2FAsset-79-1024x171.png&w=1200&q=80', alt: 'Wembley venue image from the Concert Parking page', caption: 'Wembley / venue-specific parking page', href: 'https://concertparking.co.uk/wembley' },
+        { src: 'https://concertparking.co.uk/_next/image?url=https%3A%2F%2Fapp.concertparking.co.uk%2Fwp-content%2Fuploads%2F2024%2F10%2FTottenham-Hotspur-Stadium.png&w=1200&q=80', alt: 'Tottenham Hotspur Stadium venue image from Concert Parking', caption: 'Tottenham / venue discovery', href: 'https://concertparking.co.uk/tottenham' },
+        { src: 'https://concertparking.co.uk/_next/image?url=https%3A%2F%2Fapp.concertparking.co.uk%2Fwp-content%2Fuploads%2F2025%2F01%2Fimages.png&w=1200&q=80', alt: 'Ashton Gate Stadium image from Concert Parking', caption: 'Ashton Gate / venue discovery', href: 'https://concertparking.co.uk/ashton-gate-stadium' }
+      ]
     },
     featured: true
   },

@@ -14,6 +14,13 @@ export interface Project {
     built: string;
     role: string;
     outcome?: string;
+    delivery?: string[];
+    gallery?: Array<{
+      src: string;
+      alt: string;
+      caption: string;
+      href: string;
+    }>;
   };
 }
 
