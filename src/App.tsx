@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab } from './types';
 import { PUBLIC_PAGES } from './data/sitePages';
@@ -10,7 +10,7 @@ import { HomeSections } from './components/HomeSections';
 import { HomeClosingSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
 import { SimpleFooter } from './components/SimpleFooter';
-import { FiberNetwork } from './components/FiberNetwork';
+const FiberNetwork = dynamic(() => import('./components/FiberNetwork').then((module) => module.FiberNetwork), { ssr: false, loading: () => null });
 
 const SpecialtyDomains = dynamic(() => import('./components/SpecialtyDomains').then((module) => module.SpecialtyDomains));
 const ServicesSection = dynamic(() => import('./components/ServicesSection').then((module) => module.ServicesSection));
@@ -37,6 +37,7 @@ function getTabFromBrowser(): ScreenTab {
   const path = window.location.pathname.replace(/\/$/, '');
   if (path === '/build' || path === '/start') return path.slice(1) as ScreenTab;
   if (path === '/package') return 'package';
+  if (path === '/projects' || path === '/services' || path === '/expertise') return path.slice(1) as ScreenTab;
   if (path === '/email-sandbox') return 'email-sandbox';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
   if (page) return page.tab;
@@ -51,6 +52,7 @@ function getTabFromBrowser(): ScreenTab {
 function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'home') return '/';
   if (tab === 'build' || tab === 'start' || tab === 'package' || tab === 'email-sandbox') return `/${tab}`;
+  if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
   return `/?tab=${tab}`;
@@ -58,6 +60,7 @@ function getUrlForTab(tab: ScreenTab): string {
 
 export default function App({ initialTab = 'home', initialService }: AppProps) {
   const [currentTab, setCurrentTab] = useState<ScreenTab>(initialTab);
+  const previousTab = useRef(initialTab);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<ServiceItem | null>(null);
@@ -72,6 +75,12 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  useEffect(() => {
+    if (previousTab.current === currentTab) return;
+    previousTab.current = currentTab;
+    window.dispatchEvent(new Event('cjc:virtual-pageview'));
+  }, [currentTab]);
 
   const handleSelectTab = (tab: ScreenTab) => {
     setCurrentTab(tab);
@@ -98,7 +107,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
   return (
     <div className="relative isolate min-h-screen bg-[#060608] text-[#ededed] selection:bg-[#FF003C] selection:text-white flex flex-col font-sans">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#060608]">
-        <FiberNetwork />
+        {currentTab === 'home' && <FiberNetwork />}
         <div className="site-fiber-shade absolute inset-0" />
       </div>
 

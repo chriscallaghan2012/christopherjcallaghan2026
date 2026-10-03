@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Activity, BarChart3, CalendarClock, Database, Link2, LoaderCircle, MapPin, Plus, Save, Search, Sparkles, Trash2 } from 'lucide-react';
+import { Activity, BarChart3, CalendarClock, Copy, Database, Link2, LoaderCircle, MapPin, Plus, Save, Search, Sparkles, Trash2 } from 'lucide-react';
 import type {
   AdminResearchTrack,
   AdminResearchTrackInput,
@@ -63,6 +63,7 @@ const cadenceLabels: Record<ResearchCadence, string> = {
 
 const googleConnectors = [
   { label: 'Google Analytics 4', detail: 'Users, sessions, landing pages, events, and conversions.', icon: BarChart3 },
+  { label: 'Google Tag Manager', detail: 'Read-only access to account containers and public container IDs.', icon: Link2 },
   { label: 'Search Console', detail: 'Search queries and pages with clicks, impressions, CTR, and average position.', icon: Search },
   { label: 'Google Business Profile', detail: 'Locations and available profile performance such as calls, directions, and website clicks.', icon: MapPin }
 ];
@@ -337,6 +338,16 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
     }
   };
 
+  const copyConnectorId = async (identifier: string) => {
+    try {
+      await navigator.clipboard.writeText(identifier);
+      setNotice(`${identifier} copied.`);
+      setError('');
+    } catch {
+      setError('Clipboard access is unavailable. Select and copy the identifier.');
+    }
+  };
+
   const syncGoogle = async () => {
     setIsWorking(true);
     setError('');
@@ -520,6 +531,7 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
             <div className="flex flex-wrap gap-2">
               {googleConnector.connected ? <>
                 <button onClick={syncGoogle} disabled={isWorking} className="inline-flex min-h-9 items-center gap-2 bg-[#00DFC9] px-3 font-mono text-[9px] font-bold tracking-widest text-black disabled:opacity-50"><Activity className="h-3.5 w-3.5" /> SYNC GOOGLE DATA</button>
+                <a href="/api/admin/control-center/connectors/google/start" className="min-h-9 border border-white/15 px-3 py-2 font-mono text-[9px] font-bold tracking-widest text-white/65 hover:text-white">UPDATE ACCESS</a>
                 <button onClick={disconnectGoogle} disabled={isWorking} className="min-h-9 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/65 hover:text-white">DISCONNECT</button>
               </> : <>
                 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-2 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/70 hover:text-white">GOOGLE CLOUD <Link2 className="h-3.5 w-3.5" /></a>
@@ -531,10 +543,24 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
           {googleConnector.lastSyncStatus && <p className="mt-2 text-xs text-white/55">Sync status: {googleConnector.lastSyncStatus}</p>}
           {!!googleSnapshots.length && <div className="mt-6 divide-y divide-white/10 border-y border-white/10">
             <h3 className="py-3 font-mono text-[10px] uppercase tracking-widest text-white/60">Imported snapshots ({googleSnapshots.length})</h3>
-            {googleSnapshots.map((snapshot) => <details key={snapshot.id} className="py-3">
-              <summary className="cursor-pointer text-sm font-semibold text-white">{snapshot.source.toUpperCase()} / {snapshot.resourceName}<span className="ml-2 text-xs font-normal text-white/50">{snapshot.periodStart} to {snapshot.periodEnd}</span></summary>
-              <pre className="mt-3 max-h-80 overflow-auto border border-white/10 bg-black/30 p-3 text-[10px] leading-relaxed text-white/70">{JSON.stringify(snapshot.data, null, 2).slice(0, 12000)}</pre>
-            </details>)}
+            {googleSnapshots.map((snapshot) => {
+              const data = snapshot.data && typeof snapshot.data === 'object' ? snapshot.data as Record<string, unknown> : {};
+              const measurementIds = snapshot.source === 'ga4' && Array.isArray(data.measurementIds)
+                ? data.measurementIds.filter((identifier): identifier is string => typeof identifier === 'string')
+                : [];
+              const containerId = snapshot.source === 'gtm' && typeof data.publicId === 'string' ? data.publicId : '';
+              const identifiers = [...measurementIds, ...(containerId ? [containerId] : [])];
+
+              return <details key={snapshot.id} className="py-3">
+                <summary className="cursor-pointer text-sm font-semibold text-white">{snapshot.source.toUpperCase()} / {snapshot.resourceName}<span className="ml-2 text-xs font-normal text-white/50">{snapshot.periodStart} to {snapshot.periodEnd}</span></summary>
+                {!!identifiers.length && <div className="mt-3 flex flex-wrap gap-2">
+                  {identifiers.map((identifier) => <span key={identifier} className="inline-flex min-h-9 items-center gap-2 border border-[#00DFC9]/30 bg-[#00DFC9]/[0.05] px-3 font-mono text-xs text-[#00DFC9]">
+                    {identifier}<button type="button" onClick={() => copyConnectorId(identifier)} aria-label={`Copy ${identifier}`} className="text-white/60 hover:text-white"><Copy className="h-3.5 w-3.5" /></button>
+                  </span>)}
+                </div>}
+                <pre className="mt-3 max-h-80 overflow-auto border border-white/10 bg-black/30 p-3 text-[10px] leading-relaxed text-white/70">{JSON.stringify(snapshot.data, null, 2).slice(0, 12000)}</pre>
+              </details>;
+            })}
           </div>}
         </section>
 

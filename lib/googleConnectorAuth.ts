@@ -5,6 +5,7 @@ export const GOOGLE_CONNECTOR_SCOPES = [
   'email',
   'profile',
   'https://www.googleapis.com/auth/analytics.readonly',
+  'https://www.googleapis.com/auth/tagmanager.readonly',
   'https://www.googleapis.com/auth/webmasters.readonly',
   'https://www.googleapis.com/auth/business.manage'
 ] as const;

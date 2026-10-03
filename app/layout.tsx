@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
+import { AnalyticsConsent } from '@/src/components/AnalyticsConsent';
 import '@/src/index.css';
 
 export const viewport: Viewport = {
@@ -115,6 +116,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[#060608] text-[#ededed] selection:bg-[#FF003C] selection:text-white font-sans antialiased">
         {children}
+        <AnalyticsConsent measurementId="G-0R6PCNG3NK" tagManagerId={process.env.NEXT_PUBLIC_GTM_ID ?? ''} />
       </body>
     </html>
   );

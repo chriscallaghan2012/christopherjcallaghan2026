@@ -109,7 +109,7 @@ export interface AdminGoogleConnection {
   lastSyncStatus: string;
 }
 
-export type GoogleDataSource = 'ga4' | 'gsc' | 'gbp';
+export type GoogleDataSource = 'ga4' | 'gsc' | 'gbp' | 'gtm';
 
 export interface AdminGoogleSnapshotInput {
   source: GoogleDataSource;

@@ -55,6 +55,9 @@ async function syncGa4(accessToken: string, periodStart: string, periodEnd: stri
 
   const snapshots: AdminGoogleSnapshotInput[] = [];
   for (const property of properties) {
+    const streamsResult = await googleJson(`https://analyticsadmin.googleapis.com/v1beta/${property.id}/dataStreams?pageSize=200`, accessToken);
+    const streams = (streamsResult.dataStreams as Array<{ webStreamData?: { measurementId?: string } }> | undefined) ?? [];
+    const measurementIds = streams.flatMap((stream) => stream.webStreamData?.measurementId ? [stream.webStreamData.measurementId] : []);
     const report = await googleJson(`https://analyticsdata.googleapis.com/v1beta/${property.id}:runReport`, accessToken, {
       dateRanges: [{ startDate: '28daysAgo', endDate: 'yesterday' }],
       dimensions: [{ name: 'date' }, { name: 'pagePath' }],
@@ -73,9 +76,34 @@ async function syncGa4(accessToken: string, periodStart: string, periodEnd: stri
       resourceName: property.name,
       periodStart,
       periodEnd,
-      data: report
+      data: { measurementIds, report }
     });
   }
+  return snapshots;
+}
+
+async function syncTagManager(accessToken: string, periodStart: string, periodEnd: string): Promise<AdminGoogleSnapshotInput[]> {
+  const accountsResult = await googleJson('https://tagmanager.googleapis.com/tagmanager/v2/accounts', accessToken);
+  const accounts = (accountsResult.account as Array<{ name?: string; accountId?: string }> | undefined) ?? [];
+  const snapshots: AdminGoogleSnapshotInput[] = [];
+
+  for (const account of accounts) {
+    if (!account.name) continue;
+    const containersResult = await googleJson(`https://tagmanager.googleapis.com/tagmanager/v2/${account.name}/containers`, accessToken);
+    const containers = (containersResult.container as Array<Record<string, unknown> & { containerId?: string; name?: string; publicId?: string }> | undefined) ?? [];
+    for (const container of containers) {
+      const publicId = container.publicId ?? container.containerId ?? '';
+      snapshots.push({
+        source: 'gtm',
+        resourceId: publicId,
+        resourceName: container.name || publicId || 'Tag Manager container',
+        periodStart,
+        periodEnd,
+        data: { accountId: account.accountId, ...container }
+      });
+    }
+  }
+
   return snapshots;
 }
 
@@ -171,6 +199,7 @@ export async function syncGoogleConnectorData(accessToken: string): Promise<Goog
   const snapshots: AdminGoogleSnapshotInput[] = [];
   const providers: Array<[GoogleDataSource, () => Promise<AdminGoogleSnapshotInput[]>]> = [
     ['ga4', () => syncGa4(accessToken, periodStart, periodEnd)],
+    ['gtm', () => syncTagManager(accessToken, periodStart, periodEnd)],
     ['gsc', () => syncSearchConsole(accessToken, periodStart, periodEnd)],
     ['gbp', () => syncBusinessProfile(accessToken, periodStart, periodEnd)]
   ];
