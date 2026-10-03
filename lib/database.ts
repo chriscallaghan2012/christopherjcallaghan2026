@@ -59,6 +59,47 @@ export interface AdminResearchTrack {
 
 export type AdminResearchTrackInput = Omit<AdminResearchTrack, 'id' | 'createdAt' | 'updatedAt'> & { id?: string };
 
+export type AdminSubmissionKind = 'contact' | 'consultation';
+export type AdminSubmissionStatus = 'pending' | 'reviewed';
+
+export interface AdminSubmission {
+  id: string;
+  kind: AdminSubmissionKind;
+  name: string;
+  email: string;
+  subject: string;
+  budget: string;
+  timeline: string;
+  message: string;
+  reference: string;
+  status: AdminSubmissionStatus;
+  createdAt: string;
+}
+
+export type RankingSource = 'google' | 'local' | 'ai_search';
+
+export interface AdminRankObservation {
+  id: string;
+  trackId: string;
+  trackName: string;
+  query: string;
+  source: RankingSource;
+  position: number | null;
+  isPresent: boolean;
+  resultUrl: string;
+  evidence: string;
+  observedAt: string;
+}
+
+export interface AdminRankObservationInput {
+  trackId: string;
+  source: RankingSource;
+  position: number | null;
+  isPresent: boolean;
+  resultUrl: string;
+  evidence: string;
+}
+
 const SOCIAL_DRAFT_COLUMNS = `
   id::text AS id,
   title,
@@ -324,5 +365,105 @@ export async function saveAdminResearchTrack(data: AdminResearchTrackInput): Pro
 export async function deleteAdminResearchTrack(id: string): Promise<boolean> {
   if (!sql) throw new Error('DATABASE_URL is not configured.');
   const rows = await sql`DELETE FROM admin_research_tracks WHERE id = ${id}::bigint RETURNING id`;
+  return rows.length > 0;
+}
+
+export async function listAdminSubmissions(): Promise<AdminSubmission[]> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    SELECT * FROM (
+      SELECT
+        id::text AS id,
+        'contact'::text AS kind,
+        name,
+        email,
+        project_type AS subject,
+        budget,
+        timeline,
+        message,
+        ref_code AS reference,
+        CASE WHEN status = 'reviewed' THEN 'reviewed' ELSE 'pending' END AS status,
+        created_at::text AS "createdAt"
+      FROM contact_submissions
+      UNION ALL
+      SELECT
+        id::text AS id,
+        'consultation'::text AS kind,
+        name,
+        email,
+        package_scope AS subject,
+        funding_goal AS budget,
+        timeline,
+        details AS message,
+        ref_code AS reference,
+        CASE WHEN status = 'reviewed' THEN 'reviewed' ELSE 'pending' END AS status,
+        created_at::text AS "createdAt"
+      FROM consultation_requests
+    ) AS submissions
+    ORDER BY "createdAt" DESC
+    LIMIT 300
+  `;
+  return rows as unknown as AdminSubmission[];
+}
+
+export async function updateAdminSubmissionStatus(
+  kind: AdminSubmissionKind,
+  id: string,
+  status: AdminSubmissionStatus
+): Promise<boolean> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = kind === 'contact'
+    ? await sql`UPDATE contact_submissions SET status = ${status} WHERE id = ${id}::bigint RETURNING id`
+    : await sql`UPDATE consultation_requests SET status = ${status} WHERE id = ${id}::bigint RETURNING id`;
+  return rows.length > 0;
+}
+
+export async function deleteAdminSubmission(kind: AdminSubmissionKind, id: string): Promise<boolean> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = kind === 'contact'
+    ? await sql`DELETE FROM contact_submissions WHERE id = ${id}::bigint RETURNING id`
+    : await sql`DELETE FROM consultation_requests WHERE id = ${id}::bigint RETURNING id`;
+  return rows.length > 0;
+}
+
+export async function listAdminRankObservations(): Promise<AdminRankObservation[]> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    SELECT
+      observations.id::text AS id,
+      observations.track_id::text AS "trackId",
+      tracks.name AS "trackName",
+      tracks.query_text AS query,
+      observations.source,
+      observations.position,
+      observations.is_present AS "isPresent",
+      observations.result_url AS "resultUrl",
+      observations.evidence,
+      observations.observed_at::text AS "observedAt"
+    FROM admin_rank_observations AS observations
+    INNER JOIN admin_research_tracks AS tracks ON tracks.id = observations.track_id
+    ORDER BY observations.observed_at DESC
+    LIMIT 500
+  `;
+  return rows as unknown as AdminRankObservation[];
+}
+
+export async function saveAdminRankObservation(data: AdminRankObservationInput): Promise<AdminRankObservation | null> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`
+    INSERT INTO admin_rank_observations (track_id, source, position, is_present, result_url, evidence)
+    VALUES (${data.trackId}::bigint, ${data.source}, ${data.position}, ${data.isPresent}, ${data.resultUrl}, ${data.evidence})
+    RETURNING id::text AS id, track_id::text AS "trackId", source, position, is_present AS "isPresent", result_url AS "resultUrl", evidence, observed_at::text AS "observedAt"
+  `;
+  const saved = rows[0] as unknown as Omit<AdminRankObservation, 'trackName' | 'query'> | undefined;
+  if (!saved) return null;
+  const tracks = await sql`SELECT name, query_text AS query FROM admin_research_tracks WHERE id = ${saved.trackId}::bigint LIMIT 1`;
+  const track = tracks[0] as { name: string; query: string } | undefined;
+  return track ? { ...saved, trackName: track.name, query: track.query } : null;
+}
+
+export async function deleteAdminRankObservation(id: string): Promise<boolean> {
+  if (!sql) throw new Error('DATABASE_URL is not configured.');
+  const rows = await sql`DELETE FROM admin_rank_observations WHERE id = ${id}::bigint RETURNING id`;
   return rows.length > 0;
 }

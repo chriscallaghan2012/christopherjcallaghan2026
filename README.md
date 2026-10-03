@@ -40,11 +40,11 @@ npm run build
 ## Features
 
 - **Next.js 15 (App Router)**: Sub-second edge rendering and 100/100 Lighthouse SEO with JSON-LD Schema markup.
-- **Neon**: Server-side PostgreSQL persistence for contact submissions, consultations, AI blueprints, blog posts, social drafts, and saved research monitors. Apply `neon_setup.sql` and `database/migrations/001_admin_control_center.sql` to the configured project.
+- **Neon**: Server-side PostgreSQL persistence for contact submissions, consultations, AI blueprints, blog posts, social drafts, research monitors, and ranking observations. Apply `neon_setup.sql` and migrations `001_admin_control_center.sql` and `002_admin_inbox_rankings.sql` to the configured project.
 - **Blog and admin**: Public Markdown articles are published from a password-protected admin. AI creates editable drafts only; publishing always requires a manual action.
-- **Admin control center foundation**: Authenticated social-draft and research-monitor CRUD is available. Gemini generates channel-specific copy and an image prompt; image-file generation, social publishing, scheduled execution, and live research providers are not connected yet.
+- **Admin control center**: Authenticated draft editing, planned-post queue, platform readiness, submission inbox, research monitors, and timestamped ranking observations. Gemini generates channel-specific copy and an image prompt. Image-file generation, platform OAuth/publishing, scheduled execution, and automatic ranking providers are not connected yet.
 - **Resend Email Engine**: Dual HTML email dispatch (Admin Alert + Client Confirmation) with an interactive **Email Template Sandbox** tab.
 - Project enquiries can use email-only delivery until a Neon `DATABASE_URL` is configured. Neither service is reported as active without its server-side credentials.
 - **Gemini 2.0 AI Studio**: Real AI software architecture blueprint generator.
 
-The admin needs `DATABASE_URL`, `ADMIN_PASSWORD`, and a random `ADMIN_SESSION_SECRET` of at least 32 characters. AI draft generation also needs `GEMINI_API_KEY`. Apply both SQL files before using the blog or control-center storage APIs.
+The admin needs `DATABASE_URL`, `ADMIN_PASSWORD`, and a random `ADMIN_SESSION_SECRET` of at least 32 characters. AI draft generation also needs `GEMINI_API_KEY`. Apply `neon_setup.sql` and both files in `database/migrations/` before using the blog or control-center storage APIs.
