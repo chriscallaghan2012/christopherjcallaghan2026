@@ -8,6 +8,7 @@ export interface EmailPayload {
   fundingGoal?: string;
   packageScope?: string;
   aiBlueprint?: string;
+  attachments?: string[];
   type?: 'contact' | 'consultation';
   submittedAt?: string;
 }
@@ -109,22 +110,25 @@ function renderBlueprint(data: EmailPayload): string {
   return contentSection('AI architecture notes', escapeHtml(data.aiBlueprint), BRAND.purple);
 }
 
+function renderAttachments(data: EmailPayload): string {
+  if (!data.attachments?.length) return '';
+  return contentSection('Files received', data.attachments.map(escapeHtml).join('<br>'), BRAND.purple);
+}
+
 export function generateAdminNotificationEmail(data: EmailPayload): string {
   const isConsultation = data.type === 'consultation';
   const scope = getScope(data);
-  const timestamp = data.submittedAt ? new Date(data.submittedAt) : new Date();
-  const submittedAt = Number.isNaN(timestamp.getTime()) ? 'Unknown' : timestamp.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }) + ' UTC';
   const subject = encodeURIComponent(`Re: ${isConsultation ? 'Project brief' : 'Enquiry'} - Christopher J. Callaghan`);
   const body = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;border-top:1px solid ${BRAND.border};border-bottom:1px solid ${BRAND.border};">
     ${detailRow('Name', data.name)}
     ${detailRow('Email', data.email, BRAND.orange)}
     ${detailRow('Submission', isConsultation ? 'Project brief' : 'Contact enquiry', BRAND.purple)}
-    ${detailRow('Scope', scope)}
+    ${detailRow('Selected scope and options', scope)}
     ${detailRow('Budget', data.budget || data.fundingGoal || 'Not specified', BRAND.orange)}
-    ${detailRow('Timeline', data.timeline || 'Flexible')}
-    ${detailRow('Received', submittedAt)}
+    ${detailRow('Timing', data.timeline || 'Flexible')}
   </table>
   ${data.message ? contentSection('Project details', escapeHtml(data.message)) : ''}
+  ${renderAttachments(data)}
   ${renderBlueprint(data)}`;
 
   return renderEmail(data, {
@@ -144,14 +148,15 @@ export function generateClientConfirmationEmail(data: EmailPayload): string {
   const isConsultation = data.type === 'consultation';
   const scope = getScope(data);
   const body = `<p style="margin:22px 0 0;padding:15px 17px;border-left:3px solid ${BRAND.orange};background:#0b0b0f;color:${BRAND.text};font-size:13px;line-height:1.7;">
-    I’ll review what you sent and reply within one business day. No technical plan needed to get started.
+    I’ll review what you sent and get back to you. No technical plan needed to get started.
   </p>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;border-top:1px solid ${BRAND.border};border-bottom:1px solid ${BRAND.border};">
-    ${detailRow('What you sent', scope)}
+    ${detailRow('Selected scope and options', scope)}
     ${detailRow('Budget', data.budget || data.fundingGoal || 'Not specified', BRAND.orange)}
     ${detailRow('Timing', data.timeline || 'Flexible')}
   </table>
   ${data.message ? contentSection('Your notes', escapeHtml(data.message)) : ''}
+  ${renderAttachments(data)}
   ${renderBlueprint(data)}`;
 
   return renderEmail(data, {

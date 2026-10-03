@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/email-sandbox']
+      disallow: ['/email-sandbox', '/admin', '/api/admin']
     },
     sitemap: 'https://christopherjcallaghan.com/sitemap.xml'
   };

@@ -7,10 +7,9 @@ import { ScreenTab } from '../types';
 interface SimpleNavbarProps {
   currentTab: ScreenTab;
   onSelectTab: (tab: ScreenTab) => void;
-  onOpenConsultation: () => void;
 }
 
-export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab, onOpenConsultation }) => {
+export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
@@ -36,6 +35,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     { label: 'START', href: '/start' },
     { label: 'GROW', action: () => scrollToSection('grow') },
     { label: 'WORK', action: selectWork },
+    { label: 'BLOG', href: '/blog' },
     { label: 'ABOUT', href: '/about' },
     { label: 'CONTACT', href: '/contact' }
   ];

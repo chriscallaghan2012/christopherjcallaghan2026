@@ -98,7 +98,7 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
   </>
 );
 
-export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, onNavigate }) => (
+export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onNavigate }) => (
   <>
     <section className="relative overflow-hidden border-t border-white/10 py-24 md:py-32">
       <div className="pointer-events-none absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-[#FF003C]/10 blur-[130px]" />
@@ -131,7 +131,7 @@ export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onOpenConsult
         <p className="mb-6 font-mono text-xs uppercase tracking-[0.24em] text-[#FF003C]">Your move</p>
         <ScrollWritingTitle text={'WHAT ARE YOU\nBUILDING?'} accentWords={[{ word: 'WHAT', color: 'purple' }, { word: 'BUILDING?', color: 'orange' }]} className="text-5xl font-black leading-[0.9] text-white sm:text-7xl md:text-8xl" />
         <p className="mt-6 text-sm text-white/55 md:text-base">You don&apos;t need the technical plan. Start with the idea.</p>
-        <button onClick={onOpenConsultation} className="mt-9 inline-flex items-center gap-3 bg-[#FF003C] px-8 py-4 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_35px_rgba(255,0,60,0.35)] transition-all hover:gap-5 hover:shadow-[0_0_50px_rgba(255,0,60,0.55)]">LET&apos;S BUILD IT <ArrowRight className="h-4 w-4" /></button>
+        <button onClick={() => onNavigate('build')} className="mt-9 inline-flex items-center gap-3 bg-[#FF003C] px-8 py-4 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_35px_rgba(255,0,60,0.35)] transition-all hover:gap-5 hover:shadow-[0_0_50px_rgba(255,0,60,0.55)]">LET&apos;S BUILD IT <ArrowRight className="h-4 w-4" /></button>
       </div>
     </section>
   </>

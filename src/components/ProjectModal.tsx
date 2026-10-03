@@ -6,10 +6,10 @@ import { X, ExternalLink, Cpu, Layers, Terminal, CheckCircle } from 'lucide-reac
 interface ProjectModalProps {
   project: Project | null;
   onClose: () => void;
-  onOpenConsultation: () => void;
+  onNavigateToBuild: () => void;
 }
 
-export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, onOpenConsultation }) => {
+export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, onNavigateToBuild }) => {
   // Lock page scroll + close on Escape while the modal is open.
   useEffect(() => {
     if (!project) return;
@@ -143,7 +143,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
             <button
               onClick={() => {
                 onClose();
-                onOpenConsultation();
+                onNavigateToBuild();
               }}
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#FF003C] text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,0,60,0.4)] hover:scale-105 transition-all"
             >

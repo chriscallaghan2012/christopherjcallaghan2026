@@ -27,12 +27,12 @@ import {
 } from 'lucide-react';
 
 interface TheWholePackageProps {
-  onOpenConsultation: () => void;
+  onNavigateToBuild: () => void;
   onNavigateToProjects?: () => void;
 }
 
 export const TheWholePackage: React.FC<TheWholePackageProps> = ({ 
-  onOpenConsultation,
+  onNavigateToBuild,
   onNavigateToProjects 
 }) => {
   const [selectedStage, setSelectedStage] = useState<VentureStageConfig>(VENTURE_STAGES[0]);
@@ -295,7 +295,7 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
                 Select Full Suite ({totalAvailable}/{totalAvailable})
               </button>
               <button
-                onClick={onOpenConsultation}
+                onClick={onNavigateToBuild}
                 className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#FF003C] text-white text-xs font-mono font-black uppercase tracking-wider shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 min-h-[44px]"
               >
                 <span>Deploy Package</span>
@@ -457,7 +457,7 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
             </div>
 
             <button
-              onClick={onOpenConsultation}
+              onClick={onNavigateToBuild}
               className="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#FF003C] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_0_30px_rgba(255,0,60,0.4)] hover:shadow-[0_0_40px_rgba(255,0,60,0.6)] hover:scale-105 active:scale-95 transition-all shrink-0 flex items-center justify-center gap-2 min-h-[44px]"
             >
               <span>Schedule Whole Package Briefing</span>
@@ -559,7 +559,7 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
 
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
             <button
-              onClick={onOpenConsultation}
+              onClick={onNavigateToBuild}
               className="w-full sm:w-auto px-8 py-4 bg-[#FF003C] text-white font-mono font-black text-xs uppercase tracking-widest rounded-2xl shadow-[0_0_30px_rgba(255,0,60,0.5)] hover:shadow-[0_0_45px_rgba(255,0,60,0.7)] hover:scale-105 transition-all flex items-center justify-center gap-2"
             >
               <span>Initiate Whole Package</span>

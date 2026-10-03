@@ -4,10 +4,9 @@ import { ScreenTab } from '../types';
 
 interface SimpleFooterProps {
   onNavigate: (tab: ScreenTab) => void;
-  onOpenConsultation: () => void;
 }
 
-export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate, onOpenConsultation }) => (
+export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
   <footer className="relative z-10 border-t border-white/10 bg-black/40">
     <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-8">
       <div>
@@ -17,6 +16,7 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate, onOpenCo
       <nav className="flex flex-wrap items-center gap-x-6 gap-y-3" aria-label="Footer navigation">
         <button onClick={() => onNavigate('home')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">HOME</button>
         <button onClick={() => onNavigate('projects')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">WORK</button>
+        <a href="/blog" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">BLOG</a>
         <a href="/about" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">ABOUT</a>
         <a href="/seo" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">SEO</a>
         <a href="/google-maps" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">GOOGLE MAPS</a>

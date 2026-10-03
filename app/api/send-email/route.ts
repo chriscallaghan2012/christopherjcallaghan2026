@@ -7,6 +7,37 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 const adminEmail = process.env.ADMIN_EMAIL || 'christopher@christopherjcallaghan.com';
 const senderIdentity = 'Christopher J. Callaghan <christopher@christopherjcallaghan.com>';
+const MAX_ATTACHMENT_FILES = 5;
+const MAX_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
+const ATTACHMENT_TYPES: Record<string, string> = {
+  txt: 'text/plain', md: 'text/markdown', csv: 'text/csv', pdf: 'application/pdf',
+  doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  rtf: 'text/rtf', odt: 'application/vnd.oasis.opendocument.text', xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', ppt: 'application/vnd.ms-powerpoint',
+  pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', png: 'image/png',
+  jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml',
+  psd: 'image/vnd.adobe.photoshop', ai: 'application/postscript', fig: 'application/octet-stream',
+  sketch: 'application/octet-stream', zip: 'application/zip'
+};
+
+type PreparedAttachment = { filename: string; content: Buffer; contentType: string };
+
+async function prepareAttachments(files: File[]): Promise<{ attachments?: PreparedAttachment[]; error?: string }> {
+  if (files.length > MAX_ATTACHMENT_FILES) return { error: `Attach no more than ${MAX_ATTACHMENT_FILES} files.` };
+  const totalBytes = files.reduce((total, file) => total + file.size, 0);
+  if (totalBytes > MAX_ATTACHMENT_BYTES) return { error: 'Attachments must total 3.5 MB or less.' };
+
+  const attachments: PreparedAttachment[] = [];
+  for (const file of files) {
+    const extension = file.name.split('.').pop()?.toLowerCase() || '';
+    const contentType = ATTACHMENT_TYPES[extension];
+    if (!contentType) return { error: `${file.name} has an unsupported file type.` };
+    const filename = file.name.replace(/[\\/\u0000-\u001f\u007f]/g, '_').slice(0, 120);
+    attachments.push({ filename, content: Buffer.from(await file.arrayBuffer()), contentType });
+  }
+
+  return { attachments };
+}
 
 /** Builds a plain-text AI Studio summary; the email template escapes it for HTML. */
 function formatBlueprintForEmail(ctx: { blueprint?: any; prompt?: string; model?: string; scale?: string }): string {
@@ -36,7 +67,19 @@ function formatBlueprintForEmail(ctx: { blueprint?: any; prompt?: string; model?
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const contentType = request.headers.get('content-type') || '';
+    let body: Record<string, any>;
+    let uploadedFiles: File[] = [];
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      body = {};
+      for (const [key, value] of formData.entries()) {
+        if (key === 'attachments' && typeof value !== 'string') uploadedFiles.push(value);
+        else if (typeof value === 'string') body[key] = value;
+      }
+    } else {
+      body = await request.json();
+    }
     const {
       name,
       email,
@@ -58,6 +101,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Name and email are required fields.' }, { status: 400 });
     }
 
+    const preparedUpload = await prepareAttachments(uploadedFiles);
+    if (preparedUpload.error) return NextResponse.json({ success: false, error: preparedUpload.error }, { status: 400 });
+    const uploadedAttachments = preparedUpload.attachments || [];
+    const attachmentNames = uploadedAttachments.map((attachment) => attachment.filename);
+
     if (!isSandboxTest && !isDatabaseConfigured && !resend) {
       return NextResponse.json({
         success: false,
@@ -74,6 +122,7 @@ export async function POST(request: Request) {
       fundingGoal,
       timeline: timeline || 'Flexible',
       message: message || details || '',
+      attachments: attachmentNames,
       aiBlueprint: aiContext ? formatBlueprintForEmail(aiContext) : undefined,
       type,
       submittedAt: new Date().toISOString()
@@ -94,7 +143,7 @@ export async function POST(request: Request) {
             packageScope: payload.packageScope,
             fundingGoal: fundingGoal || budget || 'N/A',
             timeline: payload.timeline,
-            details: payload.message
+            details: [payload.message, attachmentNames.length ? `Attached files: ${attachmentNames.join(', ')}` : ''].filter(Boolean).join('\n\n')
           });
         } else {
           dbResult = await saveContactSubmission({
@@ -167,7 +216,8 @@ export async function POST(request: Request) {
           to: [adminEmail],
           replyTo: email,
           subject: `⚡ New ${submissionLabel}: ${safeSubjectName} (${safeSubjectScope})`,
-          html: generateAdminNotificationEmail(payload)
+          html: generateAdminNotificationEmail(payload),
+          ...(uploadedAttachments.length ? { attachments: uploadedAttachments } : {})
         });
         adminEmailSent = true;
       } catch (e: any) {

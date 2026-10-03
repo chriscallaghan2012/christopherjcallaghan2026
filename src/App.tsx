@@ -105,7 +105,6 @@ export default function App({ initialTab = 'home' }: AppProps) {
       <SimpleNavbar
         currentTab={currentTab}
         onSelectTab={handleSelectTab}
-        onOpenConsultation={handleOpenConsultation}
       />
 
       {/* Main Content Areas */}
@@ -133,7 +132,7 @@ export default function App({ initialTab = 'home' }: AppProps) {
         {currentTab === 'package' && (
           <div className="pt-6">
             <TheWholePackage
-              onOpenConsultation={handleOpenConsultation}
+              onNavigateToBuild={() => handleSelectTab('build')}
               onNavigateToProjects={() => setCurrentTab('projects')}
             />
             <ProjectsSection
@@ -196,7 +195,6 @@ export default function App({ initialTab = 'home' }: AppProps) {
         {currentTab === 'about' && (
           <PublicPageContent
             page="about"
-            onOpenConsultation={handleOpenConsultation}
             onNavigateToProjects={() => handleSelectTab('projects')}
           />
         )}
@@ -204,7 +202,6 @@ export default function App({ initialTab = 'home' }: AppProps) {
         {(currentTab === 'seo' || currentTab === 'google-maps' || currentTab === 'ppc' || currentTab === 'social-media') && (
           <PublicPageContent
             page={currentTab as Exclude<PublicPageTab, 'contact'>}
-            onOpenConsultation={handleOpenConsultation}
             onNavigateToProjects={() => handleSelectTab('projects')}
           />
         )}
@@ -225,14 +222,13 @@ export default function App({ initialTab = 'home' }: AppProps) {
       {/* Footer */}
       <SimpleFooter
         onNavigate={setCurrentTab}
-        onOpenConsultation={handleOpenConsultation}
       />
 
       {/* Case Study Modal */}
       {selectedProject && <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
-        onOpenConsultation={handleOpenConsultation}
+        onNavigateToBuild={() => handleSelectTab('build')}
       />}
 
       {/* Consultation Modal */}
