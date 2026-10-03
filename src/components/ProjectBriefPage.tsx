@@ -38,6 +38,28 @@ const START_EXTRAS: Record<string, string[]> = {
   'I am getting ready to launch': ['Brand and positioning', 'Website or online shop', 'Payments or bookings', 'Launch and marketing plan', 'Analytics and tracking', 'Business automations'],
   'I have started already': ['Improve conversion', 'Find more customers', 'Streamline operations', 'Connect existing systems', 'Add new product features', 'Plan for growth and scale']
 };
+const GOAL_CONTEXT_PROMPTS: Record<string, string> = {
+  'A website': 'What is the site for? Share an existing URL, business, or example if you have one.',
+  'An app or platform': 'What should people be able to do with the app or platform?',
+  'Software or AI': 'What task or problem should the software or AI help with?',
+  'Automation or integration': 'Which tools or systems do you use, and what would you like to connect or automate?',
+  'Not sure yet': 'What problem are you trying to solve, and who does it affect?',
+  'I have an idea': 'What is the idea, and who do you imagine using it?',
+  'I am getting ready to launch': 'What are you launching? Include the business, product, or industry if you know it.',
+  'I have started already': 'What does your business do? Share its name or website if useful.'
+};
+const FOCUS_CONTEXT_PROMPTS: Record<string, string> = {
+  'Plan and scope the idea': 'What do you already know about the idea, audience, or problem?',
+  'Design and build the first version': 'What would the first useful version need to include?',
+  'Improve something that already exists': 'What should be improved? Share a site, app, or current process if you can.',
+  'Connect tools or automate a process': 'What tools are involved, and what happens in the process today?',
+  'Explore the right approach together': 'What are you unsure about or hoping to decide?',
+  'Business plan and setup': 'What kind of business are you considering, and where are you in the process?',
+  'Brand, website or online shop': 'What are you selling or offering, and do you have an existing site or brand?',
+  'Marketing and customer growth': 'How do you currently reach customers, and what would you like to improve?',
+  'Funding options and launch planning': 'What are you hoping to fund, and when would you like to launch?',
+  'A joined-up plan from idea to launch': 'What parts of the idea or launch would you most like help connecting?'
+};
 const BUDGETS = ['Not sure yet', 'Under £1,000', '£1,000–£5,000', '£5,000–£15,000', '£15,000+'];
 const MAX_UPLOAD_FILES = 5;
 const MAX_UPLOAD_BYTES = 3.5 * 1024 * 1024;
@@ -58,6 +80,9 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
   const [goal, setGoal] = useState('');
   const [focus, setFocus] = useState('');
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  const [goalDetails, setGoalDetails] = useState('');
+  const [focusDetails, setFocusDetails] = useState('');
+  const [optionDetails, setOptionDetails] = useState<Record<string, string>>({});
   const extraOptions = (isStart ? START_EXTRAS : BUILD_EXTRAS)[goal] ?? [];
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -70,9 +95,14 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
   const [error, setError] = useState('');
 
   const pageTitle = isStart ? 'Start a business' : 'Build a digital product';
+  const goalPrompt = GOAL_CONTEXT_PROMPTS[goal] ?? 'What should I know about this project?';
+  const focusPrompt = FOCUS_CONTEXT_PROMPTS[focus] ?? 'What should I know about this focus?';
   const selectGoal = (value: string) => {
     setGoal(value);
     setSelectedExtras([]);
+    setGoalDetails('');
+    setFocusDetails('');
+    setOptionDetails({});
     setStep(1);
   };
 
@@ -88,6 +118,16 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
     `Focus: ${focus}`,
     `Options: ${selectedExtras.length ? selectedExtras.join(', ') : 'None selected'}`
   ].join(' | ');
+  const extraSummary = selectedExtras.map((item) => {
+    const note = optionDetails[item]?.trim();
+    return note ? `${item}: ${note}` : item;
+  }).join('; ');
+  const briefNotes = [
+    goalDetails.trim() ? `${goal} details:\n${goalDetails.trim()}` : '',
+    focusDetails.trim() ? `${focus} details:\n${focusDetails.trim()}` : '',
+    ...selectedExtras.map((item) => optionDetails[item]?.trim() ? `${item}:\n${optionDetails[item].trim()}` : ''),
+    details.trim() ? `Additional notes:\n${details.trim()}` : ''
+  ].filter(Boolean).join('\n\n');
 
   const addUploads = (files: FileList | null) => {
     if (!files?.length) return;
@@ -128,7 +168,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
         packageScope: briefScope,
         budget,
         timeline,
-        message: details,
+        message: briefNotes,
         type: 'consultation'
       }).forEach(([key, value]) => formData.append(key, value));
       uploads.forEach((file) => formData.append('attachments', file, file.name));
@@ -187,7 +227,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
               <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#DF80FF]">{goal}</p>
               <ScrollWritingTitle text="What would help most?" accentWords={[{ word: 'help', color: 'orange' }, { word: 'most?', color: 'purple' }]} className="mb-6 text-2xl font-black text-white md:text-3xl" />
               <div className="divide-y divide-white/10 border-y border-white/10">
-                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setStep(2); }} className="group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#00DFC9] md:text-base">
+                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setFocusDetails(''); setStep(2); }} className="group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#00DFC9] md:text-base">
                   <span><span className="mr-4 font-mono text-xs text-[#00DFC9]">0{index + 1}</span>{item}</span>
                   <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
                 </button>)}
@@ -204,9 +244,9 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                 <section aria-label="Brief summary" className="border-y border-white/10 py-4 lg:col-span-2">
                   <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[#00DFC9]">Your brief so far</p>
                   <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
-                    <div><dt className="text-xs text-white/45">Project</dt><dd className="mt-1 text-white/85">{goal}</dd></div>
-                    <div><dt className="text-xs text-white/45">Main focus</dt><dd className="mt-1 text-white/85">{focus}</dd></div>
-                    <div><dt className="text-xs text-white/45">Extra options</dt><dd className="mt-1 text-white/85">{selectedExtras.length ? selectedExtras.join(', ') : 'None selected'}</dd></div>
+                    <div><dt className="text-xs text-white/45">Project</dt><dd className="mt-1 text-white/85">{goal}{goalDetails && <span className="mt-1 block text-white/60">{goalDetails}</span>}</dd></div>
+                    <div><dt className="text-xs text-white/45">Main focus</dt><dd className="mt-1 text-white/85">{focus}{focusDetails && <span className="mt-1 block text-white/60">{focusDetails}</span>}</dd></div>
+                    <div><dt className="text-xs text-white/45">Extra options</dt><dd className="mt-1 text-white/85">{extraSummary || 'None selected'}</dd></div>
                     <div><dt className="text-xs text-white/45">Budget and timing</dt><dd className="mt-1 text-white/85">{budget} / {timeline}</dd></div>
                   </dl>
                 </section>
@@ -214,6 +254,8 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Email *<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" className="mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#DF80FF]" /></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Budget<select value={budget} onChange={(event) => setBudget(event.target.value)} className="mt-2 min-h-12 w-full border border-white/15 bg-[#111118] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]">{BUDGETS.map((item) => <option key={item}>{item}</option>)}</select></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Timing<select value={timeline} onChange={(event) => setTimeline(event.target.value)} className="mt-2 min-h-12 w-full border border-white/15 bg-[#111118] px-4 text-sm normal-case tracking-normal text-white outline-none focus:border-[#FF3E85]"><option>Flexible</option><option>As soon as possible</option><option>Within 1–3 months</option><option>More than 3 months</option><option>Just exploring</option></select></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{goalPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={goalDetails} onChange={(event) => setGoalDetails(event.target.value)} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#DF80FF]" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{focusPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={focusDetails} onChange={(event) => setFocusDetails(event.target.value)} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#00DFC9]" /></label>
                 <details className="group border-y border-white/10 py-4 lg:col-span-2">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-white/85 marker:hidden">
                     <span>Explore useful options <span className="font-normal text-white/45">(optional)</span></span>
@@ -222,10 +264,13 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
                   <fieldset className="mt-4">
                     <legend className="sr-only">Optional project options</legend>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      {extraOptions.map((item) => <label key={item} className="flex min-h-12 cursor-pointer items-start gap-3 border border-white/10 px-3 py-3 text-sm text-white/75 transition-colors hover:border-[#FFB347]/60 hover:text-white">
-                        <input type="checkbox" checked={selectedExtras.includes(item)} onChange={() => toggleExtra(item)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FFB347]" />
-                        <span>{item}</span>
-                      </label>)}
+                      {extraOptions.map((item) => <div key={item} className="space-y-2">
+                        <label className="flex min-h-12 cursor-pointer items-start gap-3 border border-white/10 px-3 py-3 text-sm text-white/75 transition-colors hover:border-[#FFB347]/60 hover:text-white">
+                          <input type="checkbox" checked={selectedExtras.includes(item)} onChange={() => toggleExtra(item)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FFB347]" />
+                          <span>{item}</span>
+                        </label>
+                        {selectedExtras.includes(item) && <label className="block text-[10px] font-mono uppercase tracking-widest text-white/55">A little more about this option <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea aria-label={`Details for ${item}`} rows={2} value={optionDetails[item] ?? ''} onChange={(event) => setOptionDetails((current) => ({ ...current, [item]: event.target.value }))} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-3 py-2 text-sm font-sans normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#FFB347]" /></label>}
+                      </div>)}
                     </div>
                   </fieldset>
                 </details>
@@ -259,9 +304,9 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode }) => {
               <h2 className="mt-3 text-3xl font-black text-white">Thanks, {name}.</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/60">I&apos;ll review what you shared and reply to {email}.</p>
               <dl className="mt-6 grid gap-4 border-t border-white/10 pt-5 text-sm sm:grid-cols-2">
-                <div><dt className="text-xs text-white/45">Project</dt><dd className="mt-1 text-white/85">{goal}</dd></div>
-                <div><dt className="text-xs text-white/45">Main focus</dt><dd className="mt-1 text-white/85">{focus}</dd></div>
-                <div><dt className="text-xs text-white/45">Options included</dt><dd className="mt-1 text-white/85">{selectedExtras.length ? selectedExtras.join(', ') : 'None selected'}</dd></div>
+                <div><dt className="text-xs text-white/45">Project</dt><dd className="mt-1 text-white/85">{goal}{goalDetails && <span className="mt-1 block text-white/60">{goalDetails}</span>}</dd></div>
+                <div><dt className="text-xs text-white/45">Main focus</dt><dd className="mt-1 text-white/85">{focus}{focusDetails && <span className="mt-1 block text-white/60">{focusDetails}</span>}</dd></div>
+                <div><dt className="text-xs text-white/45">Options included</dt><dd className="mt-1 text-white/85">{extraSummary || 'None selected'}</dd></div>
                 <div><dt className="text-xs text-white/45">Budget and timing</dt><dd className="mt-1 text-white/85">{budget} / {timeline}</dd></div>
                 {details && <div className="sm:col-span-2"><dt className="text-xs text-white/45">Your notes</dt><dd className="mt-1 whitespace-pre-wrap text-white/85">{details}</dd></div>}
               </dl>
