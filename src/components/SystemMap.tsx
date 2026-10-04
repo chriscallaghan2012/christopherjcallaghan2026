@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowDown, ArrowRight, MousePointer2, X } from 'lucide-react';
 import { MotionConfig, motion } from 'motion/react';
 import type { SystemMapContent, SystemMapNode } from '../types';
@@ -147,16 +148,22 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
             </React.Fragment>)}
           </div>
 
-          {selectedNode && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4" onClick={() => setSelectedNodeId(null)}>
-            <section id="system-map-node-detail" role="dialog" aria-modal="true" aria-labelledby="system-map-node-title" onClick={(event) => event.stopPropagation()} className="w-full max-w-lg border border-white/15 bg-[#101014] p-5 shadow-2xl sm:p-6">
+          {selectedNode && createPortal(<div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4" onClick={() => setSelectedNodeId(null)}>
+            <section id="system-map-node-detail" role="dialog" aria-modal="true" aria-labelledby="system-map-node-title" onClick={(event) => event.stopPropagation()} className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto overscroll-contain border border-white/15 bg-[#101014] p-5 shadow-2xl sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-[#00DFC9]">{groups.find((group) => group.id === selectedNode.group)?.label} / NODE DETAIL</p>
                 <button type="button" onClick={() => setSelectedNodeId(null)} aria-label="Close node details" className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/15 text-white/60 hover:text-white"><X className="h-4 w-4" /></button>
               </div>
               <h3 id="system-map-node-title" className="mt-4 text-xl font-bold text-white">{selectedNode.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-white/65">{selectedNode.detail}</p>
+              {!!selectedNode.examples?.length && <div className="mt-5 border-t border-white/10 pt-4">
+                <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-white/45">Examples and touchpoints</p>
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {selectedNode.examples.map((example) => <li key={example} className="border-l border-[#FF003C]/60 pl-3 text-xs leading-relaxed text-white/70">{example}</li>)}
+                </ul>
+              </div>}
             </section>
-          </div>}
+          </div>, document.body)}
         </div>
       </section>
     </MotionConfig>

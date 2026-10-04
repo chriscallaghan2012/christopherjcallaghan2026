@@ -49,6 +49,7 @@ export interface SystemMapNode {
   title: string;
   summary: string;
   detail: string;
+  examples?: string[];
   group: 'source' | 'work' | 'outcome';
 }
 
