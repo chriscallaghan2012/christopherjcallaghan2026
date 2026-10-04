@@ -17,8 +17,8 @@ Use Christopher J. Callaghan as the canonical name. Christopher J Callaghan and 
 - [Projects and case studies](https://christopherjcallaghan.com/projects): Selected full-stack, e-commerce, AI, API and digital product work.
 - [Services](https://christopherjcallaghan.com/services): Website, application, software, AI and automation development.
 - [Technical expertise](https://christopherjcallaghan.com/expertise): Development and product-delivery experience.
-- [Matchday Parking](https://matchdayparking.com): Football and rugby event parking platform. Christopher built the customer-facing product and booking experience, including backend integrations and launch operations.
-- [Concert Parking](https://concertparking.co.uk): Concert and live-event parking platform. Christopher built the customer-facing product and booking experience, including backend integrations and launch operations.
+- [Matchday Parking](https://matchdayparking.com): Football and rugby event parking platform. Christopher built the customer-facing product, Cashflows SDK and Worldpay payment gateway integrations, and a staff-scanner PWA that downloads event orders, validates tickets offline, and syncs queued scans after reconnection.
+- [Concert Parking](https://concertparking.co.uk): Concert and live-event parking platform. Christopher built the customer-facing product, Cashflows SDK and Worldpay payment gateway integrations, and a staff-scanner PWA that downloads event orders, validates tickets offline, and syncs queued scans after reconnection.
 
 ## Search and marketing
 

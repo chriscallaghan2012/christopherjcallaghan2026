@@ -16,6 +16,20 @@ const headlineAccents: Record<PublicContentTab, Array<{ word: string; color: 'or
   'social-media': [{ word: 'REASON', color: 'orange' }, { word: 'ATTENTION.', color: 'purple' }]
 };
 
+const serviceCtaHeadlines: Partial<Record<PublicContentTab, string>> = {
+  seo: "LET'S MAKE THE RIGHT PAGES EASIER TO FIND.",
+  'google-maps': "LET'S MAKE YOUR LOCAL PRESENCE CLEARER.",
+  ppc: "LET'S BUILD A CAMPAIGN AROUND A CLEAR GOAL.",
+  'social-media': "LET'S GIVE YOUR NEXT CONTENT CYCLE A PLAN."
+};
+
+const serviceCtaAccents: Partial<Record<PublicContentTab, Array<{ word: string; color: 'orange' | 'purple' }>>> = {
+  seo: [{ word: 'PAGES', color: 'orange' }, { word: 'FIND.', color: 'purple' }],
+  'google-maps': [{ word: 'LOCAL', color: 'orange' }, { word: 'CLEARER.', color: 'purple' }],
+  ppc: [{ word: 'CAMPAIGN', color: 'purple' }, { word: 'GOAL.', color: 'orange' }],
+  'social-media': [{ word: 'CONTENT', color: 'orange' }, { word: 'PLAN.', color: 'purple' }]
+};
+
 interface PublicPageContentProps {
   page: PublicContentTab;
   onNavigateToProjects: () => void;
@@ -46,30 +60,36 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
               <p>The aim is straightforward: understand what you are trying to achieve, then build the technology that helps get you there.</p>
             </div>
           </section>
-        ) : content.points && (
-          <section className="mt-20 max-w-5xl">
-            <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</p>
-              <span className="font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
-            </div>
-            <ol className="divide-y divide-white/10">
-              {content.points.map((point, index) => (
-                <li key={point.title} className="grid gap-3 py-6 sm:grid-cols-[64px_1fr] sm:gap-5">
-                  <span className="font-mono text-xs text-[#FF003C]">{String(index + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h2 className="text-base font-bold text-white">{point.title}</h2>
-                    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">{point.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        )}
+        ) : null}
 
         {content.flow && <div className="mt-12"><ProcessFlow {...content.flow} /></div>}
         {content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
-        <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+        {content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
+          <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
+            <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
+          </div>
+          <ol className="divide-y divide-white/10 border-y border-white/10">
+            {content.points.map((point, index) => (
+              <li key={point.title} className="grid gap-3 py-6 sm:grid-cols-[80px_1fr] sm:gap-5">
+                <span className="font-mono text-4xl font-black leading-none text-[#FF003C] sm:text-5xl">{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3 className="text-base font-bold text-white">{point.title}</h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">{point.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>}
+
+        {serviceCtaHeadlines[page] && <section className="mt-16 max-w-5xl border-t border-white/10 pt-10">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">NEXT STEP</p>
+          <ScrollWritingTitle as="h2" text={serviceCtaHeadlines[page] ?? ''} accentWords={serviceCtaAccents[page]} className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl" />
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell me what you want to improve. We can shape the scope and the next step around your business.</p>
+        </section>}
+
+        <div className={`${serviceCtaHeadlines[page] ? 'mt-8' : 'mt-12'} flex flex-col gap-4 sm:flex-row`}>
           <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FF003C] px-6 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_28px_rgba(255,0,60,0.24)] transition-all hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]">
             LET&apos;S BUILD <ArrowRight className="h-4 w-4" />
           </a>

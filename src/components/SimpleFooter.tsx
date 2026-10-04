@@ -15,14 +15,14 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
       </div>
       <nav className="flex flex-wrap items-center gap-x-6 gap-y-3" aria-label="Footer navigation">
         <button onClick={() => onNavigate('home')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">HOME</button>
-        <button onClick={() => onNavigate('projects')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">WORK</button>
-        <a href="/blog" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">BLOG</a>
         <a href="/about" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">ABOUT</a>
+        <button onClick={() => onNavigate('projects')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">WORK</button>
         <a href="/seo" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">SEO</a>
         <a href="/google-maps" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">GOOGLE MAPS</a>
         <a href="/ppc" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">PPC</a>
         <a href="/social-media" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">SOCIAL</a>
         <a href="/contact" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">CONTACT</a>
+        <a href="/blog" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">BLOG</a>
         <a href="https://www.linkedin.com/in/webdevelopermanchester/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-white/65 transition-colors hover:text-[#FF003C]"><Linkedin className="h-4 w-4" /></a>
         <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-white/65 transition-colors hover:text-[#FF003C]"><Github className="h-4 w-4" /></a>
       </nav>

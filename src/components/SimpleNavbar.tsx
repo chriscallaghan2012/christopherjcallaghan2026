@@ -20,16 +20,14 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
 
   const links = [
     { label: 'HOME', href: '/' },
-    { label: 'BUILD', href: '/build' },
-    { label: 'START', href: '/start' },
-    { label: 'WORK', action: selectWork },
-    { label: 'BLOG', href: '/blog' },
     { label: 'ABOUT', href: '/about' },
+    { label: 'WORK', action: selectWork },
     { label: 'SEO', href: '/seo' },
     { label: 'GOOGLE MAPS', href: '/google-maps' },
     { label: 'PPC', href: '/ppc' },
     { label: 'SOCIAL', href: '/social-media' },
-    { label: 'CONTACT', href: '/contact' }
+    { label: 'CONTACT', href: '/contact' },
+    { label: 'START', href: '/start' }
   ];
 
   return (
