@@ -40,7 +40,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           <span className="hidden text-sm font-bold tracking-tight text-white sm:block">Christopher J. Callaghan</span>
         </a>
 
-        <nav className="hidden items-center gap-3 2xl:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-2 lg:flex" aria-label="Main navigation">
           {links.map((link) => (
             link.href
               ? <a key={link.label} href={link.href} className="whitespace-nowrap font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:text-[#FF003C]">{link.label}</a>
@@ -52,13 +52,13 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           <button onClick={() => { onSelectTab('build'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="group flex min-h-10 items-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.12em] text-white shadow-[0_0_22px_rgba(255,0,60,0.25)] transition-all hover:shadow-[0_0_32px_rgba(255,0,60,0.45)]">
             LET&apos;S BUILD <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
           </button>
-          <button className="flex h-10 w-10 items-center justify-center border border-white/15 text-white 2xl:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen}>
+          <button className="flex h-10 w-10 items-center justify-center border border-white/15 text-white lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen}>
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 2xl:hidden" aria-label="Mobile navigation">
+      {menuOpen && <nav className="border-t border-white/10 bg-[#08080a] px-5 py-3 lg:hidden" aria-label="Mobile navigation">
         {links.map((link) => link.href
               ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center justify-center border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
               : <button key={link.label} onClick={() => { link.action?.(); setMenuOpen(false); }} className="block min-h-12 w-full border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>

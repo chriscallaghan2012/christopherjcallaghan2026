@@ -2,6 +2,8 @@ import React from 'react';
 import { ArrowRight, MapPin, MousePointerClick, Search } from 'lucide-react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
+import { SystemMap } from './SystemMap';
+import type { SystemMapContent } from '../types';
 
 interface HomeSectionsProps {
   onOpenConsultation: () => void;
@@ -48,6 +50,22 @@ const growthServices = [
   { label: 'PPC', href: '/ppc', description: 'Reach people ready to take action.', icon: MousePointerClick, accent: 'text-[#FF6F91]', hoverText: 'group-hover:text-[#FF6F91]', border: 'hover:border-[#FF6F91]/55', wash: 'group-hover:bg-[#FF6F91]/[0.035]' }
 ];
 
+const homepageSystemMap: SystemMapContent = {
+  title: 'How an idea becomes a working product',
+  intro: 'The visible website is one part of a connected system: goals and constraints shape the scope, product experience, backend and launch.',
+  nodes: [
+    { id: 'idea', title: 'Idea or problem', summary: 'What needs to change?', detail: 'Start with the opportunity, problem or outcome. The technology choice comes after understanding what the product needs to do.', group: 'source' },
+    { id: 'audience', title: 'People using it', summary: 'Who is it for?', detail: 'Identify the customers, teams or users the experience needs to serve and what they need to accomplish.', group: 'source' },
+    { id: 'constraints', title: 'Requirements', summary: 'Budget, timing and existing systems', detail: 'Account for delivery constraints, existing tools, integrations, data and operational needs before fixing the scope.', group: 'source' },
+    { id: 'scope', title: 'Product scope', summary: 'Priorities and delivery plan', detail: 'Translate the goal into a sensible first release, key user journeys and an order for delivery.', group: 'work' },
+    { id: 'experience', title: 'Website or application', summary: 'The user-facing experience', detail: 'Design and build the interface around the tasks users need to complete, on desktop and mobile.', group: 'work' },
+    { id: 'backend', title: 'Backend and data', summary: 'Logic, storage and APIs', detail: 'Implement the server-side functions, data model, APIs and integrations needed to make the product work.', group: 'work' },
+    { id: 'launch', title: 'Deployment and learning', summary: 'Release, measure and improve', detail: 'Deploy the product, test critical journeys and use real usage or feedback to choose what to improve next.', group: 'work' },
+    { id: 'product', title: 'Working product', summary: 'A connected system ready for real use', detail: 'A live product where the interface, backend, data and integrations work together to support the original goal.', group: 'outcome' }
+  ],
+  connections: [['idea', 'scope'], ['audience', 'experience'], ['constraints', 'backend'], ['scope', 'experience'], ['scope', 'backend'], ['experience', 'launch'], ['backend', 'launch'], ['launch', 'product']]
+};
+
 export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, onNavigate }) => (
   <>
     <section id="ways-to-work" className="relative border-y border-white/10 bg-white/[0.015] py-24 md:py-32">
@@ -85,6 +103,7 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
         { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
       ]}
     />
+    <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
 
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />

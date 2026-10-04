@@ -4,6 +4,7 @@ import { PUBLIC_PAGES } from '../data/sitePages';
 import { PublicPageTab } from '../types';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
+import { SystemMap } from './SystemMap';
 
 type PublicContentTab = Exclude<PublicPageTab, 'contact'>;
 
@@ -66,6 +67,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         )}
 
         {content.flow && <div className="mt-12"><ProcessFlow {...content.flow} /></div>}
+        {content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
         <div className="mt-12 flex flex-col gap-4 sm:flex-row">
           <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FF003C] px-6 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_28px_rgba(255,0,60,0.24)] transition-all hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]">

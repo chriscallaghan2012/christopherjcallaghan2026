@@ -44,6 +44,21 @@ export interface ProcessFlowContent {
   steps: ProcessFlowStep[];
 }
 
+export interface SystemMapNode {
+  id: string;
+  title: string;
+  summary: string;
+  detail: string;
+  group: 'source' | 'work' | 'outcome';
+}
+
+export interface SystemMapContent {
+  title: string;
+  intro: string;
+  nodes: SystemMapNode[];
+  connections: Array<[string, string]>;
+}
+
 export interface RoleExpertise {
   title: string;
   subtitle: string;
