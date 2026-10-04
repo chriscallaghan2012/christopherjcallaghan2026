@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, MapPin, MousePointerClick, Search } from 'lucide-react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
+import { ProcessFlow } from './ProcessFlow';
 
 interface HomeSectionsProps {
   onOpenConsultation: () => void;
@@ -72,6 +73,18 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
         </div>
       </div>
     </section>
+
+    <ProcessFlow
+      eyebrow="From first conversation to live product"
+      title="A clear route from idea to launch."
+      intro="Start with the outcome. Shape the right scope, build the product and its connections, then launch and improve it with real feedback."
+      steps={[
+        { title: 'Set the objective', description: 'Clarify the problem, audience and outcome the work needs to support.' },
+        { title: 'Shape the scope', description: 'Choose the right product, priorities, integrations and delivery plan.' },
+        { title: 'Build and connect', description: 'Create the experience, backend and services needed to make it work.' },
+        { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
+      ]}
+    />
 
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />

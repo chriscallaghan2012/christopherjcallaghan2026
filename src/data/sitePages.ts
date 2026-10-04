@@ -1,4 +1,5 @@
 import { PublicPageTab } from '../types';
+import type { ProcessFlowContent } from '../types';
 
 export interface PublicPage {
   slug: string;
@@ -9,6 +10,7 @@ export interface PublicPage {
   headline: string;
   intro: string;
   points?: { title: string; description: string }[];
+  flow?: ProcessFlowContent;
 }
 
 export const PUBLIC_PAGES: Record<string, PublicPage> = {
@@ -44,7 +46,17 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'On-page improvements', description: 'Improve page titles, headings, internal links, snippets and calls to action so each page is clear to both search engines and people deciding who to contact.' },
       { title: 'Local and wider visibility', description: 'Connect your service pages, locations and business details so local search and broader organic search reinforce each other.' },
       { title: 'Measurement and iteration', description: 'Use search impressions, relevant visits and completed enquiries to see what is improving, find gaps and decide what to work on next.' }
-    ]
+    ],
+    flow: {
+      title: 'From search opportunity to useful growth',
+      intro: 'A practical SEO cycle: establish what is blocking discovery, improve the pages that matter, then measure and refine.',
+      steps: [
+        { title: 'Find the opportunity', description: 'Understand the services, audience, search intent and current visibility.' },
+        { title: 'Fix technical barriers', description: 'Review indexing, site structure, performance, mobile usability and metadata.' },
+        { title: 'Build useful pages', description: 'Improve service content, internal links and clear next steps for visitors.' },
+        { title: 'Measure and refine', description: 'Use search visibility, relevant visits and enquiries to choose the next improvement.' }
+      ]
+    }
   },
   'google-maps': {
     slug: 'google-maps',
@@ -60,7 +72,17 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Service-area pages', description: 'Create useful pages that explain what you do and where you work. Each page should answer local questions and give visitors a clear next step, not just repeat a town name.' },
       { title: 'Reviews and customer actions', description: 'Make it easier for customers to call, request directions, visit your site or leave feedback, with clear processes for responding to reviews.' },
       { title: 'Local performance', description: 'Track profile interactions, website visits, calls and enquiries to understand which locations and services are generating interest.' }
-    ]
+    ],
+    flow: {
+      title: 'Turn local intent into customer action',
+      intro: 'Connect an accurate business profile with consistent local information and useful service-area pages.',
+      steps: [
+        { title: 'Make the profile accurate', description: 'Check categories, services, hours, contact details, photos and links.' },
+        { title: 'Align local information', description: 'Keep business details consistent across key directories and your website.' },
+        { title: 'Answer local questions', description: 'Create useful location and service pages with clear visitor next steps.' },
+        { title: 'Review customer actions', description: 'Monitor calls, directions, site visits and enquiries, then improve what is unclear.' }
+      ]
+    }
   },
   ppc: {
     slug: 'ppc',
@@ -76,7 +98,17 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Ads and landing pages', description: 'Write useful, specific ad messages and connect each campaign to a page that matches the promise, answers likely questions and makes the next action obvious.' },
       { title: 'Conversion measurement', description: 'Configure and test measurement for meaningful actions such as qualified enquiries, calls, bookings or purchases, rather than treating every visit as a result.' },
       { title: 'Ongoing optimisation', description: 'Review spend, search terms, conversions and landing-page performance together. Use the evidence to refine targeting and budget, not just chase clicks.' }
-    ]
+    ],
+    flow: {
+      title: 'Connect ad spend to a measurable outcome',
+      intro: 'Build a paid-search loop around the action that matters, with each campaign and landing page telling the same story.',
+      steps: [
+        { title: 'Define the conversion', description: 'Choose the meaningful action, target area and budget constraints.' },
+        { title: 'Structure the campaign', description: 'Group searches by intent and exclude irrelevant traffic.' },
+        { title: 'Match ad to landing page', description: 'Keep the promise, page content and call to action consistent.' },
+        { title: 'Measure and adjust', description: 'Check conversion data and search terms before changing bids or budget.' }
+      ]
+    }
   },
   'social-media': {
     slug: 'social-media',
@@ -93,6 +125,16 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Community and response', description: 'Set expectations for comments, messages, moderation and escalation so customer conversations are handled consistently.' },
       { title: 'Paid social when it fits', description: 'Plan and test paid campaigns on relevant platforms, with clear audiences, creative variations, budget limits and a defined conversion goal.' },
       { title: 'Measure useful outcomes', description: 'Connect reach and engagement to visits, enquiries, sign-ups or sales. Use the results to adjust topics, formats, channels and campaign spend.' }
-    ]
+    ],
+    flow: {
+      title: 'From audience insight to a repeatable content loop',
+      intro: 'Plan content for the people and platforms that fit the business, then learn from useful actions rather than reach alone.',
+      steps: [
+        { title: 'Choose audience and channels', description: 'Match audience needs and available capacity to suitable platforms.' },
+        { title: 'Plan useful content', description: 'Choose themes, formats and a realistic publishing rhythm.' },
+        { title: 'Publish and respond', description: 'Adapt each post to its platform and handle audience replies consistently.' },
+        { title: 'Learn and refine', description: 'Review engagement, visits and enquiries to guide the next content cycle.' }
+      ]
+    }
   }
 };

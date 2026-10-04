@@ -33,6 +33,17 @@ export interface ServiceItem {
   idealFor?: string;
 }
 
+export interface ProcessFlowStep {
+  title: string;
+  description: string;
+}
+
+export interface ProcessFlowContent {
+  title: string;
+  intro: string;
+  steps: ProcessFlowStep[];
+}
+
 export interface RoleExpertise {
   title: string;
   subtitle: string;
