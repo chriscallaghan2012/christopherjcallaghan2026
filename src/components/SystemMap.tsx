@@ -91,9 +91,10 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
 
                   return <path
                     key={`${sourceId}-${targetId}`}
+                    className="system-map-link"
                     d={`M ${sourceX} ${sourcePosition.y} C ${controlX} ${sourcePosition.y}, ${controlX} ${targetPosition.y}, ${targetX} ${targetPosition.y}`}
                     fill="none"
-                    stroke={isSelected ? '#ff003c' : 'rgba(220,225,232,0.48)'}
+                    stroke={isSelected ? '#ff003c' : 'rgba(255,0,60,0.55)'}
                     strokeWidth={isSelected ? 2.5 : 2}
                     strokeDasharray="7 8"
                   />;
@@ -144,7 +145,7 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
                   </button>)}
                 </div>
               </section>}
-              {groupIndex < groupedNodes.length - 1 && <div aria-hidden="true" className="flex justify-center py-2 text-[#FF003C]"><ArrowDown className="h-4 w-4" /></div>}
+              {groupIndex < groupedNodes.length - 1 && <div aria-hidden="true" className="flex flex-col items-center py-2 text-[#FF003C]"><span className="flow-dash-y" /><ArrowDown className="h-4 w-4" /></div>}
             </React.Fragment>)}
           </div>
 

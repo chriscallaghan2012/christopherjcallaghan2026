@@ -19,7 +19,7 @@ export const ProcessFlow: React.FC<ProcessFlowProps> = ({ title, intro, steps, e
           <p className="mt-3 text-sm leading-relaxed text-white/60 md:text-base">{intro}</p>
         </header>
 
-        <ol className="grid items-stretch gap-2 md:grid-cols-[minmax(0,1fr)_24px_minmax(0,1fr)_24px_minmax(0,1fr)_24px_minmax(0,1fr)] md:gap-3">
+        <ol className="grid items-stretch gap-2 md:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] md:gap-3">
           {steps.map((step, index) => (
             <React.Fragment key={step.title}>
               <motion.li
@@ -33,9 +33,11 @@ export const ProcessFlow: React.FC<ProcessFlowProps> = ({ title, intro, steps, e
                 <h3 className="mt-3 text-base font-bold leading-snug text-white">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">{step.description}</p>
               </motion.li>
-              {index < steps.length - 1 && <div aria-hidden="true" className="flex items-center justify-center py-1 text-[#FF003C] md:py-0">
-                <ArrowDown className="h-4 w-4 md:hidden" />
-                <ArrowRight className="hidden h-4 w-4 md:block" />
+              {index < steps.length - 1 && <div aria-hidden="true" className="flex items-center justify-center gap-0 py-1 text-[#FF003C] md:py-0">
+                <span className="flow-dash-y md:hidden" />
+                <span className="flow-dash-x hidden flex-1 md:block" />
+                <ArrowDown className="h-4 w-4 shrink-0 md:hidden" />
+                <ArrowRight className="hidden h-4 w-4 shrink-0 md:block" />
               </div>}
             </React.Fragment>
           ))}
