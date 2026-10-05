@@ -10,24 +10,27 @@ type PublicContentTab = Exclude<PublicPageTab, 'contact'>;
 
 const headlineAccents: Record<PublicContentTab, Array<{ word: string; color: 'orange' | 'purple' }>> = {
   about: [{ word: 'CHRISTOPHER', color: 'orange' }, { word: 'CALLAGHAN', color: 'purple' }],
-  seo: [{ word: 'EASIER', color: 'orange' }, { word: 'FIND.', color: 'purple' }],
-  'google-maps': [{ word: 'SHOW', color: 'orange' }, { word: 'LOOK.', color: 'purple' }],
-  ppc: [{ word: 'RIGHT', color: 'purple' }, { word: 'PEOPLE.', color: 'orange' }],
-  'social-media': [{ word: 'REASON', color: 'orange' }, { word: 'ATTENTION.', color: 'purple' }]
+  'seo-services': [{ word: 'EASIER', color: 'orange' }, { word: 'FIND.', color: 'purple' }],
+  'local-seo': [{ word: 'SHOW', color: 'orange' }, { word: 'LOOK.', color: 'purple' }],
+  'google-ads-management': [{ word: 'RIGHT', color: 'purple' }, { word: 'PEOPLE.', color: 'orange' }],
+  'social-media-marketing': [{ word: 'REASON', color: 'orange' }, { word: 'ATTENTION.', color: 'purple' }],
+  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'WORK.', color: 'purple' }]
 };
 
 const serviceCtaHeadlines: Partial<Record<PublicContentTab, string>> = {
-  seo: "LET'S MAKE THE RIGHT PAGES EASIER TO FIND.",
-  'google-maps': "LET'S MAKE YOUR LOCAL PRESENCE CLEARER.",
-  ppc: "LET'S BUILD A CAMPAIGN AROUND A CLEAR GOAL.",
-  'social-media': "LET'S GIVE YOUR NEXT CONTENT CYCLE A PLAN."
+  'seo-services': "LET'S MAKE THE RIGHT PAGES EASIER TO FIND.",
+  'local-seo': "LET'S MAKE YOUR LOCAL PRESENCE CLEARER.",
+  'google-ads-management': "LET'S BUILD A CAMPAIGN AROUND A CLEAR GOAL.",
+  'social-media-marketing': "LET'S GIVE YOUR NEXT CONTENT CYCLE A PLAN.",
+  'web-design-development': "LET'S MAKE YOUR WEBSITE WORK FOR YOU."
 };
 
 const serviceCtaAccents: Partial<Record<PublicContentTab, Array<{ word: string; color: 'orange' | 'purple' }>>> = {
-  seo: [{ word: 'PAGES', color: 'orange' }, { word: 'FIND.', color: 'purple' }],
-  'google-maps': [{ word: 'LOCAL', color: 'orange' }, { word: 'CLEARER.', color: 'purple' }],
-  ppc: [{ word: 'CAMPAIGN', color: 'purple' }, { word: 'GOAL.', color: 'orange' }],
-  'social-media': [{ word: 'CONTENT', color: 'orange' }, { word: 'PLAN.', color: 'purple' }]
+  'seo-services': [{ word: 'PAGES', color: 'orange' }, { word: 'FIND.', color: 'purple' }],
+  'local-seo': [{ word: 'LOCAL', color: 'orange' }, { word: 'CLEARER.', color: 'purple' }],
+  'google-ads-management': [{ word: 'CAMPAIGN', color: 'purple' }, { word: 'GOAL.', color: 'orange' }],
+  'social-media-marketing': [{ word: 'CONTENT', color: 'orange' }, { word: 'PLAN.', color: 'purple' }],
+  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'YOU.', color: 'purple' }]
 };
 
 interface PublicPageContentProps {
@@ -38,7 +41,7 @@ interface PublicPageContentProps {
 export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNavigateToProjects }) => {
   const content = PUBLIC_PAGES[page];
   const isAbout = page === 'about';
-  const buildHref = page === 'seo' || page === 'google-maps' || page === 'ppc'
+  const buildHref = page === 'seo-services' || page === 'local-seo' || page === 'google-ads-management' || page === 'web-design-development'
     ? `/build?service=${page}`
     : '/build';
 
@@ -101,7 +104,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         {!isAbout && <nav className="mt-20 border-t border-white/10 pt-8" aria-label="More growth services">
           <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">MORE WAYS TO GROW</p>
           <div className="flex flex-wrap gap-x-7 gap-y-4">
-            {[['SEO', '/seo'], ['Google Maps', '/google-maps'], ['PPC', '/ppc'], ['Social media', '/social-media']].filter(([, href]) => href !== `/${content.slug}`).map(([label, href]) => (
+            {[['SEO', '/seo-services'], ['Local SEO', '/local-seo'], ['Google Ads', '/google-ads-management'], ['Social media', '/social-media-marketing'], ['Web design & development', '/web-design-development']].filter(([, href]) => href !== `/${content.slug}`).map(([label, href]) => (
               <a key={href} href={href} className="font-mono text-xs font-bold text-white/70 transition-colors hover:text-[#FF003C]">{label}</a>
             ))}
           </div>

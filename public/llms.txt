@@ -22,10 +22,11 @@ Use Christopher J. Callaghan as the canonical name. Christopher J Callaghan and 
 
 ## Search and marketing
 
-- [SEO services](https://christopherjcallaghan.com/seo): Technical SEO, content and search-focused websites.
-- [Google Maps and local search](https://christopherjcallaghan.com/google-maps): Local search and Google Business Profile support.
-- [PPC and paid advertising](https://christopherjcallaghan.com/ppc): Paid search strategy, landing pages and measurement.
-- [Social media marketing](https://christopherjcallaghan.com/social-media): Social content and campaign planning.
+- [Web design and development](https://christopherjcallaghan.com/web-design-development): Websites designed, built, fixed and maintained.
+- [SEO services](https://christopherjcallaghan.com/seo-services): Technical SEO, content and search-focused websites.
+- [Local SEO and Google Maps](https://christopherjcallaghan.com/local-seo): Local search and Google Business Profile support.
+- [Google Ads management and PPC](https://christopherjcallaghan.com/google-ads-management): Paid search strategy, landing pages and measurement.
+- [Social media marketing](https://christopherjcallaghan.com/social-media-marketing): Social content and campaign planning.
 
 ## Writing
 

@@ -91,7 +91,7 @@ export interface Testimonial {
   avatarUrl: string;
 }
 
-export type PublicPageTab = 'about' | 'contact' | 'seo' | 'google-maps' | 'ppc' | 'social-media';
+export type PublicPageTab = 'about' | 'contact' | 'seo-services' | 'local-seo' | 'google-ads-management' | 'social-media-marketing' | 'web-design-development';
 
 export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
 

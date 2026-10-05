@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, MapPin, MousePointerClick, Search } from 'lucide-react';
+import { ArrowRight, Code, MapPin, MousePointerClick, Search } from 'lucide-react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
@@ -45,9 +45,10 @@ const technologies = [
 ];
 
 const growthServices = [
-  { label: 'SEO', href: '/seo', description: 'Build long-term visibility in search.', icon: Search, accent: 'text-[#FFB347]', hoverText: 'group-hover:text-[#FFB347]', border: 'hover:border-[#FFB347]/55', wash: 'group-hover:bg-[#FFB347]/[0.035]' },
-  { label: 'Google Maps', href: '/google-maps', description: 'Help nearby customers find you.', icon: MapPin, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' },
-  { label: 'PPC', href: '/ppc', description: 'Reach people ready to take action.', icon: MousePointerClick, accent: 'text-[#FF6F91]', hoverText: 'group-hover:text-[#FF6F91]', border: 'hover:border-[#FF6F91]/55', wash: 'group-hover:bg-[#FF6F91]/[0.035]' }
+  { label: 'SEO', href: '/seo-services', description: 'Build long-term visibility in search.', icon: Search, accent: 'text-[#FFB347]', hoverText: 'group-hover:text-[#FFB347]', border: 'hover:border-[#FFB347]/55', wash: 'group-hover:bg-[#FFB347]/[0.035]' },
+  { label: 'Local SEO', href: '/local-seo', description: 'Help nearby customers find you.', icon: MapPin, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' },
+  { label: 'Google Ads', href: '/google-ads-management', description: 'Reach people ready to take action.', icon: MousePointerClick, accent: 'text-[#FF6F91]', hoverText: 'group-hover:text-[#FF6F91]', border: 'hover:border-[#FF6F91]/55', wash: 'group-hover:bg-[#FF6F91]/[0.035]' },
+  { label: 'Web Design & Development', href: '/web-design-development', description: 'Websites built, fixed and kept working.', icon: Code, accent: 'text-[#FF003C]', hoverText: 'group-hover:text-[#FF003C]', border: 'hover:border-[#FF003C]/55', wash: 'group-hover:bg-[#FF003C]/[0.035]' }
 ];
 
 const homepageSystemMap: SystemMapContent = {
@@ -138,9 +139,9 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
             <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
             <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility and paid campaigns, connected to your business goals.</p>
+          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
         </div>
-        <nav aria-label="SEO, Google Maps and PPC services" className="grid gap-3 sm:grid-cols-3">
+        <nav aria-label="SEO, local SEO, Google Ads and web design services" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {growthServices.map((service) => {
             const Icon = service.icon;
             return (

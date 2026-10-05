@@ -31,9 +31,12 @@ export const metadata: Metadata = {
     'AI Engineer',
     'Software Developer',
     'SEO Services',
+    'Local SEO',
     'Google Maps Marketing',
+    'Google Ads Management',
     'PPC Advertising',
-    'Social Media Marketing'
+    'Social Media Marketing',
+    'Web Design & Development'
   ],
   authors: [{ name: 'Christopher J. Callaghan', url: 'https://christopherjcallaghan.com' }],
   creator: 'Christopher J. Callaghan',

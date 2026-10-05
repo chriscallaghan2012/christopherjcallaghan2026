@@ -33,12 +33,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
     headline: 'WHAT ARE YOU BUILDING?',
     intro: 'Share the idea, problem or opportunity. I’ll get back to you by email.'
   },
-  seo: {
-    slug: 'seo',
-    tab: 'seo',
+  'seo-services': {
+    slug: 'seo-services',
+    tab: 'seo-services',
     title: 'SEO Services',
     description: 'Technical SEO, useful content and search-focused websites to help the right people find your business.',
-    eyebrow: 'SEARCH / SEO',
+    eyebrow: 'SEO SERVICES',
     headline: 'BE EASIER TO FIND.',
     intro: 'Make your website clearer to search engines and more useful to the people looking for what you do.',
     points: [
@@ -73,12 +73,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       connections: [['queries', 'intent-map'], ['site-state', 'technical-fixes'], ['intent-map', 'page-content'], ['technical-fixes', 'page-content'], ['page-content', 'internal-links'], ['internal-links', 'search-pages']]
     }
   },
-  'google-maps': {
-    slug: 'google-maps',
-    tab: 'google-maps',
-    title: 'Google Maps and Local Search',
+  'local-seo': {
+    slug: 'local-seo',
+    tab: 'local-seo',
+    title: 'Local SEO and Google Maps Marketing',
     description: 'Google Business Profile and local search support to help nearby customers find accurate information about your business.',
-    eyebrow: 'LOCAL SEARCH / GOOGLE MAPS',
+    eyebrow: 'LOCAL SEO / GOOGLE MAPS',
     headline: 'SHOW UP WHERE PEOPLE LOOK.',
     intro: 'Build a clearer local presence across Google Search and Maps, backed by accurate business information and useful location pages.',
     points: [
@@ -113,12 +113,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       connections: [['profile', 'profile-update'], ['business-data', 'consistency'], ['profile-update', 'location-pages'], ['consistency', 'location-pages'], ['location-pages', 'customer-actions'], ['customer-actions', 'local-discovery']]
     }
   },
-  ppc: {
-    slug: 'ppc',
-    tab: 'ppc',
-    title: 'PPC and Paid Advertising',
-    description: 'Paid search campaigns connected to relevant landing pages, conversion tracking and business goals.',
-    eyebrow: 'PAID SEARCH / PPC',
+  'google-ads-management': {
+    slug: 'google-ads-management',
+    tab: 'google-ads-management',
+    title: 'Google Ads Management and PPC',
+    description: 'Google Ads and paid search campaigns connected to relevant landing pages, conversion tracking and business goals.',
+    eyebrow: 'GOOGLE ADS / PPC',
     headline: 'REACH THE RIGHT PEOPLE.',
     intro: 'Plan paid campaigns around a clear offer, a useful landing page and measurement you can act on.',
     points: [
@@ -154,9 +154,9 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       connections: [['offer', 'ad-page'], ['audience', 'campaign'], ['search-intent', 'campaign'], ['campaign', 'ad-page'], ['ad-page', 'tracking'], ['tracking', 'optimisation'], ['optimisation', 'measured-actions']]
     }
   },
-  'social-media': {
-    slug: 'social-media',
-    tab: 'social-media',
+  'social-media-marketing': {
+    slug: 'social-media-marketing',
+    tab: 'social-media-marketing',
     title: 'Social Media Marketing',
     description: 'Social media planning, content and paid campaigns connected to your website, audience and business goals.',
     eyebrow: 'CONTENT / SOCIAL MEDIA',
@@ -194,6 +194,47 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
         { id: 'next-cycle', title: 'Next content cycle', summary: 'Plan informed by what people did', detail: 'Use audience response and meaningful actions to adjust topics, formats, channels and publishing cadence.', examples: ['Repeat useful themes', 'Retire weak formats', 'Update the publishing rhythm'], group: 'outcome' }
       ],
       connections: [['audience-needs', 'content-themes'], ['business-goals', 'content-themes'], ['capacity', 'formats'], ['content-themes', 'formats'], ['formats', 'publishing'], ['publishing', 'measurement'], ['measurement', 'next-cycle']]
+    }
+  },
+  'web-design-development': {
+    slug: 'web-design-development',
+    tab: 'web-design-development',
+    title: 'Web Design & Development',
+    description: 'Websites designed, built, fixed and maintained. New builds, redesigns, repairs, updates and software fixes without the need for a full project brief or business setup.',
+    eyebrow: 'WEB DESIGN / DEVELOPMENT',
+    headline: 'MAKE YOUR WEBSITE WORK.',
+    intro: 'A better website, built or fixed. Design, development and repair for websites and software that need to look right, work properly and turn visitors into enquiries.',
+    points: [
+      { title: 'Web design', description: 'Clear, on-brand design that guides visitors towards the next step, with responsive layouts that work on mobile, tablet and desktop.' },
+      { title: 'Website development', description: 'Fast, reliable websites built on modern foundations such as Next.js, React and WordPress, with clean code that is easy to update and maintain.' },
+      { title: 'Fixes and repairs', description: 'Broken layouts, broken forms, slow pages, console errors and display issues diagnosed and fixed so the site works the way it should.' },
+      { title: 'Software and system fixes', description: 'Bugs, crashes and performance problems in existing applications and software, repaired without rewriting what already works.' },
+      { title: 'Redesigns and improvements', description: 'Refresh an existing site with a modern design, clearer structure, faster pages and content that performs like a website built today.' },
+      { title: 'Updates and maintenance', description: 'Keep the site secure and current with regular updates, backups, monitoring and small improvements that compound over time.' }
+    ],
+    flow: {
+      title: 'From a website that works to one that works harder',
+      intro: 'A practical cycle for websites and software: understand the problem, design or fix it, launch it, then keep improving.',
+      steps: [
+        { title: 'Find the problem', description: 'Understand what the site or software needs to achieve and what is currently holding it back.' },
+        { title: 'Design or fix', description: 'Create the design, rebuild the page or repair the broken piece with a clear goal in mind.' },
+        { title: 'Test and launch', description: 'Check on real devices, confirm the essentials work, then launch or hand over.' },
+        { title: 'Maintain and improve', description: 'Keep it secure and current, measure how it performs and improve what matters.' }
+      ]
+    },
+    systemMap: {
+      title: 'How a working website stays connected',
+      intro: 'Business goals, the current website and budget shape the design and build work, while testing, launch and maintenance keep it working over time.',
+      nodes: [
+        { id: 'business-goal', title: 'Business goal', summary: 'The outcome the site should support', detail: 'Clarify what the business needs the website or software to achieve, such as enquiries, bookings, sales or simply a clearer professional presence.', examples: ['More enquiries or bookings', 'Faster, clearer information', 'A more professional impression'], group: 'source' },
+        { id: 'current-site', title: 'Current website or software', summary: 'What exists today and where it falls short', detail: 'Review the existing site or system to find broken elements, performance issues, outdated design or missing functionality.', examples: ['Broken forms or links', 'Slow page load times', 'Layout or mobile issues'], group: 'source' },
+        { id: 'budget', title: 'Budget and priorities', summary: 'What matters most right now', detail: 'Agree on the scope that fits the budget, prioritising the fixes and improvements that will make the biggest difference.', examples: ['Fix first, redesign later', 'Priority pages or features', 'A realistic timeline'], group: 'source' },
+        { id: 'design-build', title: 'Design and build', summary: 'The work that makes the goal real', detail: 'Design, build or repair the site or software against the agreed priorities, keeping it simple and maintainable.', examples: ['Responsive design', 'Modern development stack', 'Clean, updatable code'], group: 'work' },
+        { id: 'testing', title: 'Testing', summary: 'Checked before it reaches customers', detail: 'Test everything on real devices and browsers, confirm forms and key actions work, and review against the original goal.', examples: ['Mobile and desktop checks', 'Form and checkout testing', 'Speed and accessibility review'], group: 'work' },
+        { id: 'launch', title: 'Launch and handover', summary: 'Live and easy to manage', detail: 'Launch the change and hand over with clear, simple instructions so the business can manage its own content and not depend on a developer for every edit.', examples: ['Launch or deploy', 'Editing guidance', 'Backup and handover notes'], group: 'outcome' },
+        { id: 'maintenance', title: 'Maintenance', summary: 'Secure, current and improving', detail: 'Regular updates, backups and monitoring keep the site secure, while small measured improvements build on what is working.', examples: ['Updates and backups', 'Uptime and performance checks', 'Small improvement rounds'], group: 'outcome' }
+      ],
+      connections: [['business-goal', 'design-build'], ['current-site', 'design-build'], ['budget', 'design-build'], ['design-build', 'testing'], ['testing', 'launch'], ['launch', 'maintenance']]
     }
   }
 };

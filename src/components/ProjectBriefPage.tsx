@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Check, ChevronDown, LoaderCircle, Paperclip, X }
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 
 type BriefMode = 'build' | 'start';
-type GrowthServiceSlug = 'seo' | 'google-maps' | 'ppc';
+type GrowthServiceSlug = 'seo-services' | 'local-seo' | 'google-ads-management' | 'web-design-development';
 
 interface ProjectBriefPageProps {
   mode: BriefMode;
@@ -107,7 +107,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
   const isStart = mode === 'start';
   const goals = isStart ? START_GOALS : BUILD_GOALS;
   const initialGoal = !isStart && initialService
-    ? { seo: 'SEO', 'google-maps': 'Google Maps', ppc: 'PPC' }[initialService]
+    ? { 'seo-services': 'SEO', 'local-seo': 'Google Maps', 'google-ads-management': 'PPC', 'web-design-development': 'A website' }[initialService]
     : '';
   const [step, setStep] = useState(initialGoal ? 1 : 0);
   const [goal, setGoal] = useState(initialGoal);

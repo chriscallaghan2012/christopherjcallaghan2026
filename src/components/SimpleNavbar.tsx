@@ -22,10 +22,11 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     { label: 'HOME', href: '/' },
     { label: 'ABOUT', href: '/about' },
     { label: 'WORK', action: selectWork },
-    { label: 'SEO', href: '/seo' },
-    { label: 'GOOGLE MAPS', href: '/google-maps' },
-    { label: 'PPC', href: '/ppc' },
-    { label: 'SOCIAL', href: '/social-media' },
+    { label: 'SEO', href: '/seo-services' },
+    { label: 'LOCAL SEO', href: '/local-seo' },
+    { label: 'GOOGLE ADS', href: '/google-ads-management' },
+    { label: 'WEB DESIGN', href: '/web-design-development' },
+    { label: 'SOCIAL', href: '/social-media-marketing' },
     { label: 'CONTACT', href: '/contact' },
     { label: 'START', href: '/start' }
   ];

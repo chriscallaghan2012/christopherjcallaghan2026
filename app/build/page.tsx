@@ -17,9 +17,25 @@ type BuildPageProps = {
   searchParams: Promise<{ service?: string | string[] }>;
 };
 
+const GROWTH_SERVICE_SLUGS = ['seo-services', 'local-seo', 'google-ads-management', 'web-design-development'] as const;
+type GrowthServiceSlug = (typeof GROWTH_SERVICE_SLUGS)[number];
+
+const LEGACY_SERVICE_ALIASES: Record<string, GrowthServiceSlug> = {
+  seo: 'seo-services',
+  'google-maps': 'local-seo',
+  ppc: 'google-ads-management'
+};
+
+function resolveInitialService(raw?: string): GrowthServiceSlug | undefined {
+  if (!raw) return undefined;
+  if ((GROWTH_SERVICE_SLUGS as readonly string[]).includes(raw)) return raw as GrowthServiceSlug;
+  return LEGACY_SERVICE_ALIASES[raw];
+}
+
 export default async function BuildPage({ searchParams }: BuildPageProps) {
   const { service } = await searchParams;
-  const initialService = service === 'seo' || service === 'google-maps' || service === 'ppc' ? service : undefined;
+  const rawService = Array.isArray(service) ? service[0] : service;
+  const initialService = resolveInitialService(rawService);
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
