@@ -24,6 +24,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     projectType: initialService || 'Build something',
     budget: 'Not sure yet',
     timeline: 'Flexible',
@@ -48,6 +49,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
           projectType: formData.projectType,
           packageScope: formData.projectType,
           budget: formData.budget,
@@ -234,6 +236,20 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                         className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-mono uppercase tracking-widest text-white/50 block mb-2">
+                      Phone (optional)
+                    </label>
+                    <input
+                      type="tel"
+                      autoComplete="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="e.g. +44 7700 900000"
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70 transition-colors"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

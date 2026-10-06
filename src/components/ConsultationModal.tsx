@@ -50,6 +50,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [packageScope, setPackageScope] = useState('Build something');
   const [budgetRange, setBudgetRange] = useState('Not sure yet');
   const [details, setDetails] = useState('');
@@ -108,6 +109,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
         body: JSON.stringify({
           name,
           email,
+          phone,
           packageScope: preselectedService ? preselectedService.title : packageScope,
           projectType: preselectedService ? preselectedService.title : packageScope,
           fundingGoal: budgetRange,
@@ -264,6 +266,20 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1.5">
+                  Phone (optional)
+                </label>
+                <input
+                  type="tel"
+                  autoComplete="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="e.g. +44 7700 900000"
                   className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#00DFC9]/70"
                 />
               </div>

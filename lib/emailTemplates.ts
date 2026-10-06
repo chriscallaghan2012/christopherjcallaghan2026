@@ -1,6 +1,7 @@
 export interface EmailPayload {
   name: string;
   email: string;
+  phone?: string;
   projectType: string;
   budget?: string;
   timeline?: string;
@@ -122,6 +123,7 @@ export function generateAdminNotificationEmail(data: EmailPayload): string {
   const body = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;border-top:1px solid ${BRAND.border};border-bottom:1px solid ${BRAND.border};">
     ${detailRow('Name', data.name)}
     ${detailRow('Email', data.email, BRAND.orange)}
+    ${data.phone ? detailRow('Phone', data.phone, BRAND.orange) : ''}
     ${detailRow('Submission', isConsultation ? 'Project brief' : 'Contact enquiry', BRAND.purple)}
     ${detailRow('Selected scope and options', scope)}
     ${detailRow('Budget', data.budget || data.fundingGoal || 'Not specified', BRAND.orange)}

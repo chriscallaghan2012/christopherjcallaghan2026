@@ -120,6 +120,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
   const extraOptions = (isStart ? START_EXTRAS : BUILD_EXTRAS)[goal] ?? [];
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [budget, setBudget] = useState('Not sure yet');
   const [timeline, setTimeline] = useState('Flexible');
   const [details, setDetails] = useState('');
@@ -200,6 +201,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
       Object.entries({
         name,
         email,
+        phone,
         projectType: pageTitle,
         packageScope: briefScope,
         budget,
@@ -289,6 +291,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
                 </section>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Name *<input required value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none" /></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Email *<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none" /></label>
+                <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">Phone (optional)<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none" /></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Budget<select value={budget} onChange={(event) => setBudget(event.target.value)} className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none">{BUDGETS.map((item) => <option key={item}>{item}</option>)}</select></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65">Timing<select value={timeline} onChange={(event) => setTimeline(event.target.value)} className="brief-control mt-2 min-h-12 w-full px-4 text-sm normal-case tracking-normal text-white outline-none"><option>Flexible</option><option>As soon as possible</option><option>Within 1–3 months</option><option>More than 3 months</option><option>Just exploring</option></select></label>
                 <label className="text-xs font-mono uppercase tracking-widest text-white/65 lg:col-span-2">{goalPrompt} <span className="normal-case tracking-normal text-white/40">(optional)</span><textarea rows={3} value={goalDetails} onChange={(event) => setGoalDetails(event.target.value)} className="brief-control mt-2 w-full resize-y px-4 py-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30" /></label>

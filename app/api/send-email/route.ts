@@ -83,6 +83,7 @@ export async function POST(request: Request) {
     const {
       name,
       email,
+      phone,
       projectType,
       packageScope,
       budget,
@@ -116,6 +117,7 @@ export async function POST(request: Request) {
     const payload = {
       name,
       email,
+      phone: typeof phone === 'string' ? phone.trim() : '',
       projectType: projectType || 'General Architectural Inquiry',
       packageScope: packageScope || projectType || 'General Scope',
       budget: budget || fundingGoal || 'Not Specified',
