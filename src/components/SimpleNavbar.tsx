@@ -64,15 +64,16 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     setMobileServicesOpen(false);
   };
 
-  const linksBefore = [
+  const linksBefore: Array<{ label: string; href?: string; action?: () => void }> = [
     { label: 'HOME', href: '/' },
     { label: 'ABOUT', href: '/about' },
-    { label: 'WORK', action: selectWork }
+    { label: 'START', href: '/start' },
+    { label: 'BUILD', href: '/build' }
   ];
 
-  const linksAfter = [
-    { label: 'CONTACT', href: '/contact' },
-    { label: 'START', href: '/start' }
+  const linksAfter: Array<{ label: string; href?: string; action?: () => void }> = [
+    { label: 'WORK', action: selectWork },
+    { label: 'CONTACT', href: '/contact' }
   ];
 
   const isOnServicePage = SERVICE_MENU.some((item) => currentTab === item.href.slice(1));
@@ -143,7 +144,9 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           </div>
 
           {linksAfter.map((link) => (
-            <a key={link.label} href={link.href} className="whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{link.label}</a>
+            link.href
+              ? <a key={link.label} href={link.href} className="whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{link.label}</a>
+              : <button key={link.label} onClick={link.action} className={`whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
           ))}
         </nav>
 
@@ -186,7 +189,9 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           </div>
 
           {linksAfter.map((link) => (
-            <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center justify-center border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
+            link.href
+              ? <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-12 w-full items-center justify-center border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</a>
+              : <button key={link.label} onClick={() => { link.action?.(); setMenuOpen(false); }} className="block min-h-12 w-full border-b border-white/[0.07] text-center font-mono text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:text-[#FF003C]">{link.label}</button>
           ))}
         </div>
       </nav>}
