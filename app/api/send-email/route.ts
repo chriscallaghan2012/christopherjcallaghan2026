@@ -207,6 +207,8 @@ export async function POST(request: Request) {
     // Live Submissions: Send dual emails (Admin alert + Client receipt)
     let adminEmailSent = false;
     let clientEmailSent = false;
+    let adminEmailError = '';
+    let clientEmailError = '';
 
     if (resend) {
       try {
@@ -221,6 +223,7 @@ export async function POST(request: Request) {
         });
         adminEmailSent = true;
       } catch (e: any) {
+        adminEmailError = e?.message || 'Unknown Resend error';
         console.error('Failed to send admin email via Resend:', e);
       }
 
@@ -237,29 +240,51 @@ export async function POST(request: Request) {
         });
         clientEmailSent = true;
       } catch (e: any) {
+        clientEmailError = e?.message || 'Unknown Resend error';
         console.error('Failed to send client confirmation email via Resend:', e);
       }
     } else {
       console.log('RESEND_API_KEY is not set. The submission was stored in Neon.');
     }
 
-    if (!isSandboxTest && !isDatabaseConfigured && resend && !adminEmailSent) {
+    const resendActive = Boolean(resend);
+    const emailStatus = {
+      resendActive,
+      adminEmailSent,
+      clientEmailSent,
+      adminEmailError,
+      clientEmailError
+    };
+
+    // Fail loudly when the owner notification email could not be delivered.
+    // The submission is already saved to Neon, so nothing is lost - but the
+    // visitor must not be told "success" when no email was actually sent.
+    if (!isSandboxTest && (!resendActive || !adminEmailSent)) {
+      const errorMessage = !resendActive
+        ? 'Your brief was received and saved, but email delivery is not configured on the server yet. Please email hello@christopherjcallaghan.com directly if you do not hear back soon.'
+        : `Your brief was received and saved, but the email notification could not be sent right now (${adminEmailError || 'delivery failed'}). Please email hello@christopherjcallaghan.com directly if you do not hear back soon.`;
       return NextResponse.json({
         success: false,
-        error: 'Your enquiry could not be delivered. Please try again shortly.'
+        error: errorMessage,
+        refCode: dbResult?.refCode || 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+        emailStatus,
+        dbResult,
+        blueprintResult
       }, { status: 502 });
     }
+
+    // Success, but surface a warning when the client confirmation email failed.
+    const warning = !isSandboxTest && !clientEmailSent
+      ? 'Your brief was received and saved. The confirmation email could not be delivered right now, but I will still be in touch.'
+      : undefined;
 
     return NextResponse.json({
       success: true,
       message: 'Project specification transmitted successfully!',
       refCode: dbResult?.refCode || 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
       storage: isDatabaseConfigured ? 'neon' : 'email-only',
-      emailStatus: {
-        resendActive: Boolean(resend),
-        adminEmailSent,
-        clientEmailSent
-      },
+      emailStatus,
+      ...(warning ? { warning } : {}),
       dbResult,
       blueprintResult
     });

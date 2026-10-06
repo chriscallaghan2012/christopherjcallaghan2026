@@ -34,6 +34,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
   const [submitted, setSubmitted] = useState(false);
   const [refCode, setRefCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [noticeMessage, setNoticeMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,8 +61,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
 
       if (res.ok && data.success) {
         setRefCode(data.refCode || 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+        setNoticeMessage(data.warning || '');
         setSubmitted(true);
       } else {
+        setNoticeMessage('');
         setErrorMessage(data.error || 'Failed to transmit specification. Please try again.');
       }
     } catch (err: any) {
@@ -176,12 +179,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                     <span>Reference Code:</span>
                     <strong className="font-bold">{refCode}</strong>
                   </div>
+                  {noticeMessage && (
+                    <div className="mx-auto max-w-md p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs leading-relaxed">
+                      {noticeMessage}
+                    </div>
+                  )}
                   <p className="text-white/60 text-sm max-w-md mx-auto leading-relaxed">
                     Thanks, {formData.name}. I&apos;ll be in touch at <strong className="text-white">{formData.email}</strong>.
                   </p>
                   <button
                     onClick={() => {
                       setSubmitted(false);
+                      setNoticeMessage('');
                       setFormData({ ...formData, message: '' });
                     }}
                     className="px-6 py-2.5 rounded-xl bg-white/10 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/20 transition-colors"

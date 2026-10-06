@@ -127,6 +127,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reference, setReference] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
   const pageTitle = isStart ? 'Start a business' : 'Build a digital product';
   const goalPrompt = GOAL_CONTEXT_PROMPTS[goal] ?? 'What should I know about this project?';
@@ -192,6 +193,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
     event.preventDefault();
     setIsSubmitting(true);
     setError('');
+    setNotice('');
 
     try {
       const formData = new FormData();
@@ -217,6 +219,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
         return;
       }
       setReference(result.refCode || 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+      setNotice(result.warning || '');
       setStep(3);
     } catch {
       setError('A network error stopped the brief from sending. Please try again.');
@@ -337,6 +340,11 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
               <p className="font-mono text-xs uppercase tracking-widest text-[#00DFC9]">Brief received / {reference}</p>
               <h2 className="mt-3 text-3xl font-black text-white">Thanks, {name}.</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/60">I&apos;ll review what you shared and reply to {email}.</p>
+              {notice && (
+                <div className="mt-4 max-w-xl p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs leading-relaxed">
+                  {notice}
+                </div>
+              )}
               <dl className="mt-6 grid gap-4 border-t border-white/10 pt-5 text-sm sm:grid-cols-2">
                 <div><dt className="text-xs text-white/45">Project</dt><dd className="mt-1 text-white/85">{goal}{goalDetails && <span className="mt-1 block text-white/60">{goalDetails}</span>}</dd></div>
                 <div><dt className="text-xs text-white/45">Main focus</dt><dd className="mt-1 text-white/85">{focus}{focusDetails && <span className="mt-1 block text-white/60">{focusDetails}</span>}</dd></div>

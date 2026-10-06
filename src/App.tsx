@@ -107,7 +107,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
   return (
     <div className="relative isolate min-h-screen bg-[#060608] text-[#ededed] selection:bg-[#FF003C] selection:text-white flex flex-col font-sans">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#060608]">
-        {currentTab === 'home' && <FiberNetwork />}
+        <FiberNetwork />
         <div className="site-fiber-shade absolute inset-0" />
       </div>
 

@@ -58,6 +58,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [refCode, setRefCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [noticeMessage, setNoticeMessage] = useState('');
 
   // Lock page scroll + close on Escape while the modal is open.
   useEffect(() => {
@@ -122,8 +123,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
       if (res.ok && data.success) {
         setRefCode(data.refCode || 'CNS-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+        setNoticeMessage(data.warning || '');
         setSubmitted(true);
       } else {
+        setNoticeMessage('');
         setErrorMessage(data.error || 'Failed to submit consultation. Please try again.');
       }
     } catch (err: any) {
@@ -166,12 +169,18 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               <span>Reference Code:</span>
               <strong className="font-bold">{refCode}</strong>
             </div>
+            {noticeMessage && (
+              <div className="mx-auto max-w-sm p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs leading-relaxed">
+                {noticeMessage}
+              </div>
+            )}
             <p className="text-white/60 text-sm max-w-sm mx-auto leading-relaxed">
               Thanks, {name}. I&apos;ll be in touch at <strong className="text-white">{email}</strong>.
             </p>
             <button
               onClick={() => {
                 setSubmitted(false);
+                setNoticeMessage('');
                 onClose();
               }}
               className="px-6 py-2.5 rounded-xl bg-white/10 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/20"
