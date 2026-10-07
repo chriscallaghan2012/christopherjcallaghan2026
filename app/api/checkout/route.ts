@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { WEBSITE_CLASS_OFFER } from '@/lib/websiteClassOffer';
+import { WEBSITE_CLASS_OFFERS } from '@/lib/websiteClassOffer';
 
 export async function POST(request: Request) {
   if (request.headers.get('origin') !== new URL(request.url).origin) {
@@ -14,9 +14,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Checkout request is invalid.' }, { status: 400 });
   }
 
-  if (!body || typeof body !== 'object' || Object.keys(body).length !== 0) {
+  if (!body || typeof body !== 'object' || !('offerId' in body) || Object.keys(body).length !== 1) {
     return NextResponse.json({ error: 'Checkout request is invalid.' }, { status: 400 });
   }
+
+  const offerId = body.offerId;
+  if (offerId !== 'session' && offerId !== 'bootcamp') {
+    return NextResponse.json({ error: 'Choose a valid class option.' }, { status: 400 });
+  }
+  const offer = WEBSITE_CLASS_OFFERS[offerId];
 
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
@@ -30,11 +36,11 @@ export async function POST(request: Request) {
       mode: 'payment',
       line_items: [{
         price_data: {
-          currency: WEBSITE_CLASS_OFFER.currency,
-          unit_amount: WEBSITE_CLASS_OFFER.unitAmount,
+          currency: offer.currency,
+          unit_amount: offer.unitAmount,
           product_data: {
-            name: WEBSITE_CLASS_OFFER.name,
-            description: WEBSITE_CLASS_OFFER.description
+            name: offer.name,
+            description: offer.description
           }
         },
         quantity: 1
