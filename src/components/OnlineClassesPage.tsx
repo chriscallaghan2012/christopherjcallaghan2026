@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowRight, Check, Code2, CreditCard, Laptop, LoaderCircle, ShieldCheck } from 'lucide-react';
+import { ArrowDown, ArrowRight, Check, Code2, CreditCard, Laptop, LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react';
 import { WEBSITE_CLASS_OFFER, WEBSITE_CLASS_PRICE } from '@/lib/websiteClassOffer';
 
 export function OnlineClassesPage() {
@@ -50,8 +50,8 @@ export function OnlineClassesPage() {
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Live one-to-one website classes</p>
           <h1 className="mt-5 max-w-4xl text-4xl font-black leading-[1.06] text-white sm:text-5xl lg:text-6xl">Your website idea,<br /><span className="text-[#FF5575]">built together.</span></h1>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Get personal online guidance to plan, design and build a site you understand and own. You can start with no coding or design experience.</p>
-          <a href="#website-package" className="mt-8 inline-flex min-h-12 items-center gap-3 bg-[#FF003C] px-5 text-xs font-black tracking-[0.12em] text-white transition-colors hover:bg-[#df0035]">SEE THE PACKAGE <ArrowDown className="h-4 w-4" /></a>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Use online AI and design tools to turn your idea into a prototype, then learn how to shape it into an MVP with payments, a domain and code you own. No coding experience needed to start.</p>
+          <a href="#website-package" className="mt-8 inline-flex min-h-12 items-center gap-3 bg-[#FF003C] px-5 text-xs font-black tracking-[0.12em] text-white transition-colors hover:bg-[#df0035]">SEE THE CLASS <ArrowDown className="h-4 w-4 class-arrow-down" /></a>
           <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/10 pt-5 font-mono text-[10px] font-bold uppercase tracking-[0.13em] text-white/55">
             <span>One-to-one online</span><span>No coding needed</span><span>Your project stays yours</span>
           </div>
@@ -63,19 +63,20 @@ export function OnlineClassesPage() {
           <div className="max-w-2xl">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">From first thought to live site</p>
             <h2 className="mt-3 text-3xl font-black text-white">A clear path, built around you</h2>
-            <p className="mt-4 text-sm leading-relaxed text-white/55">We’ll focus on what your project actually needs, not a generic course syllabus. Move at your pace and ask questions at every step.</p>
+            <p className="mt-4 text-sm leading-relaxed text-white/55">Go from a clear brief to an AI-assisted design, a clickable prototype and a practical first version. Ask questions and learn by making your own project.</p>
           </div>
-          <ol className="mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-10 grid gap-x-6 gap-y-7 xl:grid-cols-5">
             {[
-              ['01', 'Start with the idea', 'Who is your site for? What should visitors be able to do?'],
-              ['02', 'Plan the pages', 'Organise your content, key messages and next steps for visitors.'],
-              ['03', 'Design and build', 'Choose an approach that fits, then create the site together.'],
-              ['04', 'Test and launch', 'Test what we build together and map the remaining steps to launch.']
+              ['01', 'Shape the idea', 'Use AI to clarify your audience, offer and what the site needs to do.'],
+              ['02', 'Design with AI', 'Explore visual directions, page layouts and starter content using online tools.'],
+              ['03', 'Make a prototype', 'Turn the design into a clickable preview and test the journey before building.'],
+              ['04', 'Build an MVP', 'Create the essential pages and learn how Stripe payments can fit your project.'],
+              ['05', 'Launch and own it', 'Connect a domain, understand deployment and keep your site files and code.']
             ].map(([number, title, detail], index) => (
-              <li key={number} className="relative border-t border-white/15 pt-4">
+              <li key={number} className="website-flow-step relative border-t border-white/15 pt-4" style={{ animationDelay: `${index * 110}ms` }}>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-[#FF5575]">STEP {number}</span>
-                  {index < 3 && <ArrowRight aria-hidden="true" className="hidden h-4 w-4 text-white/30 lg:block" />}
+                  {index < 4 && <ArrowRight aria-hidden="true" className="website-flow-arrow h-4 w-4 rotate-90 text-[#FF5575] xl:rotate-0" />}
                 </div>
                 <h3 className="mt-4 text-base font-bold text-white">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{detail}</p>
@@ -89,15 +90,15 @@ export function OnlineClassesPage() {
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Start from zero</p>
-            <h2 className="mt-3 text-3xl font-black text-white">You don’t need to know how to code.</h2>
-            <p className="mt-4 text-sm leading-relaxed text-white/60">You don’t need to arrive with a finished plan, a design background or the right technical words. Bring your idea and we’ll work out the next step together.</p>
+            <h2 className="mt-3 text-3xl font-black text-white">No coding experience? You can still build.</h2>
+            <p className="mt-4 text-sm leading-relaxed text-white/60">You don’t need a finished plan, a design background or technical vocabulary. We’ll use guided online tools and AI together. You’ll learn what each tool is doing, make the decisions and build confidence as your idea takes shape.</p>
           </div>
           <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {[
-              ['No programming experience', 'We can use beginner-friendly tools where they fit your project.'],
-              ['No design software required', 'We’ll shape the look and layout together, one decision at a time.'],
-              ['Questions are part of it', 'I’ll explain unfamiliar terms and show you what each choice means.'],
-              ['Custom features explained', 'If your idea needs code, I’ll explain what it does and guide you through it.']
+              ['AI as your design partner', 'Learn to prompt AI for ideas, page structure, visual directions and first drafts.'],
+              ['Prototype before building', 'Use browser-based design tools to make a preview and get the user journey right.'],
+              ['Code is explained, not assumed', 'AI can help create code; I’ll explain it in plain English and show you how to work with it.'],
+              ['You stay in control', 'Use accounts you own, connect your domain and keep your project files and code.']
             ].map(([title, detail]) => <div key={title} className="border-t border-white/10 pt-4"><h3 className="text-sm font-bold text-white">{title}</h3><p className="mt-2 text-sm leading-relaxed text-white/55">{detail}</p></div>)}
           </div>
         </div>
@@ -108,7 +109,7 @@ export function OnlineClassesPage() {
           <div className="max-w-2xl">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">One package · one clear next step</p>
             <h2 className="mt-3 text-3xl font-black text-white md:text-4xl">Build your website together</h2>
-            <p className="mt-4 text-sm leading-relaxed text-white/60">A focused 60-minute session to move your real website idea forward, with a developer beside you and a clear next step to take away.</p>
+            <p className="mt-4 text-sm leading-relaxed text-white/60">A focused 60-minute, one-to-one online class. Learn the AI-to-prototype-to-MVP workflow with a developer beside you and a clear next step to take away.</p>
           </div>
 
           {message && <div role={message.kind === 'error' ? 'alert' : 'status'} className={`mt-8 border px-4 py-3 text-sm ${statusStyle}`}><p>{message.text}</p>{message.kind === 'success' && <a href="/contact" className="mt-2 inline-flex items-center gap-2 font-bold underline underline-offset-4">Arrange your class <ArrowRight className="h-4 w-4" /></a>}</div>}
@@ -119,13 +120,13 @@ export function OnlineClassesPage() {
               <ul className="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {[
                   '60 minutes of live, one-to-one online guidance',
-                  'Plan your pages, content and design together',
-                  'Build a useful first version together',
-                  'Leave with clear next steps for launch and updates'
+                  'Use AI and online design tools to plan and prototype',
+                  'Explore an MVP, Stripe payments and domain setup',
+                  'Understand and keep your project files and code'
                 ].map((detail) => <li key={detail} className="flex gap-2 text-sm leading-relaxed text-white/65"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#FF5575]" />{detail}</li>)}
               </ul>
               <div className="mt-7 flex flex-wrap gap-5 border-t border-white/10 pt-5 text-xs text-white/45">
-                <span className="flex items-center gap-2"><Code2 className="h-4 w-4 text-[#FF5575]" />Beginner friendly</span>
+                <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-[#FF5575]" />AI-guided learning</span>
                 <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#FF5575]" />You keep the project</span>
               </div>
             </div>
@@ -143,7 +144,7 @@ export function OnlineClassesPage() {
             </div>
           </div>
 
-          <p className="mt-4 flex items-center gap-2 text-xs leading-relaxed text-white/40"><CreditCard className="h-4 w-4 shrink-0" />Domain, hosting and optional third-party tools are separate costs. We’ll set up accounts in your name so you stay in control. Larger projects may need more than one session; we’ll agree next steps together.</p>
+          <p className="mt-4 flex items-center gap-2 text-xs leading-relaxed text-white/40"><CreditCard className="h-4 w-4 shrink-0" />Domain, hosting and optional AI/design tools are separate costs. Payment processing fees are charged by Stripe. We’ll use accounts in your name so you stay in control. A full MVP can take more than one session; we’ll agree a realistic next step together.</p>
           <p className="mt-3 text-xs text-white/40">After checkout, contact me to arrange your session time.</p>
         </div>
       </section>

@@ -302,6 +302,40 @@ select:focus {
   animation: flowDashY 700ms linear infinite;
 }
 
+.website-flow-step {
+  opacity: 0;
+  animation: websiteFlowStepIn 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.website-flow-arrow {
+  animation: websiteFlowArrowDown 1.3s ease-in-out infinite;
+}
+
+.class-arrow-down {
+  animation: websiteFlowArrowDown 1.3s ease-in-out infinite;
+}
+
+@keyframes websiteFlowStepIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes websiteFlowArrowDown {
+  0%, 100% { opacity: 0.5; translate: 0 0; }
+  50% { opacity: 1; translate: 0 4px; }
+}
+
+@keyframes websiteFlowArrowRight {
+  0%, 100% { opacity: 0.5; translate: 0 0; }
+  50% { opacity: 1; translate: 4px 0; }
+}
+
+@media (min-width: 1280px) {
+  .website-flow-arrow {
+    animation-name: websiteFlowArrowRight;
+  }
+}
+
 @keyframes flowDashX {
   to { background-position-x: 12px; }
 }

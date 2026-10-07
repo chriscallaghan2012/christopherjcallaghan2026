@@ -1,8 +1,8 @@
 export const WEBSITE_CLASS_OFFER = {
   name: '60-minute Website Build Session',
-  description: 'A live one-to-one online session to plan and build a website together. No coding experience required.',
+  description: 'A 60-minute live online class using AI and design tools to plan a website, prototype an idea and learn the path to an MVP. No coding experience required.',
   currency: 'gbp',
-  unitAmount: 9900,
+  unitAmount: 14900,
   duration: '60 minutes'
 } as const;
 
