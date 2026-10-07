@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-
-const PRICE_ENV_KEYS = {
-  one_to_one: 'STRIPE_PRICE_ONE_TO_ONE',
-  build_together: 'STRIPE_PRICE_BUILD_TOGETHER'
-} as const;
-
-type ClassProduct = keyof typeof PRICE_ENV_KEYS;
+import { WEBSITE_CLASS_OFFER } from '@/lib/websiteClassOffer';
 
 export async function POST(request: Request) {
   if (request.headers.get('origin') !== new URL(request.url).origin) {
@@ -17,17 +11,15 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: 'Choose a class before continuing.' }, { status: 400 });
+    return NextResponse.json({ error: 'Checkout request is invalid.' }, { status: 400 });
   }
 
-  const product = body && typeof body === 'object' && 'product' in body ? body.product : null;
-  if (product !== 'one_to_one' && product !== 'build_together') {
-    return NextResponse.json({ error: 'Choose a valid class option.' }, { status: 400 });
+  if (!body || typeof body !== 'object' || Object.keys(body).length !== 0) {
+    return NextResponse.json({ error: 'Checkout request is invalid.' }, { status: 400 });
   }
 
   const secretKey = process.env.STRIPE_SECRET_KEY;
-  const priceId = process.env[PRICE_ENV_KEYS[product as ClassProduct]];
-  if (!secretKey || !priceId) {
+  if (!secretKey) {
     return NextResponse.json({ error: 'Online checkout is not configured yet. Please contact me to book.' }, { status: 503 });
   }
 
@@ -36,7 +28,17 @@ export async function POST(request: Request) {
     const origin = new URL(request.url).origin;
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{
+        price_data: {
+          currency: WEBSITE_CLASS_OFFER.currency,
+          unit_amount: WEBSITE_CLASS_OFFER.unitAmount,
+          product_data: {
+            name: WEBSITE_CLASS_OFFER.name,
+            description: WEBSITE_CLASS_OFFER.description
+          }
+        },
+        quantity: 1
+      }],
       allow_promotion_codes: true,
       success_url: `${origin}/classes?checkout=success`,
       cancel_url: `${origin}/classes?checkout=cancelled`
