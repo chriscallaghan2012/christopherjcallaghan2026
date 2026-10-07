@@ -23,8 +23,9 @@ const AiToolStudio = dynamic(() => import('./components/AiToolStudio').then((mod
 const EmailTemplateSandbox = dynamic(() => import('./components/EmailTemplateSandbox').then((module) => module.EmailTemplateSandbox));
 const PublicPageContent = dynamic(() => import('./components/PublicPageContent').then((module) => module.PublicPageContent));
 const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').then((module) => module.ProjectBriefPage));
+const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -37,6 +38,7 @@ function getTabFromBrowser(): ScreenTab {
   const path = window.location.pathname.replace(/\/$/, '');
   if (path === '/build' || path === '/start') return path.slice(1) as ScreenTab;
   if (path === '/package') return 'package';
+  if (path === '/classes') return 'classes';
   if (path === '/projects' || path === '/services' || path === '/expertise') return path.slice(1) as ScreenTab;
   if (path === '/email-sandbox') return 'email-sandbox';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
@@ -51,7 +53,7 @@ function getTabFromBrowser(): ScreenTab {
 /** Builds a shareable, refresh-safe URL for a given tab. */
 function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'home') return '/';
-  if (tab === 'build' || tab === 'start' || tab === 'package' || tab === 'email-sandbox') return `/${tab}`;
+  if (tab === 'build' || tab === 'start' || tab === 'package' || tab === 'classes' || tab === 'email-sandbox') return `/${tab}`;
   if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
@@ -138,6 +140,8 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
         {(currentTab === 'build' || currentTab === 'start') && (
           <ProjectBriefPage key={currentTab} mode={currentTab} initialService={initialService} />
         )}
+
+        {currentTab === 'classes' && <OnlineClassesPage />}
 
         {currentTab === 'package' && (
           <div className="pt-6">

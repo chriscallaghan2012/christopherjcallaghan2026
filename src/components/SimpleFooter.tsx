@@ -16,6 +16,7 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
       <nav className="flex flex-wrap items-center gap-x-6 gap-y-3" aria-label="Footer navigation">
         <button onClick={() => onNavigate('home')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">HOME</button>
         <a href="/about" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">ABOUT</a>
+        <a href="/classes" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">1:1 CLASSES</a>
         <button onClick={() => onNavigate('projects')} className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/55 transition-colors hover:text-[#FF003C]">WORK</button>
         <a href="/seo-services" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">SEO</a>
         <a href="/local-seo" className="font-mono text-[10px] font-bold tracking-[0.14em] text-white/65 transition-colors hover:text-[#FF003C]">LOCAL SEO</a>

@@ -93,7 +93,7 @@ export interface Testimonial {
 
 export type PublicPageTab = 'about' | 'contact' | 'seo-services' | 'local-seo' | 'google-ads-management' | 'social-media-marketing' | 'web-design-development';
 
-export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
+export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
 
 export interface ArchitectureBlueprint {
   title: string;

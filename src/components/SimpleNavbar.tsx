@@ -68,7 +68,8 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     { label: 'HOME', href: '/' },
     { label: 'ABOUT', href: '/about' },
     { label: 'START', href: '/start' },
-    { label: 'BUILD', href: '/build' }
+    { label: 'BUILD', href: '/build' },
+    { label: 'CLASSES', href: '/classes' }
   ];
 
   const linksAfter: Array<{ label: string; href?: string; action?: () => void }> = [
