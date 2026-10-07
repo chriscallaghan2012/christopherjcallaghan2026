@@ -66,6 +66,18 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
           </p>
         </div>
 
+        {project.caseStudy?.gallery && project.caseStudy.gallery.length > 0 && <section aria-label={`Screenshots for ${project.title}`} className="mb-8">
+          <h3 className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/60">Project screenshots</h3>
+          <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-none">
+            {project.caseStudy.gallery.map((image) => <figure key={image.src} className="w-40 shrink-0 sm:w-48">
+              <a href={image.href} target="_blank" rel="noreferrer" className="block overflow-hidden border border-white/10 bg-black/50">
+                <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="aspect-[9/16] w-full object-cover" />
+              </a>
+              <figcaption className="mt-2 text-xs leading-relaxed text-white/55">{image.caption}</figcaption>
+            </figure>)}
+          </div>
+        </section>}
+
         {/* Tech Stack Pills */}
         {project.techStack.length > 0 && <div className="mb-8">
           <h4 className="text-xs font-mono uppercase tracking-widest text-white/65 mb-3 flex items-center gap-2">

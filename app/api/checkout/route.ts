@@ -25,7 +25,8 @@ export async function POST(request: Request) {
   const offer = WEBSITE_CLASS_OFFERS[offerId];
 
   const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
+  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  if (!secretKey || !publishableKey) {
     return NextResponse.json({ error: 'Online checkout is not configured yet. Please contact me to book.' }, { status: 503 });
   }
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
     const origin = new URL(request.url).origin;
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      ui_mode: 'embedded',
       line_items: [{
         price_data: {
           currency: offer.currency,
@@ -46,15 +48,14 @@ export async function POST(request: Request) {
         quantity: 1
       }],
       allow_promotion_codes: true,
-      success_url: `${origin}/classes?checkout=success`,
-      cancel_url: `${origin}/classes?checkout=cancelled`
+      return_url: `${origin}/classes?checkout=success&session_id={CHECKOUT_SESSION_ID}`
     });
 
-    if (!session.url) {
-      return NextResponse.json({ error: 'Stripe could not create a checkout link. Please try again.' }, { status: 502 });
+    if (!session.client_secret) {
+      return NextResponse.json({ error: 'Stripe could not start embedded checkout. Please try again.' }, { status: 502 });
     }
 
-    return NextResponse.json({ url: session.url }, { headers: { 'Cache-Control': 'no-store' } });
+    return NextResponse.json({ clientSecret: session.client_secret }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     console.error('Stripe Checkout session creation failed:', error);
     return NextResponse.json({ error: 'Checkout could not be started. Please try again shortly.' }, { status: 502 });

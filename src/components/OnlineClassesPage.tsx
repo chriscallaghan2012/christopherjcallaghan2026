@@ -1,8 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowRight, Check, Code2, CreditCard, Laptop, LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { ArrowDown, ArrowRight, Check, Code2, CreditCard, Laptop, LoaderCircle, ShieldCheck, ShoppingCart, Sparkles, X } from 'lucide-react';
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { WEBSITE_BOOTCAMP_PRICE, WEBSITE_CLASS_OFFERS, WEBSITE_CLASS_PRICE, type WebsiteClassOfferId } from '@/lib/websiteClassOffer';
+
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 const bootcampSessions = [
   { title: 'Your idea and website plan', detail: 'Clarify your audience, goals and offer. Use AI to turn your idea into a clear website brief.' },
@@ -15,7 +20,10 @@ const bootcampSessions = [
 
 export function OnlineClassesPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [cartOfferId, setCartOfferId] = useState<WebsiteClassOfferId | null>(null);
+  const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: 'success' | 'info' | 'error'; text: string } | null>(null);
+  const cartOffer = cartOfferId ? WEBSITE_CLASS_OFFERS[cartOfferId] : null;
 
   useEffect(() => {
     const checkoutStatus = new URLSearchParams(window.location.search).get('checkout');
@@ -28,6 +36,11 @@ export function OnlineClassesPage() {
   }, []);
 
   const startCheckout = async (offerId: WebsiteClassOfferId) => {
+    if (!stripePromise) {
+      setMessage({ kind: 'error', text: 'Online checkout needs the Stripe publishable key. Please contact me to book while checkout is being configured.' });
+      return;
+    }
+
     setIsCheckingOut(true);
     setMessage(null);
 
@@ -37,9 +50,10 @@ export function OnlineClassesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offerId })
       });
-      const result = await response.json() as { url?: string; error?: string };
-      if (!response.ok || !result.url) throw new Error(result.error || 'Checkout could not be started.');
-      window.location.assign(result.url);
+      const result = await response.json() as { clientSecret?: string; error?: string };
+      if (!response.ok || !result.clientSecret) throw new Error(result.error || 'Checkout could not be started.');
+      setCheckoutClientSecret(result.clientSecret);
+      setIsCheckingOut(false);
     } catch (error) {
       setMessage({ kind: 'error', text: error instanceof Error ? error.message : 'Checkout could not be started. Please try again.' });
       setIsCheckingOut(false);
@@ -74,7 +88,7 @@ export function OnlineClassesPage() {
             <h2 className="mt-3 text-3xl font-black text-white">A clear path, built around you</h2>
             <p className="mt-4 text-sm leading-relaxed text-white/55">Go from a clear brief to an AI-assisted design, a clickable prototype and a practical first version. Ask questions and learn by making your own project.</p>
           </div>
-          <ol className="mt-10 grid gap-x-6 gap-y-7 xl:grid-cols-5">
+          <ol className="website-flow-grid mt-10 grid items-stretch gap-x-3 gap-y-2 xl:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] xl:gap-3">
             {[
               ['01', 'Shape the idea', 'Use AI to clarify your audience, offer and what the site needs to do.'],
               ['02', 'Design with AI', 'Explore visual directions, page layouts and starter content using online tools.'],
@@ -82,14 +96,19 @@ export function OnlineClassesPage() {
               ['04', 'Build an MVP', 'Create the essential pages and learn how Stripe payments can fit your project.'],
               ['05', 'Launch and own it', 'Connect a domain, understand deployment and keep your site files and code.']
             ].map(([number, title, detail], index) => (
-              <li key={number} className="website-flow-step relative border-t border-white/15 pt-4" style={{ animationDelay: `${index * 110}ms` }}>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-[#FF5575]">STEP {number}</span>
-                  {index < 4 && <ArrowRight aria-hidden="true" className="website-flow-arrow h-4 w-4 rotate-90 text-[#FF5575] xl:rotate-0" />}
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">{detail}</p>
-              </li>
+              <Fragment key={number}>
+                <li className="website-flow-step min-w-0 border-t-2 border-[#FF003C]/60 bg-white/[0.025] px-4 py-4 sm:px-5 sm:py-5" style={{ animationDelay: `${index * 110}ms` }}>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#00DFC9]">STEP {number}</p>
+                  <h3 className="mt-3 text-base font-bold leading-snug text-white">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60">{detail}</p>
+                </li>
+                {index < 4 && <li aria-hidden="true" className="flex items-center justify-center gap-0 py-1 text-[#FF003C] xl:py-0">
+                  <span className="flow-dash-y website-flow-y" />
+                  <span className="flow-dash-x website-flow-x w-full" />
+                  <ArrowDown className="h-4 w-4 shrink-0 xl:hidden" />
+                  <ArrowRight className="hidden h-4 w-4 shrink-0 xl:block" />
+                </li>}
+              </Fragment>
             ))}
           </ol>
         </div>
@@ -121,8 +140,6 @@ export function OnlineClassesPage() {
             <p className="mt-4 text-sm leading-relaxed text-white/60">Both options are live, one-to-one and designed for beginners. Bring your own website idea and work directly on it.</p>
           </div>
 
-          {message && <div role={message.kind === 'error' ? 'alert' : 'status'} className={`mt-8 border px-4 py-3 text-sm ${statusStyle}`}><p>{message.text}</p>{message.kind === 'success' && <a href="/contact" className="mt-2 inline-flex items-center gap-2 font-bold underline underline-offset-4">Arrange your class <ArrowRight className="h-4 w-4" /></a>}</div>}
-
           <div className="mt-10 grid gap-12 border-y border-white/15 py-8 xl:grid-cols-[0.8fr_1.2fr] xl:gap-14 xl:py-10">
             <article className="flex flex-col border-l-2 border-[#FF003C] pl-6">
               <div className="flex items-center gap-3"><Laptop className="h-5 w-5 text-[#FF5575]" /><h3 className="text-lg font-bold text-white">Flexible 60-minute session</h3></div>
@@ -130,8 +147,8 @@ export function OnlineClassesPage() {
               <div className="mt-5 flex items-center gap-5 text-xs text-white/45"><span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-[#FF5575]" />One-to-one online</span><span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#FF5575]" />Beginner friendly</span></div>
               <div className="mt-auto pt-8">
                 <p className="text-4xl font-black text-white">{WEBSITE_CLASS_PRICE}</p>
-                <button onClick={() => startCheckout('session')} disabled={isCheckingOut} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-white px-5 text-xs font-black tracking-[0.1em] text-black transition-colors hover:bg-[#FF5575] hover:text-white disabled:cursor-wait disabled:opacity-60">
-                  {isCheckingOut ? <><LoaderCircle className="h-4 w-4 animate-spin" /> OPENING CHECKOUT</> : <>BOOK A FLEXIBLE SESSION <ArrowRight className="h-4 w-4" /></>}
+                <button onClick={() => { setCartOfferId('session'); setCheckoutClientSecret(null); setMessage(null); }} aria-pressed={cartOfferId === 'session'} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-white px-5 text-xs font-black tracking-[0.1em] text-black transition-colors hover:bg-[#FF5575] hover:text-white">
+                  {cartOfferId === 'session' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD SESSION TO CART</>}
                 </button>
                 <a href="/contact" className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 border border-white/25 px-5 text-center text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#FF5575] hover:text-[#FF5575]">ASK ABOUT A SESSION <ArrowRight className="h-4 w-4" /></a>
               </div>
@@ -145,11 +162,34 @@ export function OnlineClassesPage() {
               <ol className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
                 {bootcampSessions.map((session, index) => <li key={session.title} className="website-flow-step border-t border-white/10 pt-3" style={{ animationDelay: `${index * 90}ms` }}><span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#FF5575]">Session {index + 1} · 60 minutes</span><h4 className="mt-2 text-sm font-bold text-white">{session.title}</h4><p className="mt-1 text-xs leading-relaxed text-white/55">{session.detail}</p></li>)}
               </ol>
-              <button onClick={() => startCheckout('bootcamp')} disabled={isCheckingOut} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-wait disabled:opacity-60">
-                {isCheckingOut ? <><LoaderCircle className="h-4 w-4 animate-spin" /> OPENING CHECKOUT</> : <>BOOK THE SIX-SESSION BOOTCAMP <ArrowRight className="h-4 w-4" /></>}
+                <button onClick={() => { setCartOfferId('bootcamp'); setCheckoutClientSecret(null); setMessage(null); }} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">
+                {cartOfferId === 'bootcamp' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD BOOTCAMP TO CART</>}
               </button>
             </article>
           </div>
+
+          <aside id="class-checkout" aria-label="Your cart and checkout" className="mt-8 border border-white/15 bg-black/35 p-5 sm:p-7">
+            <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+              <div>
+                <div className="flex items-center gap-2 text-[#FF5575]"><ShoppingCart className="h-4 w-4" /><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]">Your cart</p></div>
+                {cartOffer ? (
+                  <div className="mt-4 flex items-start justify-between gap-4">
+                    <div><h3 className="text-base font-bold text-white">{cartOffer.name}</h3><p className="mt-1 text-sm text-white/50">{cartOffer.duration} · one-time payment</p></div>
+                    <button onClick={() => { setCartOfferId(null); setCheckoutClientSecret(null); setMessage(null); }} aria-label="Remove item from cart" className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/15 text-white/60 transition-colors hover:border-[#FF5575] hover:text-white"><X className="h-4 w-4" /></button>
+                  </div>
+                ) : <p className="mt-3 text-sm text-white/50">Choose a session or bootcamp above to add it here.</p>}
+              </div>
+              <div className="min-w-52 border-t border-white/10 pt-5 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+                <div className="flex items-baseline justify-between gap-8"><span className="text-sm text-white/55">Total</span><span className="text-2xl font-black text-white">{cartOfferId === 'bootcamp' ? WEBSITE_BOOTCAMP_PRICE : cartOfferId === 'session' ? WEBSITE_CLASS_PRICE : '—'}</span></div>
+                <button onClick={() => cartOfferId && startCheckout(cartOfferId)} disabled={!cartOfferId || isCheckingOut || Boolean(checkoutClientSecret)} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-40">
+                  {isCheckingOut ? <><LoaderCircle className="h-4 w-4 animate-spin" /> CONNECTING TO STRIPE</> : <>SECURE CHECKOUT <ArrowRight className="h-4 w-4" /></>}
+                </button>
+              </div>
+            </div>
+            {message && <div role={message.kind === 'error' ? 'alert' : 'status'} className={`mt-5 border px-4 py-3 text-sm ${statusStyle}`}><p>{message.text}</p>{message.kind === 'success' && <a href="/contact" className="mt-2 inline-flex items-center gap-2 font-bold underline underline-offset-4">Arrange your class <ArrowRight className="h-4 w-4" /></a>}</div>}
+            {checkoutClientSecret && stripePromise && <div className="mt-6 border-t border-white/10 pt-6"><p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">Secure payment</p><EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}><div className="min-h-[420px]"><EmbeddedCheckout /></div></EmbeddedCheckoutProvider></div>}
+            <p className="mt-4 text-xs leading-relaxed text-white/40">Stripe securely processes payment. Domain, hosting and optional AI/design tools are separate costs. You keep the accounts, project files and code.</p>
+          </aside>
 
           <p className="mt-4 flex items-center gap-2 text-xs leading-relaxed text-white/40"><CreditCard className="h-4 w-4 shrink-0" />Domain, hosting and optional AI/design tools are separate costs. Payment processing fees are charged by Stripe. We’ll use accounts in your name so you stay in control. A full MVP can take more than one session; we’ll agree a realistic next step together.</p>
           <p className="mt-3 text-xs text-white/40">After checkout, contact me to arrange your session or plan the six bootcamp dates.</p>

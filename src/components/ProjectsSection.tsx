@@ -23,7 +23,7 @@ const CATEGORIES = [
   'APIs & Integrations'
 ];
 
-const PRIORITIZED_PROJECT_IDS = [14, 4, 5, 15, 16, 11, 6, 13, 1];
+const PRIORITIZED_PROJECT_IDS = [17, 18, 14, 4, 5, 15, 16, 11, 6, 13];
 const PROJECT_ORDER = new Map(PRIORITIZED_PROJECT_IDS.map((id, index) => [id, index]));
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({

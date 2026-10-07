@@ -9,6 +9,40 @@ const FALLBACK_PROJECT_IMAGES: Record<string, string> = {
   'tutors-directory.png': '/assets/projects/tutors-directory.svg'
 };
 
+const toScreenshotGallery = (project: string, screenshots: Array<{ file: string; caption: string }>) =>
+  screenshots.map(({ file, caption }) => ({
+    src: `/images/${file}`,
+    alt: `${project}: ${caption}`,
+    caption,
+    href: `/images/${file}`
+  }));
+
+const scannerGallery = toScreenshotGallery('Matchday Parking scanner', [
+  { file: 'scaner1.jpg', caption: 'Staff access screen' },
+  { file: 'scnner2.jpg', caption: 'Live ticket scanning' },
+  { file: 'scanner4.jpg', caption: 'Manual order-code lookup' },
+  { file: 'scanner5.jpg', caption: 'Order download, cached orders and scan sync' }
+]);
+
+const mwFitnessGallery = toScreenshotGallery('MWFitness mobile app', [
+  { file: 'app1.mwfitness.app.jpg', caption: 'Member home and current workout' },
+  { file: 'app2.mwfitness.app.jpg', caption: 'Progress, weigh-in and nutrition dashboard' },
+  { file: 'app3.mwfitness.app.jpg', caption: 'Training programme and weekly sessions' },
+  { file: 'scanner3.app.jpg', caption: 'Training schedule and upcoming sessions' },
+  { file: 'Screenshot_20260928_192332_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 05' },
+  { file: 'Screenshot_20260928_192336_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 06' },
+  { file: 'Screenshot_20260928_192339_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 07' },
+  { file: 'Screenshot_20260928_192341_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 08' },
+  { file: 'Screenshot_20260928_192344_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 09' },
+  { file: 'Screenshot_20260928_192347_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 10' },
+  { file: 'Screenshot_20260928_192349_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 11' },
+  { file: 'Screenshot_20260928_192351_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 12' },
+  { file: 'Screenshot_20260928_192354_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 13' },
+  { file: 'Screenshot_20260928_192356_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 14' },
+  { file: 'Screenshot_20260928_192359_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 15' },
+  { file: 'Screenshot_20260928_192405_uk.co.mwfitness.app.jpg', caption: 'MWFitness app screen 16' }
+]);
+
 export function getProjectImageUrl(imagePath: string): string {
   if (!imagePath) return '/assets/projects/project-preview.svg';
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
@@ -230,7 +264,7 @@ export const PROJECTS_DATA: Project[] = [
     techStack: ["Next.js", "React", "Tailwind CSS", "Node.js", "Firebase", "OpenAI API", "Gemini API", "Suno", "n8n"],
     imageUrls: ["/images/genafize-logo.png"],
     carouselDataAiHints: ["AI toolkit dashboard", "prompt engineering interface"],
-    featured: true
+    featured: false
   },
   {
     id: 3,
@@ -421,6 +455,44 @@ export const PROJECTS_DATA: Project[] = [
       business: 'A men’s grooming brand offering products and mobile barbering.',
       built: 'An online shop with product discovery, basket and clear paths to book a barber visit.',
       role: 'I built the e-commerce website and connected the service and product journeys.'
+    },
+    featured: true
+  },
+  {
+    id: 17,
+    title: 'Matchday Parking Scanner PWA',
+    category: 'Full-Stack',
+    description: 'A staff-facing event order and ticket-scanning app for check-in teams, with offline scanning and automatic sync when service returns.',
+    longDescription: 'An installable Progressive Web App for event staff to load event orders, scan and validate tickets at check-in, and keep the entry workflow moving when connectivity is unreliable. Scan results are queued on the device and synchronized when service returns.',
+    techStack: ['Progressive Web App', 'Event orders', 'Ticket scanning', 'Offline sync'],
+    imageUrls: ['/images/scnner2.jpg'],
+    caseStudy: {
+      business: 'Matchday Parking event teams handling order check-in at busy venues.',
+      built: 'A staff scanner PWA covering event-order loading, ticket validation and check-in, with offline scanning and queued result synchronization as part of the workflow.',
+      role: 'I built the scanner app and its event-order, check-in and offline synchronization workflows.',
+      delivery: [
+        'Loads event orders onto staff devices while connected.',
+        'Supports ticket scanning and validation as part of event check-in.',
+        'Continues scanning when connectivity drops and queues results locally.',
+        'Synchronizes queued scan results when service returns.'
+      ],
+      gallery: scannerGallery
+    },
+    featured: true
+  },
+  {
+    id: 18,
+    title: 'MWFitness React Native App',
+    category: 'Full-Stack',
+    description: 'A cross-platform React Native mobile app for MWFitness, built for iOS and Android.',
+    longDescription: 'A React Native mobile application created for MWFitness and targeting both iOS and Android devices.',
+    techStack: ['React Native', 'iOS', 'Android'],
+    imageUrls: ['/images/app1.mwfitness.app.jpg'],
+    caseStudy: {
+      business: 'MWFitness, a personal training and online coaching business in Stockport.',
+      built: 'A cross-platform mobile app using React Native for iOS and Android.',
+      role: 'I built the MWFitness mobile app for both supported platforms.',
+      gallery: mwFitnessGallery
     },
     featured: true
   }

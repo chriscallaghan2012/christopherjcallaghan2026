@@ -311,6 +311,24 @@ select:focus {
   animation: websiteFlowArrowDown 1.3s ease-in-out infinite;
 }
 
+.website-flow-grid .website-flow-x {
+  display: none;
+}
+
+.website-flow-grid .website-flow-y {
+  display: block;
+}
+
+@media (min-width: 1280px) {
+  .website-flow-grid .website-flow-x {
+    display: block;
+  }
+
+  .website-flow-grid .website-flow-y {
+    display: none;
+  }
+}
+
 .class-arrow-down {
   animation: websiteFlowArrowDown 1.3s ease-in-out infinite;
 }
