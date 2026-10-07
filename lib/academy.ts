@@ -1,0 +1,1 @@
+export const ACADEMY_URL = 'https://academy.christopherjcallaghan.com';

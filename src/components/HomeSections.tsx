@@ -1,9 +1,10 @@
 import React from 'react';
-import { ArrowRight, Code, MapPin, MousePointerClick, Search } from 'lucide-react';
+import { ArrowDown, ArrowRight, Code, MapPin, MousePointerClick, Search } from 'lucide-react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
 import type { SystemMapContent } from '../types';
+import { ACADEMY_URL } from '../../lib/academy';
 
 interface HomeSectionsProps {
   onOpenConsultation: () => void;
@@ -201,4 +202,59 @@ export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onNavigate })
       </div>
     </section>
   </>
+);
+
+interface AcademySectionProps {
+  onNavigateToClasses: () => void;
+}
+
+export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClasses }) => (
+  <section aria-labelledby="academy-home-title" className="relative overflow-hidden border-y border-white/10 bg-black/35 py-20 md:py-24">
+    <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(ellipse_at_top_right,rgba(255,0,60,0.12),transparent_68%)]" />
+    <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+      <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
+        <div>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#00DFC9]">Learn AI. Build your idea. Launch your MVP.</p>
+          <h2 id="academy-home-title" className="mt-5 text-4xl font-black leading-[1.05] text-white sm:text-5xl md:text-6xl">AI Builder Academy</h2>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Learn how to use AI to turn your ideas into real websites, apps and MVPs, even if you don&apos;t have a traditional coding background. Practical, live 60-minute classes teach you to build with modern AI-assisted tools, not follow a traditional coding course.</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
+            <button onClick={onNavigateToClasses} className="inline-flex min-h-12 items-center gap-2 border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#00DFC9] hover:text-[#00DFC9]">VIEW CLASSES <ArrowRight aria-hidden="true" className="h-4 w-4" /></button>
+          </div>
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">New practical classes added regularly.</p>
+        </div>
+        <div className="border-y border-white/10 py-5 lg:my-1 lg:self-center">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">Tools and skills</p>
+          <ul aria-label="Practical skills and tools" className="mt-4 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-2">
+            {['AI-assisted design', 'AI prototyping', 'Stitch', 'Google AI Studio', 'VS Code + AI', 'GitHub', 'Vercel', 'Neon', 'APIs', 'Deployment', 'Domains', 'Building MVPs'].map((skill) => (
+              <li key={skill} className="border-t border-white/10 py-2.5 text-sm text-white/65">{skill}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-12 border-t border-white/10 pt-7 md:mt-16 md:pt-9">
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">From idea to launch</p>
+          <p className="text-xs text-white/40">One practical step at a time</p>
+        </div>
+        <ol aria-label="IDEA to LAUNCH" className="grid grid-cols-2 gap-x-5 gap-y-3 sm:grid-cols-3 sm:gap-y-0 lg:grid-cols-6">
+          {['IDEA', 'DESIGN', 'PROTOTYPE', 'BUILD', 'DEPLOY', 'LAUNCH'].map((step, index) => (
+            <li key={step} className="relative min-w-0 border-l-2 border-[#FF003C]/60 bg-white/[0.025] px-3 py-3 sm:px-4 lg:border-l-0 lg:border-t-2 lg:px-3">
+              <span className="font-mono text-[10px] font-bold text-[#00DFC9]">0{index + 1}</span>
+              <span className="mt-1 block text-base font-black text-white">{step}</span>
+              {index < 5 && <>
+                <ArrowRight aria-hidden="true" className={`absolute -right-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:hidden ${index % 2 === 0 ? '' : 'hidden'}`} />
+                <ArrowDown aria-hidden="true" className={`absolute -bottom-3 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:hidden ${index % 2 === 1 ? '' : 'hidden'}`} />
+                {index === 2
+                  ? <ArrowDown aria-hidden="true" className="absolute -bottom-3 left-1/2 z-10 hidden h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:block lg:hidden" />
+                  : <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 hidden h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:block lg:hidden" />}
+                <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 hidden h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] lg:block" />
+              </>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
 );

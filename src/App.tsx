@@ -6,8 +6,7 @@ import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab } 
 import { PUBLIC_PAGES } from './data/sitePages';
 import { SimpleNavbar } from './components/SimpleNavbar';
 import { Hero } from './components/Hero';
-import { HomeSections } from './components/HomeSections';
-import { HomeClosingSections } from './components/HomeSections';
+import { AcademySection, HomeClosingSections, HomeSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
 import { SimpleFooter } from './components/SimpleFooter';
 const FiberNetwork = dynamic(() => import('./components/FiberNetwork').then((module) => module.FiberNetwork), { ssr: false, loading: () => null });
@@ -134,6 +133,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
               onViewAll={() => setCurrentTab('projects')}
             />
             <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
+            <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />
           </>
         )}
 

@@ -1,9 +1,10 @@
 'use client';
 
 import { Fragment, useEffect, useState } from 'react';
-import { ArrowDown, ArrowRight, Check, Code2, CreditCard, Laptop, LoaderCircle, ShieldCheck, ShoppingCart, Sparkles, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, Check, CreditCard, Laptop, LoaderCircle, ShieldCheck, ShoppingCart, Sparkles, X } from 'lucide-react';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { ACADEMY_URL } from '@/lib/academy';
 import { WEBSITE_BOOTCAMP_PRICE, WEBSITE_CLASS_OFFERS, WEBSITE_CLASS_PRICE, type WebsiteClassOfferId } from '@/lib/websiteClassOffer';
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -34,6 +35,12 @@ export function OnlineClassesPage() {
     }
 
   }, []);
+
+  const selectOffer = (offerId: WebsiteClassOfferId) => {
+    setCartOfferId(offerId);
+    setCheckoutClientSecret(null);
+    setMessage(null);
+  };
 
   const startCheckout = async (offerId: WebsiteClassOfferId) => {
     if (!stripePromise) {
@@ -68,6 +75,17 @@ export function OnlineClassesPage() {
 
   return (
     <div className="overflow-hidden">
+      <section aria-labelledby="academy-classes-banner-title" className="border-b border-white/10 bg-[#0b0b0e]/80 px-5 py-6 md:px-8 md:py-7">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-3xl">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#00DFC9]">A separate way to learn</p>
+            <h2 id="academy-classes-banner-title" className="mt-1 text-xl font-black text-white">AI Builder Academy</h2>
+            <p className="mt-2 text-sm leading-relaxed text-white/65">Alongside the one-to-one classes below, the Academy offers live 60-minute practical classes to help you use modern AI tools to turn an idea into a website, app or MVP. No traditional coding background needed.</p>
+          </div>
+          <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
+        </div>
+      </section>
+
       <section className="relative border-b border-white/10 px-5 py-16 md:px-8 md:py-24">
         <div className="absolute right-0 top-0 -z-10 h-full w-1/2 bg-[radial-gradient(ellipse_at_top_right,rgba(255,0,60,0.14),transparent_65%)]" />
         <div className="mx-auto max-w-7xl">
@@ -147,7 +165,7 @@ export function OnlineClassesPage() {
               <div className="mt-5 flex items-center gap-5 text-xs text-white/45"><span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-[#FF5575]" />One-to-one online</span><span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#FF5575]" />Beginner friendly</span></div>
               <div className="mt-auto pt-8">
                 <p className="text-4xl font-black text-white">{WEBSITE_CLASS_PRICE}</p>
-                <button onClick={() => { setCartOfferId('session'); setCheckoutClientSecret(null); setMessage(null); }} aria-pressed={cartOfferId === 'session'} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-white px-5 text-xs font-black tracking-[0.1em] text-black transition-colors hover:bg-[#FF5575] hover:text-white">
+                <button onClick={() => selectOffer('session')} aria-pressed={cartOfferId === 'session'} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-white px-5 text-xs font-black tracking-[0.1em] text-black transition-colors hover:bg-[#FF5575] hover:text-white">
                   {cartOfferId === 'session' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD SESSION TO CART</>}
                 </button>
                 <a href="/contact" className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 border border-white/25 px-5 text-center text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#FF5575] hover:text-[#FF5575]">ASK ABOUT A SESSION <ArrowRight className="h-4 w-4" /></a>
@@ -162,7 +180,7 @@ export function OnlineClassesPage() {
               <ol className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
                 {bootcampSessions.map((session, index) => <li key={session.title} className="website-flow-step border-t border-white/10 pt-3" style={{ animationDelay: `${index * 90}ms` }}><span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#FF5575]">Session {index + 1} · 60 minutes</span><h4 className="mt-2 text-sm font-bold text-white">{session.title}</h4><p className="mt-1 text-xs leading-relaxed text-white/55">{session.detail}</p></li>)}
               </ol>
-                <button onClick={() => { setCartOfferId('bootcamp'); setCheckoutClientSecret(null); setMessage(null); }} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">
+              <button onClick={() => selectOffer('bootcamp')} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">
                 {cartOfferId === 'bootcamp' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD BOOTCAMP TO CART</>}
               </button>
             </article>
@@ -192,9 +210,10 @@ export function OnlineClassesPage() {
           </aside>
 
           <p className="mt-4 flex items-center gap-2 text-xs leading-relaxed text-white/40"><CreditCard className="h-4 w-4 shrink-0" />Domain, hosting and optional AI/design tools are separate costs. Payment processing fees are charged by Stripe. We’ll use accounts in your name so you stay in control. A full MVP can take more than one session; we’ll agree a realistic next step together.</p>
-          <p className="mt-3 text-xs text-white/40">After checkout, contact me to arrange your session or plan the six bootcamp dates.</p>
+          <p className="mt-3 text-xs text-white/40">After checkout, contact me to arrange your one-to-one session or plan the six programme dates.</p>
         </div>
       </section>
+
     </div>
   );
 }
