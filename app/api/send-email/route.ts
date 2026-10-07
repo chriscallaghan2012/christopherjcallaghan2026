@@ -5,7 +5,7 @@ import { isDatabaseConfigured, saveAiBlueprint, saveContactSubmission, saveConsu
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
-const adminEmail = process.env.ADMIN_EMAIL || 'christopher@christopherjcallaghan.com';
+const submissionEmail = process.env.FORM_SUBMISSION_EMAIL || 'instantonlinesuccess@gmail.com';
 const senderIdentity = 'Christopher J. Callaghan <christopher@christopherjcallaghan.com>';
 const MAX_ATTACHMENT_FILES = 5;
 const MAX_ATTACHMENT_BYTES = 3.5 * 1024 * 1024;
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
     // 2. Resend Email Dispatch
     if (isSandboxTest) {
       // Sandbox Test Delivery
-      const recipient = testRecipient || adminEmail;
+      const recipient = testRecipient || submissionEmail;
       const html = templateType === 'client' 
         ? generateClientConfirmationEmail(payload) 
         : generateAdminNotificationEmail(payload);
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
         const emailRes = await resend.emails.send({
           from: senderIdentity,
           to: [recipient],
-          replyTo: adminEmail,
+          replyTo: submissionEmail,
           subject: `[SANDBOX TEST] ${templateType === 'client' ? 'Client Confirmation Receipt' : 'New Project Specification Alert'}`,
           html
         });
@@ -217,7 +217,7 @@ export async function POST(request: Request) {
         // Send Admin Notification
         await resend.emails.send({
           from: senderIdentity,
-          to: [adminEmail],
+          to: [submissionEmail],
           replyTo: email,
           subject: `⚡ New ${submissionLabel}: ${safeSubjectName} (${safeSubjectScope})`,
           html: generateAdminNotificationEmail(payload),
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
         await resend.emails.send({
           from: senderIdentity,
           to: [email],
-          replyTo: adminEmail,
+          replyTo: submissionEmail,
           subject: type === 'consultation'
             ? 'We received your project brief - Christopher J. Callaghan'
             : 'Thanks for your enquiry - Christopher J. Callaghan',
@@ -263,8 +263,8 @@ export async function POST(request: Request) {
     // visitor must not be told "success" when no email was actually sent.
     if (!isSandboxTest && (!resendActive || !adminEmailSent)) {
       const errorMessage = !resendActive
-        ? 'Your brief was received and saved, but email delivery is not configured on the server yet. Please email hello@christopherjcallaghan.com directly if you do not hear back soon.'
-        : `Your brief was received and saved, but the email notification could not be sent right now (${adminEmailError || 'delivery failed'}). Please email hello@christopherjcallaghan.com directly if you do not hear back soon.`;
+        ? `Your brief was received and saved, but email delivery is not configured on the server yet. Please email ${submissionEmail} directly if you do not hear back soon.`
+        : `Your brief was received and saved, but the email notification could not be sent right now (${adminEmailError || 'delivery failed'}). Please email ${submissionEmail} directly if you do not hear back soon.`;
       return NextResponse.json({
         success: false,
         error: errorMessage,
