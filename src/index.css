@@ -302,6 +302,30 @@ select:focus {
   animation: flowDashY 700ms linear infinite;
 }
 
+.academy-flow-grid .academy-flow-dash {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .academy-flow-grid .academy-flow-dash-mobile-x,
+  .academy-flow-grid .academy-flow-dash-mobile-y {
+    display: block;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .academy-flow-grid .academy-flow-dash-tablet-x,
+  .academy-flow-grid .academy-flow-dash-tablet-y {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .academy-flow-grid .academy-flow-dash-desktop-x {
+    display: block;
+  }
+}
+
 .website-flow-step {
   opacity: 0;
   animation: websiteFlowStepIn 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;

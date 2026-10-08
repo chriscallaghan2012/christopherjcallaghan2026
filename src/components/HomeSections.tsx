@@ -238,17 +238,27 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">From idea to launch</p>
           <p className="text-xs text-white/40">One practical step at a time</p>
         </div>
-        <ol aria-label="IDEA to LAUNCH" className="grid grid-cols-2 gap-x-5 gap-y-3 sm:grid-cols-3 sm:gap-y-0 lg:grid-cols-6">
+        <ol aria-label="IDEA to LAUNCH" className="academy-flow-grid grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-y-0">
           {['IDEA', 'DESIGN', 'PROTOTYPE', 'BUILD', 'DEPLOY', 'LAUNCH'].map((step, index) => (
             <li key={step} className="relative min-w-0 border-l-2 border-[#FF003C]/60 bg-white/[0.025] px-3 py-3 sm:px-4 lg:border-l-0 lg:border-t-2 lg:px-3">
               <span className="font-mono text-[10px] font-bold text-[#00DFC9]">0{index + 1}</span>
               <span className="mt-1 block text-base font-black text-white">{step}</span>
               {index < 5 && <>
-                <ArrowRight aria-hidden="true" className={`absolute -right-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:hidden ${index % 2 === 0 ? '' : 'hidden'}`} />
-                <ArrowDown aria-hidden="true" className={`absolute -bottom-3 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:hidden ${index % 2 === 1 ? '' : 'hidden'}`} />
-                {index === 2
-                  ? <ArrowDown aria-hidden="true" className="absolute -bottom-3 left-1/2 z-10 hidden h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:block lg:hidden" />
-                  : <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 hidden h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:block lg:hidden" />}
+                {index % 2 === 0 ? <>
+                  <span className="flow-dash-x academy-flow-dash academy-flow-dash-mobile-x absolute -right-5 top-1/2 z-0 w-5 -translate-y-1/2" />
+                  <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:hidden" />
+                </> : <>
+                  <span className="flow-dash-y academy-flow-dash academy-flow-dash-mobile-y absolute -bottom-8 left-1/2 z-0 h-8 -translate-x-1/2" />
+                  <ArrowDown aria-hidden="true" className="absolute -bottom-3 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:hidden" />
+                </>}
+                {index === 2 ? <>
+                  <span className="flow-dash-y academy-flow-dash academy-flow-dash-tablet-y absolute -bottom-8 left-1/2 z-0 h-8 -translate-x-1/2" />
+                  <ArrowDown aria-hidden="true" className="absolute -bottom-3 left-1/2 z-10 hidden h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:block lg:hidden" />
+                </> : <>
+                  <span className="flow-dash-x academy-flow-dash academy-flow-dash-tablet-x absolute -right-5 top-1/2 z-0 w-5 -translate-y-1/2" />
+                  <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 hidden h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:block lg:hidden" />
+                </>}
+                <span className="flow-dash-x academy-flow-dash academy-flow-dash-desktop-x absolute -right-5 top-1/2 z-0 w-5 -translate-y-1/2" />
                 <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 hidden h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] lg:block" />
               </>}
             </li>
