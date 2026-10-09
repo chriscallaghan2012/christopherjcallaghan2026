@@ -1,27 +1,54 @@
-import { ArrowUpRight, MessageCircle } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { ArrowUpRight, MessageCircle, X } from 'lucide-react';
 
 const whatsappUrl = new URL('https://wa.me/447516391265');
 whatsappUrl.searchParams.set('text', 'Hi Christopher, I would like to talk about a project.');
 
 export function WhatsAppContact() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="fixed bottom-4 right-4 z-[70] sm:bottom-6 sm:right-6 max-sm:static max-sm:mx-auto max-sm:mb-5 max-sm:mt-5 max-sm:flex max-sm:w-full max-sm:max-w-6xl max-sm:justify-end max-sm:px-5 max-sm:pb-[env(safe-area-inset-bottom)]">
-      <a
-        href={whatsappUrl.toString()}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Message Christopher on WhatsApp, opens in a new tab"
-        className="group inline-flex min-h-14 items-center gap-3 border border-[#FF5575]/45 bg-[#100a0c]/95 px-4 text-white shadow-[0_14px_45px_rgba(0,0,0,0.38)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#FF5575] hover:bg-[#1b0b10] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF5575]"
-      >
-        <span className="flex h-9 w-9 items-center justify-center border border-[#FF5575]/35 bg-[#FF5575]/10 text-[#FF9BAC]">
-          <MessageCircle aria-hidden="true" className="h-4 w-4" />
-        </span>
-        <span className="grid gap-0.5 text-left">
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#FF9BAC]">LET&apos;S TALK</span>
-          <span className="text-sm font-semibold">Message on WhatsApp</span>
-        </span>
-        <ArrowUpRight aria-hidden="true" className="ml-1 h-4 w-4 text-white/55 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      </a>
+    <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] sm:bottom-6 sm:right-6">
+      <div className={`flex h-14 items-center justify-end overflow-hidden rounded-full border border-[#FF5575]/45 bg-[#100a0c]/95 shadow-[0_14px_45px_rgba(0,0,0,0.38)] backdrop-blur transition-[width] duration-300 motion-reduce:transition-none ${isOpen ? 'w-[min(18rem,calc(100vw-2rem))]' : 'w-14'}`}>
+        {isOpen ? (
+          <>
+            <a
+              href={whatsappUrl.toString()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex min-w-0 flex-1 items-center gap-3 pl-3 pr-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-[#FF5575]/35 bg-[#FF5575]/10 text-[#FF9BAC]">
+                <MessageCircle aria-hidden="true" className="h-4 w-4" />
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm font-semibold">Message on WhatsApp</span>
+              <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-white/55 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close WhatsApp contact"
+              title="Close"
+              className="mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
+            >
+              <X aria-hidden="true" className="h-4 w-4" />
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Open WhatsApp contact"
+            aria-expanded={false}
+            title="Message on WhatsApp"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-[#FF9BAC] transition-colors hover:bg-[#FF5575]/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
+          >
+            <MessageCircle aria-hidden="true" className="h-5 w-5" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }
