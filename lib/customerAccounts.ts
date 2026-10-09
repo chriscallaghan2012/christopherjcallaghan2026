@@ -211,7 +211,8 @@ export async function recordPaidCustomerPurchase(session: Stripe.Checkout.Sessio
   }
 
   const offer = WEBSITE_CLASS_OFFERS[offerId as WebsiteClassOfferId];
-  if (session.amount_total !== offer.unitAmount || session.currency !== offer.currency) {
+  if (session.amount_total === null || session.amount_total <= 0
+    || session.amount_total > offer.unitAmount || session.currency !== offer.currency) {
     throw new Error('Stripe Checkout session amount does not match the configured offer.');
   }
 

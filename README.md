@@ -27,7 +27,7 @@ Configure these values locally and in Vercel Project Settings > Environment Vari
 
 For paid class checkout and purchase history, apply `database/migrations/005_customer_accounts.sql` to the Neon database. In Stripe, add a webhook endpoint at `https://<your-production-domain>/api/stripe/webhook` and subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Copy that endpoint's signing secret to `STRIPE_WEBHOOK_SECRET`. Set the Stripe test keys in Vercel Preview while testing and the matching live keys in Production when ready. Never commit `.env.local` or put secrets in Neon tables. After changing environment variables, restart the local server or redeploy the Vercel environment.
 
-Customers create an account on the classes checkout section before the embedded Stripe payment form. Passwords must be at least 12 characters. Paid purchases are added to `/account` only after Stripe's signed webhook confirms payment.
+Customers add a class on `/classes`, confirm it in the cart popup, then create an account or sign in and pay on the dedicated `/checkout` page. Passwords must be at least 12 characters. Paid purchases are added to `/account` only after Stripe's signed webhook confirms payment.
 
 ### 3. Run Locally
 ```bash

@@ -72,7 +72,7 @@ export async function POST(request: Request) {
         quantity: 1
       }],
       allow_promotion_codes: true,
-      return_url: `${origin}/classes?checkout=success&session_id={CHECKOUT_SESSION_ID}`
+      return_url: `${origin}/checkout?offer=${offerId}&checkout=success&session_id={CHECKOUT_SESSION_ID}`
     });
 
     if (!session.client_secret) {
