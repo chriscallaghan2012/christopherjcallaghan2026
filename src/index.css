@@ -253,7 +253,6 @@ body {
   [class~="text-white/35"],
   [class~="text-white/40"],
   [class~="text-white/45"],
-  border-color: #ff003c !important;
   [class~="text-white/55"],
   [class~="text-white/60"],
   [class~="text-white/65"]
@@ -263,7 +262,7 @@ body {
 
 input:focus,
 textarea:focus,
-  outline-color: #ff003c;
+select:focus {
   border-color: #ff003c !important;
 }
 
