@@ -146,6 +146,7 @@ export function ClassCheckoutPage() {
 
             {offer && !isLoading && !isCheckoutComplete && (
               <section className="mt-8 border border-white/20 bg-[#0d0d11] p-5 sm:p-7">
+                <form onSubmit={(event) => { event.preventDefault(); void continueToPayment(); }}>
                 {customer ? (
                   <div className="flex items-start gap-3 border-b border-white/15 pb-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-emerald-300/40 bg-emerald-300/10 text-emerald-200"><Check className="h-5 w-5" /></span>
@@ -168,10 +169,11 @@ export function ClassCheckoutPage() {
                 )}
 
                 {!clientSecret && (
-                  <button type="button" onClick={continueToPayment} disabled={isSubmitting || (accountMode === 'register' && !customer && (!name.trim() || !email.trim() || password.length < 12)) || (accountMode === 'login' && !customer && (!email.trim() || !password))} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 py-3 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-45">
+                  <button type="submit" disabled={isSubmitting || (accountMode === 'register' && !customer && (!name.trim() || !email.trim() || password.length < 12)) || (accountMode === 'login' && !customer && (!email.trim() || !password))} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 py-3 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-45">
                     {isSubmitting ? <><LoaderCircle className="h-4 w-4 animate-spin" /> PREPARING SECURE PAYMENT</> : <>{customer ? 'CONTINUE TO PAYMENT' : accountMode === 'register' ? 'CREATE ACCOUNT & CONTINUE' : 'SIGN IN & CONTINUE'} <ArrowRight className="h-4 w-4" /></>}
                   </button>
                 )}
+                </form>
               </section>
             )}
 
