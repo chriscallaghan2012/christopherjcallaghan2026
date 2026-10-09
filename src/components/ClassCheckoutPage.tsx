@@ -119,7 +119,7 @@ export function ClassCheckoutPage() {
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)] lg:gap-12">
           <section aria-labelledby="checkout-title">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#00DFC9]">Secure checkout</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">Secure checkout</p>
             <h1 id="checkout-title" className="mt-3 text-4xl font-black text-white sm:text-5xl">Complete your booking</h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-white/75">Create your account or sign in, then complete payment below. Your account and secure Stripe payment stay together on this page.</p>
 
@@ -180,7 +180,7 @@ export function ClassCheckoutPage() {
             {clientSecret && stripePromise && !isCheckoutComplete && (
               <section className="mt-8 border border-white/20 bg-[#0d0d11] p-5 sm:p-7">
                 <div className="mb-5 flex items-center gap-3 border-b border-white/15 pb-5">
-                  <span className="flex h-10 w-10 items-center justify-center border border-[#00DFC9]/40 bg-[#00DFC9]/10 text-[#8affef]"><LockKeyhole className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center border border-[#FF5575]/40 bg-[#FF5575]/10 text-[#FF9BAC]"><LockKeyhole className="h-5 w-5" /></span>
                   <div><h2 className="font-bold text-white">Payment details</h2><p className="mt-1 text-sm text-white/75">Securely processed by Stripe</p></div>
                 </div>
                 <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
@@ -189,7 +189,7 @@ export function ClassCheckoutPage() {
               </section>
             )}
 
-            <p className="mt-6 flex items-start gap-3 text-sm leading-relaxed text-white/75"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#00DFC9]" />Your password is securely hashed, and card details are entered directly into Stripe’s secure checkout.</p>
+            <p className="mt-6 flex items-start gap-3 text-sm leading-relaxed text-white/75"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#FF5575]" />Your password is securely hashed, and card details are entered directly into Stripe’s secure checkout.</p>
           </section>
 
           <aside aria-label="Order summary" className="h-fit border border-white/20 bg-[#0d0d11] p-5 sm:p-7 lg:sticky lg:top-8">
@@ -213,7 +213,7 @@ export function ClassCheckoutPage() {
               <p className="py-6 text-sm leading-relaxed text-white/75">No class selected.</p>
             )}
             <div className="mt-6 border-t border-white/15 pt-5">
-              <p className="flex items-center gap-2 text-sm font-bold text-white"><CreditCard className="h-4 w-4 text-[#00DFC9]" /> Payment security</p>
+              <p className="flex items-center gap-2 text-sm font-bold text-white"><CreditCard className="h-4 w-4 text-[#FF5575]" /> Payment security</p>
               <p className="mt-2 text-sm leading-relaxed text-white/75">Payments are handled by Stripe. You’ll receive purchase access through your account after payment confirmation.</p>
             </div>
             <a href="/classes#website-package" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white/80 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white"><ArrowLeft className="h-4 w-4" /> Change your selection</a>

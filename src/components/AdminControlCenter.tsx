@@ -403,7 +403,7 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
         ['connectors', 'CONNECTORS'],
         ['research', 'RESEARCH SETUP'],
         ['submissions', 'SUBMISSIONS']
-      ] as const).map(([id, label]) => <button key={id} onClick={() => { setTab(id); setError(''); setNotice(''); }} className={`min-h-11 shrink-0 border-b-2 px-1 font-mono text-[10px] font-bold tracking-[0.14em] ${tab === id ? 'border-[#00DFC9] text-white' : 'border-transparent text-white/45 hover:text-white/75'}`}>{label}</button>)}
+      ] as const).map(([id, label]) => <button key={id} onClick={() => { setTab(id); setError(''); setNotice(''); }} className={`min-h-11 shrink-0 border-b-2 px-1 font-mono text-[10px] font-bold tracking-[0.14em] ${tab === id ? 'border-[#FF003C] text-white' : 'border-transparent text-white/45 hover:text-white/75'}`}>{label}</button>)}
     </nav>
 
     <p className="mt-5 text-xs leading-relaxed text-white/45">
@@ -424,7 +424,7 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
         <aside>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Saved drafts</h2>
-            <button onClick={startNewDraft} aria-label="New social draft" className="flex h-9 w-9 items-center justify-center border border-white/15 text-white hover:border-[#00DFC9]"><Plus className="h-4 w-4" /></button>
+            <button onClick={startNewDraft} aria-label="New social draft" className="flex h-9 w-9 items-center justify-center border border-white/15 text-white hover:border-[#FF003C]"><Plus className="h-4 w-4" /></button>
           </div>
           <div className="divide-y divide-white/10 border-y border-white/10">
             {drafts.map((item) => <button key={item.id} onClick={() => selectDraft(item)} className={`block w-full py-4 text-left ${draft.id === item.id ? 'text-white' : 'text-white/60 hover:text-white'}`}>
@@ -445,8 +445,8 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
           <fieldset>
             <legend className="mb-2 font-mono text-[10px] uppercase tracking-widest text-white/55">Channels</legend>
             <div className="flex flex-wrap gap-2">
-              {channels.map((channel) => <label key={channel.id} className={`flex min-h-10 cursor-pointer items-center gap-2 border px-3 text-xs transition-colors ${draft.channels.includes(channel.id) ? 'border-[#00DFC9]/70 bg-[#00DFC9]/10 text-white' : 'border-white/15 text-white/55 hover:text-white'}`}>
-                <input type="checkbox" checked={draft.channels.includes(channel.id)} onChange={() => toggleChannel(channel.id)} className="accent-[#00DFC9]" />{channel.label}
+              {channels.map((channel) => <label key={channel.id} className={`flex min-h-10 cursor-pointer items-center gap-2 border px-3 text-xs transition-colors ${draft.channels.includes(channel.id) ? 'border-[#FF003C]/70 bg-[#FF003C]/10 text-white' : 'border-white/15 text-white/55 hover:text-white'}`}>
+                <input type="checkbox" checked={draft.channels.includes(channel.id)} onChange={() => toggleChannel(channel.id)} className="accent-[#FF003C]" />{channel.label}
               </label>)}
             </div>
           </fieldset>
@@ -456,9 +456,9 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
             <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Planned date and time<input type="datetime-local" value={scheduledLocal} onChange={(event) => setScheduledLocal(event.target.value)} className="mt-2 min-h-11 w-full border border-white/15 bg-[#0b0b0f] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]" /></label>
             <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Time zone<input value={draft.timeZone} onChange={(event) => setDraft({ ...draft, timeZone: event.target.value })} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]" /></label>
           </div>
-          <label className="flex min-h-11 w-fit cursor-pointer items-center gap-2 font-mono text-xs text-white/70"><input type="checkbox" checked={draft.status === 'approved'} onChange={(event) => setDraft({ ...draft, status: event.target.checked ? 'approved' : 'draft' })} className="accent-[#00DFC9]" /> Approved for future scheduling</label>
+          <label className="flex min-h-11 w-fit cursor-pointer items-center gap-2 font-mono text-xs text-white/70"><input type="checkbox" checked={draft.status === 'approved'} onChange={(event) => setDraft({ ...draft, status: event.target.checked ? 'approved' : 'draft' })} className="accent-[#FF003C]" /> Approved for future scheduling</label>
           <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">
-            <button onClick={saveDraft} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#00DFC9] px-5 font-mono text-xs font-bold tracking-widest text-black disabled:opacity-50"><Save className="h-4 w-4" /> SAVE DRAFT</button>
+            <button onClick={saveDraft} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-white hover:bg-[#df0035] disabled:opacity-50"><Save className="h-4 w-4" /> SAVE DRAFT</button>
             {draft.id && <button onClick={deleteDraft} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 border border-[#FF6F91]/40 px-4 font-mono text-xs font-bold tracking-widest text-[#FF6F91] disabled:opacity-50"><Trash2 className="h-4 w-4" /> DELETE</button>}
           </div>
         </section>
@@ -470,7 +470,7 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
             <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Scheduled queue</h2>
             <p className="mt-2 text-sm text-white/55">Planned posts by date and selected channel.</p>
           </div>
-          <button onClick={() => { startNewDraft(); setTab('social'); }} className="inline-flex min-h-10 items-center gap-2 border border-white/15 px-3 font-mono text-[10px] font-bold tracking-widest text-white/75 hover:border-[#00DFC9] hover:text-white"><Plus className="h-4 w-4" /> NEW DRAFT</button>
+          <button onClick={() => { startNewDraft(); setTab('social'); }} className="inline-flex min-h-10 items-center gap-2 border border-white/15 px-3 font-mono text-[10px] font-bold tracking-widest text-white/75 hover:border-[#FF003C] hover:text-white"><Plus className="h-4 w-4" /> NEW DRAFT</button>
         </div>
         <div className="divide-y divide-white/10 border-y border-white/10">
           {[...drafts].filter((item) => item.scheduledAt).sort((left, right) => (left.scheduledAt ?? '').localeCompare(right.scheduledAt ?? '')).map((item) => <article key={item.id} className="grid gap-4 py-5 sm:grid-cols-[180px_minmax(0,1fr)_auto] sm:items-center">
@@ -530,12 +530,12 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
             </div>
             <div className="flex flex-wrap gap-2">
               {googleConnector.connected ? <>
-                <button onClick={syncGoogle} disabled={isWorking} className="inline-flex min-h-9 items-center gap-2 bg-[#00DFC9] px-3 font-mono text-[9px] font-bold tracking-widest text-black disabled:opacity-50"><Activity className="h-3.5 w-3.5" /> SYNC GOOGLE DATA</button>
+                <button onClick={syncGoogle} disabled={isWorking} className="inline-flex min-h-9 items-center gap-2 bg-[#FF003C] px-3 font-mono text-[9px] font-bold tracking-widest text-white hover:bg-[#df0035] disabled:opacity-50"><Activity className="h-3.5 w-3.5" /> SYNC GOOGLE DATA</button>
                 <a href="/api/admin/control-center/connectors/google/start" className="min-h-9 border border-white/15 px-3 py-2 font-mono text-[9px] font-bold tracking-widest text-white/65 hover:text-white">UPDATE ACCESS</a>
                 <button onClick={disconnectGoogle} disabled={isWorking} className="min-h-9 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/65 hover:text-white">DISCONNECT</button>
               </> : <>
                 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-2 border border-white/15 px-3 font-mono text-[9px] font-bold tracking-widest text-white/70 hover:text-white">GOOGLE CLOUD <Link2 className="h-3.5 w-3.5" /></a>
-                <a href={googleConnector.configured ? '/api/admin/control-center/connectors/google/start' : undefined} aria-disabled={!googleConnector.configured} className={`inline-flex min-h-9 items-center gap-2 px-3 font-mono text-[9px] font-bold tracking-widest ${googleConnector.configured ? 'bg-[#00DFC9] text-black' : 'cursor-not-allowed border border-white/10 text-white/35'}`}>CONNECT GOOGLE</a>
+                <a href={googleConnector.configured ? '/api/admin/control-center/connectors/google/start' : undefined} aria-disabled={!googleConnector.configured} className={`inline-flex min-h-9 items-center gap-2 px-3 font-mono text-[9px] font-bold tracking-widest ${googleConnector.configured ? 'bg-[#FF003C] text-white hover:bg-[#df0035]' : 'cursor-not-allowed border border-white/10 text-white/35'}`}>CONNECT GOOGLE</a>
               </>}
             </div>
           </div>
@@ -627,11 +627,11 @@ export const AdminControlCenter: React.FC<AdminControlCenterProps> = ({ blogCont
           <fieldset>
             <legend className="mb-2 font-mono text-[10px] uppercase tracking-widest text-white/55">Research areas</legend>
             <div className="grid gap-2 sm:grid-cols-2">
-              {scopes.map((scope) => <label key={scope.id} className="flex min-h-10 cursor-pointer items-center gap-2 border border-white/10 px-3 text-xs text-white/70"><input type="checkbox" checked={track.scopes.includes(scope.id)} onChange={(event) => setTrack({ ...track, scopes: event.target.checked ? [...track.scopes, scope.id] : track.scopes.filter((item) => item !== scope.id) })} className="accent-[#00DFC9]" />{scope.label}</label>)}
+              {scopes.map((scope) => <label key={scope.id} className="flex min-h-10 cursor-pointer items-center gap-2 border border-white/10 px-3 text-xs text-white/70"><input type="checkbox" checked={track.scopes.includes(scope.id)} onChange={(event) => setTrack({ ...track, scopes: event.target.checked ? [...track.scopes, scope.id] : track.scopes.filter((item) => item !== scope.id) })} className="accent-[#FF003C]" />{scope.label}</label>)}
             </div>
           </fieldset>
           <label className="block font-mono text-[10px] uppercase tracking-widest text-white/55">Intended cadence<select value={track.cadence} onChange={(event) => setTrack({ ...track, cadence: event.target.value as ResearchCadence })} className="mt-2 min-h-11 w-full border border-white/15 bg-[#0b0b0f] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#00DFC9]">{Object.entries(cadenceLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-          <button disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#00DFC9] px-5 font-mono text-xs font-bold tracking-widest text-black disabled:opacity-50"><Plus className="h-4 w-4" /> SAVE MONITOR</button>
+          <button disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-white hover:bg-[#df0035] disabled:opacity-50"><Plus className="h-4 w-4" /> SAVE MONITOR</button>
         </form>
       </div>
     )}

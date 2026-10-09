@@ -86,7 +86,7 @@ h3 {
 }
 
 .brief-control:focus {
-  border-color: #00dfc9;
+  border-color: #ff003c;
   background-color: rgba(255, 255, 255, 0.06);
 }
 
@@ -95,8 +95,8 @@ h3 {
 }
 
 .brief-option:has(.brief-checkbox:checked) {
-  border-color: rgba(0, 223, 201, 0.65);
-  background-color: rgba(0, 223, 201, 0.08);
+  border-color: rgba(255, 0, 60, 0.65);
+  background-color: rgba(255, 0, 60, 0.08);
   color: #ffffff;
 }
 
@@ -121,8 +121,8 @@ h3 {
 }
 
 .brief-checkbox:checked {
-  border-color: #00dfc9;
-  background-color: #00dfc9;
+  border-color: #ff003c;
+  background-color: #ff003c;
 }
 
 .brief-checkbox:checked::before {
@@ -130,7 +130,7 @@ h3 {
 }
 
 .brief-checkbox:focus-visible {
-  outline: 2px solid #00dfc9;
+  outline: 2px solid #ff003c;
   outline-offset: 3px;
 }
 
@@ -253,7 +253,7 @@ body {
   [class~="text-white/35"],
   [class~="text-white/40"],
   [class~="text-white/45"],
-  [class~="text-white/50"],
+  border-color: #ff003c !important;
   [class~="text-white/55"],
   [class~="text-white/60"],
   [class~="text-white/65"]
@@ -263,8 +263,8 @@ body {
 
 input:focus,
 textarea:focus,
-select:focus {
-  border-color: #00dfc9 !important;
+  outline-color: #ff003c;
+  border-color: #ff003c !important;
 }
 
 /* Moving gradient for titles */
@@ -482,13 +482,13 @@ select:focus {
 
 /* Keyboard visibility: consistent focus ring across the site */
 :focus-visible {
-  outline: 2px solid #00dfc9;
+  outline: 2px solid #ff003c;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 .admin-login-input:focus-visible {
-  outline-color: #00dfc9;
+  outline-color: #ff003c;
   border-radius: 2px;
 }
 

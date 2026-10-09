@@ -219,7 +219,7 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Learn how to use AI to turn your ideas into real websites, apps and MVPs, even if you don&apos;t have a traditional coding background. Practical, live 60-minute classes teach you to build with modern AI-assisted tools, not follow a traditional coding course.</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
-            <button onClick={onNavigateToClasses} className="inline-flex min-h-12 items-center gap-2 border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#00DFC9] hover:text-[#00DFC9]">VIEW CLASSES <ArrowRight aria-hidden="true" className="h-4 w-4" /></button>
+            <button onClick={onNavigateToClasses} className="inline-flex min-h-12 items-center gap-2 border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#FF003C] hover:text-[#FF5575]">VIEW CLASSES <ArrowRight aria-hidden="true" className="h-4 w-4" /></button>
           </div>
           <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">New practical classes added regularly.</p>
         </div>

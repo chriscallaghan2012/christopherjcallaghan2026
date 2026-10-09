@@ -99,7 +99,7 @@ const ALLOWED_UPLOAD_EXTENSIONS = new Set(['txt', 'md', 'csv', 'pdf', 'doc', 'do
 const colorClasses: Record<string, string> = {
   orange: 'border-[#FFB347]/35 hover:border-[#FFB347] hover:bg-[#FFB347]/[0.07] text-[#FFB347]',
   purple: 'border-[#DF80FF]/35 hover:border-[#DF80FF] hover:bg-[#DF80FF]/[0.07] text-[#DF80FF]',
-  teal: 'border-[#00DFC9]/35 hover:border-[#00DFC9] hover:bg-[#00DFC9]/[0.07] text-[#00DFC9]',
+  teal: 'border-[#FF3E85]/35 hover:border-[#FF3E85] hover:bg-[#FF3E85]/[0.07] text-[#FF3E85]',
   pink: 'border-[#FF3E85]/35 hover:border-[#FF3E85] hover:bg-[#FF3E85]/[0.07] text-[#FF3E85]'
 };
 
@@ -266,8 +266,8 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
               <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#DF80FF]">{goal}</p>
               <ScrollWritingTitle text="What would help most?" accentWords={[{ word: 'help', color: 'orange' }, { word: 'most?', color: 'purple' }]} className="mb-6 text-2xl font-black text-white md:text-3xl" />
               <div className="divide-y divide-white/10 border-y border-white/10">
-                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setFocusDetails(''); setStep(2); }} className="brief-shine-button group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#00DFC9] md:text-base">
-                  <span><span className="mr-4 font-mono text-xs text-[#00DFC9]">0{index + 1}</span>{item}</span>
+                {focusOptions.map((item, index) => <button key={item} onClick={() => { setFocus(item); setFocusDetails(''); setStep(2); }} className="brief-shine-button group flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-white/75 transition-colors hover:text-[#FF3E85] md:text-base">
+                  <span><span className="mr-4 font-mono text-xs text-[#FF3E85]">0{index + 1}</span>{item}</span>
                   <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
                 </button>)}
               </div>
