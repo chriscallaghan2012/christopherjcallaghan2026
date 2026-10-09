@@ -53,6 +53,7 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       ui_mode: 'embedded',
+      managed_payments: { enabled: false },
       branding_settings: {
         button_color: '#FF003C',
         border_style: 'rectangular'
