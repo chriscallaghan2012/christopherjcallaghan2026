@@ -20,7 +20,7 @@ export function WhatsAppContact() {
               rel="noopener noreferrer"
               className="group flex min-w-0 flex-1 items-center gap-2 pl-2 pr-1 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#FF5575]/45 bg-[#FF5575]/10 text-[#FF9BAC]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center text-[#25D366]">
                 <MessageCircle aria-hidden="true" className="h-5 w-5" />
               </span>
               <span className="grid min-w-0 flex-1 gap-0.5 text-left">
@@ -46,7 +46,7 @@ export function WhatsAppContact() {
             aria-label="Open WhatsApp contact"
             aria-expanded={false}
             title="Message on WhatsApp"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-[#FF9BAC] transition-colors hover:bg-[#FF5575]/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-[#25D366] transition-colors hover:bg-[#25D366]/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#FF5575]"
           >
             <MessageCircle aria-hidden="true" className="h-5 w-5" />
           </button>
