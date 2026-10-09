@@ -15,13 +15,19 @@ Copy `.env.example` to `.env.local` for local development:
 cp .env.example .env.local
 ```
 
-Configure these server-side values locally and in Vercel Project Settings > Environment Variables:
+Configure these values locally and in Vercel Project Settings > Environment Variables:
 - `DATABASE_URL` (Neon PostgreSQL connection string)
 - `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` (single-admin login; session secret must be at least 32 characters)
 - `GEMINI_API_KEY` (server-side Google Gemini API key for blog and social-copy generation)
 - `RESEND_API_KEY` (Resend Email API)
+- `STRIPE_SECRET_KEY` (`sk_test_...` while testing; use `sk_live_...` for production payments)
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (matching Stripe `pk_test_...` or `pk_live_...` key; this key is public)
+- `STRIPE_WEBHOOK_SECRET` (Stripe webhook signing secret, `whsec_...`)
+- `CUSTOMER_SESSION_SECRET` (a separate random secret of at least 32 characters for customer login sessions)
 
-Never commit `.env.local` or put these secrets in Neon tables. After changing environment variables, restart the local server or redeploy the Vercel environment.
+For paid class checkout and purchase history, apply `database/migrations/005_customer_accounts.sql` to the Neon database. In Stripe, add a webhook endpoint at `https://<your-production-domain>/api/stripe/webhook` and subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Copy that endpoint's signing secret to `STRIPE_WEBHOOK_SECRET`. Set the Stripe test keys in Vercel Preview while testing and the matching live keys in Production when ready. Never commit `.env.local` or put secrets in Neon tables. After changing environment variables, restart the local server or redeploy the Vercel environment.
+
+Customers create an account on the classes checkout section before the embedded Stripe payment form. Passwords must be at least 12 characters. Paid purchases are added to `/account` only after Stripe's signed webhook confirms payment.
 
 ### 3. Run Locally
 ```bash

@@ -1,10 +1,26 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { WEBSITE_CLASS_OFFERS } from '@/lib/websiteClassOffer';
+import { getCustomerSession, isCustomerAuthConfigured } from '@/lib/customerAccounts';
+import { isSameOriginRequest } from '@/lib/adminAuth';
 
 export async function POST(request: Request) {
-  if (request.headers.get('origin') !== new URL(request.url).origin) {
+  if (!isSameOriginRequest(request)) {
     return NextResponse.json({ error: 'Request origin is not allowed.' }, { status: 403 });
+  }
+  if (!isCustomerAuthConfigured()) {
+    return NextResponse.json({ error: 'Customer checkout is not configured yet.' }, { status: 503 });
+  }
+
+  let customer;
+  try {
+    customer = await getCustomerSession(request);
+  } catch (error) {
+    console.error('Could not validate customer before checkout:', error);
+    return NextResponse.json({ error: 'Could not verify your account. Please try again.' }, { status: 500 });
+  }
+  if (!customer) {
+    return NextResponse.json({ error: 'Create an account or sign in before checkout.' }, { status: 401 });
   }
 
   let body: unknown;
@@ -26,7 +42,8 @@ export async function POST(request: Request) {
 
   const secretKey = process.env.STRIPE_SECRET_KEY;
   const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-  if (!secretKey || !publishableKey) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secretKey || !publishableKey || !webhookSecret) {
     return NextResponse.json({ error: 'Online checkout is not configured yet. Please contact me to book.' }, { status: 503 });
   }
 
@@ -36,6 +53,13 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       ui_mode: 'embedded',
+      customer_creation: 'always',
+      customer_email: customer.email,
+      client_reference_id: customer.id,
+      metadata: {
+        customerId: customer.id,
+        offerId
+      },
       line_items: [{
         price_data: {
           currency: offer.currency,

@@ -21,19 +21,39 @@ const bootcampSessions = [
 
 export function OnlineClassesPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isCheckingCustomer, setIsCheckingCustomer] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [cartOfferId, setCartOfferId] = useState<WebsiteClassOfferId | null>(null);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
+  const [customer, setCustomer] = useState<{ name: string; email: string } | null>(null);
+  const [accountMode, setAccountMode] = useState<'register' | 'login'>('register');
+  const [accountName, setAccountName] = useState('');
+  const [accountEmail, setAccountEmail] = useState('');
+  const [accountPassword, setAccountPassword] = useState('');
   const [message, setMessage] = useState<{ kind: 'success' | 'info' | 'error'; text: string } | null>(null);
   const cartOffer = cartOfferId ? WEBSITE_CLASS_OFFERS[cartOfferId] : null;
 
   useEffect(() => {
     const checkoutStatus = new URLSearchParams(window.location.search).get('checkout');
     if (checkoutStatus === 'success') {
-      setMessage({ kind: 'success', text: 'Payment complete. Contact me to arrange a time for your online class.' });
+      setMessage({ kind: 'success', text: 'Checkout is complete. Your purchase will appear in your account once Stripe confirms the payment.' });
     } else if (checkoutStatus === 'cancelled') {
       setMessage({ kind: 'info', text: 'Checkout was cancelled. Nothing has been charged.' });
     }
 
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/customer/session', { cache: 'no-store' })
+      .then(async (response) => {
+        const result = await response.json() as { authenticated?: boolean; customer?: { name: string; email: string }; error?: string };
+        if (!response.ok) throw new Error(result.error || 'Could not check your account.');
+        if (result.authenticated && result.customer) setCustomer(result.customer);
+      })
+      .catch((error) => {
+        setMessage({ kind: 'error', text: error instanceof Error ? error.message : 'Could not check your account.' });
+      })
+      .finally(() => setIsCheckingCustomer(false));
   }, []);
 
   const selectOffer = (offerId: WebsiteClassOfferId) => {
@@ -52,6 +72,27 @@ export function OnlineClassesPage() {
     setMessage(null);
 
     try {
+      if (!customer) {
+        setIsAuthenticating(true);
+        const accountResponse = await fetch(`/api/customer/${accountMode === 'register' ? 'register' : 'login'}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(accountMode === 'register'
+            ? { name: accountName, email: accountEmail, password: accountPassword }
+            : { email: accountEmail, password: accountPassword })
+        });
+        const accountResult = await accountResponse.json() as {
+          customer?: { name: string; email: string };
+          error?: string
+        };
+        if (!accountResponse.ok || !accountResult.customer) {
+          throw new Error(accountResult.error || 'Could not create your account or sign in.');
+        }
+        setCustomer(accountResult.customer);
+        setAccountPassword('');
+        setIsAuthenticating(false);
+      }
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,6 +104,7 @@ export function OnlineClassesPage() {
       setIsCheckingOut(false);
     } catch (error) {
       setMessage({ kind: 'error', text: error instanceof Error ? error.message : 'Checkout could not be started. Please try again.' });
+      setIsAuthenticating(false);
       setIsCheckingOut(false);
     }
   };
@@ -199,13 +241,37 @@ export function OnlineClassesPage() {
               </div>
               <div className="min-w-52 border-t border-white/10 pt-5 md:border-l md:border-t-0 md:pl-6 md:pt-0">
                 <div className="flex items-baseline justify-between gap-8"><span className="text-sm text-white/55">Total</span><span className="text-2xl font-black text-white">{cartOfferId === 'bootcamp' ? WEBSITE_BOOTCAMP_PRICE : cartOfferId === 'session' ? WEBSITE_CLASS_PRICE : '—'}</span></div>
-                <button onClick={() => cartOfferId && startCheckout(cartOfferId)} disabled={!cartOfferId || isCheckingOut || Boolean(checkoutClientSecret)} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-40">
-                  {isCheckingOut ? <><LoaderCircle className="h-4 w-4 animate-spin" /> CONNECTING TO STRIPE</> : <>SECURE CHECKOUT <ArrowRight className="h-4 w-4" /></>}
-                </button>
               </div>
             </div>
-            {message && <div role={message.kind === 'error' ? 'alert' : 'status'} className={`mt-5 border px-4 py-3 text-sm ${statusStyle}`}><p>{message.text}</p>{message.kind === 'success' && <a href="/contact" className="mt-2 inline-flex items-center gap-2 font-bold underline underline-offset-4">Arrange your class <ArrowRight className="h-4 w-4" /></a>}</div>}
+            <div className="mt-6 border-t border-white/10 pt-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#00DFC9]">Customer account</p>
+                  <p className="mt-1 text-sm text-white/60">Your purchase history is saved to your account.</p>
+                </div>
+                {customer && <a href="/account" className="text-xs font-bold text-white underline underline-offset-4 hover:text-[#00DFC9]">View account</a>}
+              </div>
+              {customer ? (
+                <p className="mt-4 text-sm text-white/80">Signed in as <strong>{customer.email}</strong></p>
+              ) : (
+                <>
+                  <div className="mt-4 flex gap-2">
+                    <button type="button" onClick={() => { setAccountMode('register'); setMessage(null); }} aria-pressed={accountMode === 'register'} className={`border px-3 py-2 text-xs font-bold ${accountMode === 'register' ? 'border-[#00DFC9] text-[#00DFC9]' : 'border-white/15 text-white/55'}`}>CREATE ACCOUNT</button>
+                    <button type="button" onClick={() => { setAccountMode('login'); setMessage(null); }} aria-pressed={accountMode === 'login'} className={`border px-3 py-2 text-xs font-bold ${accountMode === 'login' ? 'border-[#00DFC9] text-[#00DFC9]' : 'border-white/15 text-white/55'}`}>SIGN IN</button>
+                  </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {accountMode === 'register' && <label className="text-xs text-white/60">Name<input autoComplete="name" maxLength={100} value={accountName} onChange={(event) => setAccountName(event.target.value)} className="mt-1 min-h-11 w-full border border-white/15 bg-black/40 px-3 text-sm text-white outline-none focus:border-[#00DFC9]" /></label>}
+                    <label className="text-xs text-white/60">Email<input type="email" autoComplete="email" maxLength={254} value={accountEmail} onChange={(event) => setAccountEmail(event.target.value)} className="mt-1 min-h-11 w-full border border-white/15 bg-black/40 px-3 text-sm text-white outline-none focus:border-[#00DFC9]" /></label>
+                    <label className="text-xs text-white/60">Password<input type="password" autoComplete={accountMode === 'register' ? 'new-password' : 'current-password'} minLength={accountMode === 'register' ? 12 : undefined} maxLength={128} value={accountPassword} onChange={(event) => setAccountPassword(event.target.value)} className="mt-1 min-h-11 w-full border border-white/15 bg-black/40 px-3 text-sm text-white outline-none focus:border-[#00DFC9]" />{accountMode === 'register' && <span className="mt-1 block text-[11px] text-white/40">Use at least 12 characters.</span>}</label>
+                  </div>
+                </>
+              )}
+            </div>
+            {message && <div role={message.kind === 'error' ? 'alert' : 'status'} className={`mt-5 border px-4 py-3 text-sm ${statusStyle}`}><p>{message.text}</p>{message.kind === 'success' && <a href="/account" className="mt-2 inline-flex items-center gap-2 font-bold underline underline-offset-4">View your account <ArrowRight className="h-4 w-4" /></a>}</div>}
             {checkoutClientSecret && stripePromise && <div className="mt-6 border-t border-white/10 pt-6"><p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">Secure payment</p><EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}><div className="min-h-[420px]"><EmbeddedCheckout /></div></EmbeddedCheckoutProvider></div>}
+            {!checkoutClientSecret && <button onClick={() => cartOfferId && startCheckout(cartOfferId)} disabled={!cartOfferId || isCheckingOut || isCheckingCustomer} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-40">
+              {isCheckingCustomer || isAuthenticating ? <><LoaderCircle className="h-4 w-4 animate-spin" /> {isAuthenticating ? 'SETTING UP ACCOUNT' : 'CHECKING ACCOUNT'}</> : isCheckingOut ? <><LoaderCircle className="h-4 w-4 animate-spin" /> CONNECTING TO STRIPE</> : customer ? <>SECURE CHECKOUT <ArrowRight className="h-4 w-4" /></> : accountMode === 'register' ? <>CREATE ACCOUNT & CONTINUE <ArrowRight className="h-4 w-4" /></> : <>SIGN IN & CONTINUE <ArrowRight className="h-4 w-4" /></>}
+            </button>}
             <p className="mt-4 text-xs leading-relaxed text-white/40">Stripe securely processes payment. Domain, hosting and optional AI/design tools are separate costs. You keep the accounts, project files and code.</p>
           </aside>
 
