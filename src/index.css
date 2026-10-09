@@ -14,6 +14,54 @@ html {
   scroll-behavior: smooth;
 }
 
+@property --premium-focus-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.premium-input-wrap {
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: #070709;
+}
+
+.premium-input {
+  display: block;
+  border: 0;
+  background: transparent;
+  outline: none;
+}
+
+.premium-input-wrap:focus-within {
+  border-color: transparent;
+  background:
+    linear-gradient(#070709, #070709) padding-box,
+    conic-gradient(
+      from var(--premium-focus-angle),
+      transparent 0deg 220deg,
+      #ff003c 270deg,
+      #ff8297 292deg,
+      transparent 332deg 360deg
+    ) border-box;
+  animation: premiumInputBorderSpin 1.8s linear infinite;
+}
+
+@keyframes premiumInputBorderSpin {
+  to {
+    --premium-focus-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-input-wrap:focus-within {
+    animation: none;
+    background:
+      linear-gradient(#070709, #070709) padding-box,
+      linear-gradient(90deg, #ff003c, #ff8297) border-box;
+  }
+}
+
 /* Balanced heading wrapping for cleaner mobile typography */
 h1,
 h2,
