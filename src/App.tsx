@@ -24,7 +24,7 @@ const PublicPageContent = dynamic(() => import('./components/PublicPageContent')
 const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').then((module) => module.ProjectBriefPage));
 const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -213,7 +213,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
           />
         )}
 
-        {(currentTab === 'seo-services' || currentTab === 'local-seo' || currentTab === 'google-ads-management' || currentTab === 'social-media-marketing' || currentTab === 'web-design-development') && (
+        {(currentTab === 'seo-services' || currentTab === 'local-seo' || currentTab === 'google-ads-management' || currentTab === 'social-media-marketing' || currentTab === 'web-design-development' || currentTab === 'agency-development-partner' || currentTab === 'app-development' || currentTab === 'ai-automation') && (
           <PublicPageContent
             page={currentTab as Exclude<PublicPageTab, 'contact'>}
             onNavigateToProjects={() => handleSelectTab('projects')}

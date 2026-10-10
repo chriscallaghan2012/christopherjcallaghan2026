@@ -44,6 +44,9 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
             <a href="/google-ads-management" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">GOOGLE ADS</a>
             <a href="/social-media-marketing" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">SOCIAL</a>
             <a href="/web-design-development" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">WEB DESIGN</a>
+            <a href="/agency-development-partner" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">AGENCY PARTNER</a>
+            <a href="/app-development" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">APP DEVELOPMENT</a>
+            <a href="/ai-automation" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">AI & AUTOMATION</a>
           </div>
         </nav>
       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { PUBLIC_PAGES } from '../data/sitePages';
+import type { PublicPage } from '../data/sitePages';
 import { PublicPageTab } from '../types';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
@@ -14,7 +15,10 @@ const headlineAccents: Record<PublicContentTab, Array<{ word: string; color: 'or
   'local-seo': [{ word: 'SHOW', color: 'orange' }, { word: 'LOOK.', color: 'purple' }],
   'google-ads-management': [{ word: 'RIGHT', color: 'purple' }, { word: 'PEOPLE.', color: 'orange' }],
   'social-media-marketing': [{ word: 'REASON', color: 'orange' }, { word: 'ATTENTION.', color: 'purple' }],
-  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'WORK.', color: 'purple' }]
+  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'WORK.', color: 'purple' }],
+  'agency-development-partner': [{ word: 'TEAM,', color: 'orange' }, { word: 'EXTENDED.', color: 'purple' }],
+  'app-development': [{ word: 'MOBILE', color: 'orange' }, { word: 'USE.', color: 'purple' }],
+  'ai-automation': [{ word: 'WORK', color: 'purple' }, { word: 'DOWN.', color: 'orange' }]
 };
 
 const serviceCtaHeadlines: Partial<Record<PublicContentTab, string>> = {
@@ -22,7 +26,10 @@ const serviceCtaHeadlines: Partial<Record<PublicContentTab, string>> = {
   'local-seo': "LET'S MAKE YOUR LOCAL PRESENCE CLEARER.",
   'google-ads-management': "LET'S BUILD A CAMPAIGN AROUND A CLEAR GOAL.",
   'social-media-marketing': "LET'S GIVE YOUR NEXT CONTENT CYCLE A PLAN.",
-  'web-design-development': "LET'S MAKE YOUR WEBSITE WORK FOR YOU."
+  'web-design-development': "LET'S MAKE YOUR WEBSITE WORK FOR YOU.",
+  'agency-development-partner': "LET'S ADD CAPACITY TO YOUR DELIVERY TEAM.",
+  'app-development': "LET'S BUILD AN APP PEOPLE CAN USE.",
+  'ai-automation': "LET'S MAKE THE REPETITIVE WORK LIGHTER."
 };
 
 const serviceCtaAccents: Partial<Record<PublicContentTab, Array<{ word: string; color: 'orange' | 'purple' }>>> = {
@@ -30,7 +37,70 @@ const serviceCtaAccents: Partial<Record<PublicContentTab, Array<{ word: string; 
   'local-seo': [{ word: 'LOCAL', color: 'orange' }, { word: 'CLEARER.', color: 'purple' }],
   'google-ads-management': [{ word: 'CAMPAIGN', color: 'purple' }, { word: 'GOAL.', color: 'orange' }],
   'social-media-marketing': [{ word: 'CONTENT', color: 'orange' }, { word: 'PLAN.', color: 'purple' }],
-  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'YOU.', color: 'purple' }]
+  'web-design-development': [{ word: 'WEBSITE', color: 'orange' }, { word: 'YOU.', color: 'purple' }],
+  'agency-development-partner': [{ word: 'DELIVERY', color: 'purple' }, { word: 'TEAM.', color: 'orange' }],
+  'app-development': [{ word: 'AN', color: 'orange' }, { word: 'APP.', color: 'purple' }],
+  'ai-automation': [{ word: 'WORK', color: 'purple' }, { word: 'LIGHTER.', color: 'orange' }]
+};
+
+const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ chart }) => {
+  const chartLeft = 48;
+  const chartRight = 608;
+  const chartTop = 22;
+  const chartBottom = 190;
+  const ticks = [130, 120, 110, 100, 90, 80];
+  const xFor = (index: number) => chartLeft + index * ((chartRight - chartLeft) / 5);
+  const yFor = (value: number) => chartBottom - ((value - 80) / 50) * (chartBottom - chartTop);
+
+  return (
+    <section className="mt-16 max-w-5xl" aria-labelledby="service-chart-title">
+      <div className="border-b border-white/10 pb-5">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">A REPORTING VIEW</p>
+        <h2 id="service-chart-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">{chart.title}</h2>
+      </div>
+      <figure className="mt-6 border border-white/10 bg-black/35 p-4 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-white/50">
+          <span>Illustrative index</span>
+          <span>Starting period = 100</span>
+        </div>
+        <svg className="mt-5 block w-full" viewBox="0 0 640 232" role="img" aria-label={`${chart.title}, an illustrative normalized trend chart`}>
+          {ticks.map((tick) => (
+            <g key={tick}>
+              <line x1={chartLeft} x2={chartRight} y1={yFor(tick)} y2={yFor(tick)} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 7" />
+              <text x="0" y={yFor(tick) + 4} fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="monospace">{tick}</text>
+            </g>
+          ))}
+          {Array.from({ length: 6 }, (_, index) => (
+            <text key={index} x={xFor(index)} y="220" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="monospace">P{index + 1}</text>
+          ))}
+          {chart.series.map((series) => (
+            <g key={series.label}>
+              <polyline
+                fill="none"
+                stroke={series.color}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                points={series.values.map((value, index) => `${xFor(index)},${yFor(value)}`).join(' ')}
+              />
+              {series.values.map((value, index) => (
+                <circle key={`${series.label}-${index}`} cx={xFor(index)} cy={yFor(value)} r="3.5" fill={series.color} />
+              ))}
+            </g>
+          ))}
+        </svg>
+        <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-4">
+          {chart.series.map((series) => (
+            <li key={series.label} className="flex items-center gap-2 text-xs text-white/70">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ backgroundColor: series.color }} />
+              {series.label}
+            </li>
+          ))}
+        </ul>
+        <figcaption className="mt-4 text-xs leading-relaxed text-white/45">Illustrative data only, not client results or a forecast. Real reporting is based on your agreed baseline, analytics access and conversion definitions.</figcaption>
+      </figure>
+    </section>
+  );
 };
 
 interface PublicPageContentProps {
@@ -41,9 +111,7 @@ interface PublicPageContentProps {
 export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNavigateToProjects }) => {
   const content = PUBLIC_PAGES[page];
   const isAbout = page === 'about';
-  const buildHref = page === 'seo-services' || page === 'local-seo' || page === 'google-ads-management' || page === 'web-design-development'
-    ? `/build?service=${page}`
-    : '/build';
+  const buildHref = page === 'about' ? '/build' : `/build?service=${page}`;
 
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
@@ -86,6 +154,48 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </ol>
         </section>}
 
+        {content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">THE WORK, MADE TANGIBLE</p>
+              <h2 id="service-deliverables-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">What you can expect to receive</h2>
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">SCOPED TO THE PROJECT</span>
+          </div>
+          <ol className="grid gap-x-10 sm:grid-cols-2">
+            {content.deliverables.map((item, index) => (
+              <li key={item.title} className="grid grid-cols-[36px_1fr] gap-3 border-t border-white/10 py-4">
+                <span className="font-mono text-xs font-bold text-[#FF003C]">{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3 className="text-sm font-bold text-white">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-white/60">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>}
+
+        {content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
+          <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
+              <h2 id="service-metrics-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">A baseline before a percentage</h2>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-white/55">These are reporting measures, not promised uplifts. We agree a starting period and track change against your actual data.</p>
+          </div>
+          <dl className="grid border-b border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+            {content.metrics.map((metric) => (
+              <div key={metric.label} className="border-b border-white/10 py-5 sm:border-r sm:px-5 sm:first:pl-0 lg:border-b-0 lg:first:pl-0">
+                <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">{metric.label}</dt>
+                <dd className="mt-3 text-3xl font-black leading-none text-white">{metric.value}</dd>
+                <p className="mt-3 text-xs leading-relaxed text-white/50">{metric.detail}</p>
+              </div>
+            ))}
+          </dl>
+        </section>}
+
+        {content.chart && <KpiTrendChart chart={content.chart} />}
+
         {serviceCtaHeadlines[page] && <section className="mt-16 max-w-5xl border-t border-white/10 pt-10">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">NEXT STEP</p>
           <ScrollWritingTitle as="h2" text={serviceCtaHeadlines[page] ?? ''} accentWords={serviceCtaAccents[page]} className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl" />
@@ -104,7 +214,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         {!isAbout && <nav className="mt-20 border-t border-white/10 pt-8" aria-label="More growth services">
           <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">MORE WAYS TO GROW</p>
           <div className="flex flex-wrap gap-x-7 gap-y-4">
-            {[['SEO', '/seo-services'], ['Local SEO', '/local-seo'], ['Google Ads', '/google-ads-management'], ['Social media', '/social-media-marketing'], ['Web design & development', '/web-design-development']].filter(([, href]) => href !== `/${content.slug}`).map(([label, href]) => (
+            {[['SEO', '/seo-services'], ['Local SEO', '/local-seo'], ['Google Ads', '/google-ads-management'], ['Social media', '/social-media-marketing'], ['Web design & development', '/web-design-development'], ['Agency development partner', '/agency-development-partner'], ['iPhone & Android apps', '/app-development'], ['AI & automation', '/ai-automation']].filter(([, href]) => href !== `/${content.slug}`).map(([label, href]) => (
               <a key={href} href={href} className="font-mono text-xs font-bold text-white/70 transition-colors hover:text-[#FF003C]">{label}</a>
             ))}
           </div>

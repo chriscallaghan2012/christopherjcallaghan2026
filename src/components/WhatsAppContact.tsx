@@ -10,7 +10,7 @@ export function WhatsAppContact() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] sm:bottom-6 sm:right-6">
+    <div data-floating-contact className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] transition-opacity duration-150 motion-reduce:transition-none sm:bottom-6 sm:right-6">
       <div className={`flex h-14 items-center justify-end overflow-hidden rounded-full border border-[#FF5575]/45 bg-[#100a0c]/95 shadow-[0_14px_45px_rgba(0,0,0,0.38)] backdrop-blur transition-[width] duration-300 motion-reduce:transition-none ${isOpen ? 'w-[min(20rem,calc(100vw-1.5rem))]' : 'w-14'}`}>
         {isOpen ? (
           <>

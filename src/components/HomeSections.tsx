@@ -251,15 +251,27 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
       </div>
 
       <div className="mt-12 border-t border-white/10 pt-7 md:mt-16 md:pt-9">
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">From idea to launch</p>
-          <p className="text-xs text-white/40">One practical step at a time</p>
+        <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">A practical delivery path</p>
+            <h2 className="mt-2 max-w-3xl text-2xl font-black leading-tight text-white sm:text-3xl md:text-4xl">A clear route from idea to launch.</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/60 md:text-base">Move from a promising thought to something people can use. Each step makes the next decision clearer, keeps the scope grounded and gives the work a way to learn after launch.</p>
+          </div>
+          <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-white/40">One practical step at a time</p>
         </div>
         <ol aria-label="IDEA to LAUNCH" className="academy-flow-grid grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-y-0">
-          {['IDEA', 'DESIGN', 'PROTOTYPE', 'BUILD', 'DEPLOY', 'LAUNCH'].map((step, index) => (
-            <li key={step} className="relative min-w-0 border-l-2 border-[#FF003C]/60 bg-white/[0.025] px-3 py-3 sm:px-4 lg:border-l-0 lg:border-t-2 lg:px-3">
+          {[
+            { title: 'IDEA', description: 'Name the problem, the people it affects and the change you want to make.' },
+            { title: 'DESIGN', description: 'Shape the user journey and decide what the first useful version needs.' },
+            { title: 'PROTOTYPE', description: 'Make the concept tangible early, test assumptions and refine the direction.' },
+            { title: 'BUILD', description: 'Develop the product, data and integrations around the agreed priorities.' },
+            { title: 'DEPLOY', description: 'Prepare the live environment, test key journeys and make release checks.' },
+            { title: 'LAUNCH', description: 'Put it in people’s hands, learn from real use and choose what comes next.' }
+          ].map((step, index) => (
+            <li key={step.title} className="relative min-h-[176px] min-w-0 border-l-2 border-[#FF003C]/60 bg-white/[0.025] px-3 py-3 sm:min-h-[168px] sm:px-4 lg:min-h-[190px] lg:border-l-0 lg:border-t-2 lg:px-3">
               <span className="font-mono text-[10px] font-bold text-[#00DFC9]">0{index + 1}</span>
-              <span className="mt-1 block text-base font-black text-white">{step}</span>
+              <span className="mt-1 block text-base font-black text-white">{step.title}</span>
+              <p className="mt-2 max-w-[24rem] text-xs leading-relaxed text-white/55 sm:text-[13px]">{step.description}</p>
               {index < 5 && <>
                 {index % 2 === 0 ? <>
                   <span className="flow-dash-x academy-flow-dash academy-flow-dash-mobile-x absolute -right-5 top-1/2 z-0 w-5 -translate-y-1/2" />

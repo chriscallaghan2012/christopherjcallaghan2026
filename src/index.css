@@ -14,6 +14,11 @@ html {
   scroll-behavior: smooth;
 }
 
+html.mobile-navigation-open [data-floating-contact] {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .premium-input-wrap {
   display: block;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -336,6 +341,12 @@ select:focus {
 @media (min-width: 640px) and (max-width: 1023px) {
   .academy-flow-grid .academy-flow-dash-tablet-x,
   .academy-flow-grid .academy-flow-dash-tablet-y {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .academy-flow-grid .academy-flow-dash-desktop-x {
     display: block;
   }
 }

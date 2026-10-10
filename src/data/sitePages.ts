@@ -10,6 +10,12 @@ export interface PublicPage {
   headline: string;
   intro: string;
   points?: { title: string; description: string }[];
+  deliverables?: { title: string; description: string }[];
+  metrics?: { label: string; value: string; detail: string }[];
+  chart?: {
+    title: string;
+    series: { label: string; color: string; values: number[] }[];
+  };
   flow?: ProcessFlowContent;
   systemMap?: SystemMapContent;
 }
@@ -48,6 +54,26 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Local and wider visibility', description: 'Connect your service pages, locations and business details so local search and broader organic search reinforce each other.' },
       { title: 'Measurement and iteration', description: 'Use search impressions, relevant visits and completed enquiries to see what is improving, find gaps and decide what to work on next.' }
     ],
+    deliverables: [
+      { title: 'Technical findings', description: 'A prioritised view of crawlability, indexing, performance and structural issues.' },
+      { title: 'Search-to-page map', description: 'Priority services and customer questions matched to the most useful pages.' },
+      { title: 'On-page improvements', description: 'Clearer titles, headings, internal links and calls to action on agreed pages.' },
+      { title: 'Baseline reporting', description: 'A consistent comparison of impressions, clicks, visits and qualified enquiries.' }
+    ],
+    metrics: [
+      { label: 'Organic clicks', value: 'Δ %', detail: 'Change against the agreed Search Console baseline.' },
+      { label: 'Qualified enquiries', value: 'Δ %', detail: 'Change in relevant enquiries attributed to organic search.' },
+      { label: 'Priority pages indexed', value: '%', detail: 'Share of agreed landing pages available in search.' },
+      { label: 'Search conversion rate', value: 'Δ %', detail: 'Change in the share of organic visits that take action.' }
+    ],
+    chart: {
+      title: 'Organic search signals',
+      series: [
+        { label: 'Clicks', color: '#FF003C', values: [100, 102, 98, 106, 111, 114] },
+        { label: 'Impressions', color: '#00DFC9', values: [100, 108, 105, 113, 116, 119] },
+        { label: 'Qualified enquiries', color: '#FFB347', values: [100, 96, 103, 105, 111, 108] }
+      ]
+    },
     flow: {
       title: 'From search opportunity to useful growth',
       intro: 'A practical SEO cycle: establish what is blocking discovery, improve the pages that matter, then measure and refine.',
@@ -87,6 +113,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Service-area pages', description: 'Create useful pages that explain what you do and where you work. Each page should answer local questions and give visitors a clear next step, not just repeat a town name.' },
       { title: 'Reviews and customer actions', description: 'Make it easier for customers to call, request directions, visit your site or leave feedback, with clear processes for responding to reviews.' },
       { title: 'Local performance', description: 'Track profile interactions, website visits, calls and enquiries to understand which locations and services are generating interest.' }
+    ],
+    deliverables: [
+      { title: 'Profile review', description: 'A practical check of categories, services, hours, contact details, photos and links.' },
+      { title: 'Business detail alignment', description: 'A checklist of priority places where your business information should agree.' },
+      { title: 'Useful local pages', description: 'Location content shaped around actual services, coverage and customer questions.' },
+      { title: 'Action tracking', description: 'A view of profile interactions, calls, directions, visits and enquiries.' }
     ],
     flow: {
       title: 'Turn local intent into customer action',
@@ -128,6 +160,26 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Conversion measurement', description: 'Configure and test measurement for meaningful actions such as qualified enquiries, calls, bookings or purchases, rather than treating every visit as a result.' },
       { title: 'Ongoing optimisation', description: 'Review spend, search terms, conversions and landing-page performance together. Use the evidence to refine targeting and budget, not just chase clicks.' }
     ],
+    deliverables: [
+      { title: 'Campaign structure', description: 'Campaigns, ad groups, keywords and exclusions organised around search intent.' },
+      { title: 'Ad-to-page alignment', description: 'Relevant ad messages connected to landing pages with a clear next action.' },
+      { title: 'Conversion tracking', description: 'Agreed calls, forms, bookings or purchases configured and tested.' },
+      { title: 'Optimisation report', description: 'Spend, search terms and conversion trends reviewed against the campaign baseline.' }
+    ],
+    metrics: [
+      { label: 'Cost per qualified lead', value: '£ / lead', detail: 'Cost measured against the agreed qualified lead definition.' },
+      { label: 'Landing-page conversion', value: 'Δ %', detail: 'Change in conversion rate against the starting period.' },
+      { label: 'Tracked conversions', value: '%', detail: 'Share of agreed campaign actions with verified tracking.' },
+      { label: 'Irrelevant search spend', value: 'Δ %', detail: 'Change identified through search-term and exclusion reviews.' }
+    ],
+    chart: {
+      title: 'Paid campaign signals',
+      series: [
+        { label: 'Qualified conversions', color: '#FF003C', values: [100, 106, 103, 111, 108, 116] },
+        { label: 'Conversion rate', color: '#00DFC9', values: [100, 103, 99, 108, 105, 112] },
+        { label: 'Cost per qualified lead', color: '#FFB347', values: [100, 97, 102, 92, 95, 88] }
+      ]
+    },
     flow: {
       title: 'Connect ad spend to a measurable outcome',
       intro: 'Build a paid-search loop around the action that matters, with each campaign and landing page telling the same story.',
@@ -169,6 +221,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Community and response', description: 'Set expectations for comments, messages, moderation and escalation so customer conversations are handled consistently.' },
       { title: 'Paid social when it fits', description: 'Plan and test paid campaigns on relevant platforms, with clear audiences, creative variations, budget limits and a defined conversion goal.' },
       { title: 'Measure useful outcomes', description: 'Connect reach and engagement to visits, enquiries, sign-ups or sales. Use the results to adjust topics, formats, channels and campaign spend.' }
+    ],
+    deliverables: [
+      { title: 'Channel plan', description: 'A platform mix, audience focus and publishing rhythm sized to your capacity.' },
+      { title: 'Content themes', description: 'Repeatable topics tied to customer questions, expertise and offers.' },
+      { title: 'Publishing calendar', description: 'A practical schedule with formats and channel-specific prompts.' },
+      { title: 'Outcome review', description: 'Engagement considered alongside visits, enquiries, sign-ups or sales.' }
     ],
     flow: {
       title: 'From audience insight to a repeatable content loop',
@@ -212,6 +270,12 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Redesigns and improvements', description: 'Refresh an existing site with a modern design, clearer structure, faster pages and content that performs like a website built today.' },
       { title: 'Updates and maintenance', description: 'Keep the site secure and current with regular updates, backups, monitoring and small improvements that compound over time.' }
     ],
+    deliverables: [
+      { title: 'Page and content structure', description: 'A clear sitemap, page priorities and content hierarchy shaped around customer tasks.' },
+      { title: 'Responsive implementation', description: 'A considered mobile, tablet and desktop experience, tested across key breakpoints.' },
+      { title: 'Working integrations', description: 'Forms, analytics, booking, payments or other agreed tools connected and checked.' },
+      { title: 'Launch and handover', description: 'A tested release with practical editing notes, backups and maintenance options.' }
+    ],
     flow: {
       title: 'From a website that works to one that works harder',
       intro: 'A practical cycle for websites and software: understand the problem, design or fix it, launch it, then keep improving.',
@@ -235,6 +299,144 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
         { id: 'maintenance', title: 'Maintenance', summary: 'Secure, current and improving', detail: 'Regular updates, backups and monitoring keep the site secure, while small measured improvements build on what is working.', examples: ['Updates and backups', 'Uptime and performance checks', 'Small improvement rounds'], group: 'outcome' }
       ],
       connections: [['business-goal', 'design-build'], ['current-site', 'design-build'], ['budget', 'design-build'], ['design-build', 'testing'], ['testing', 'launch'], ['launch', 'maintenance']]
+    }
+  },
+  'agency-development-partner': {
+    slug: 'agency-development-partner',
+    tab: 'agency-development-partner',
+    title: 'White-Label Agency Development Partner',
+    description: 'Dependable white-label web development and delivery support for agencies that need extra capacity, specialist implementation or a trusted overflow partner.',
+    eyebrow: 'AGENCY PARTNER / WHITE-LABEL DEVELOPMENT',
+    headline: 'YOUR DEVELOPMENT TEAM, EXTENDED.',
+    intro: 'Add senior hands-on development capacity without adding permanent headcount. Work can sit behind your brand, plug into your process and scale around the projects already on your desk.',
+    points: [
+      { title: 'White-label delivery', description: 'Build under your agency brand, follow your client-facing conventions and keep communication clear about who owns each decision and deliverable.' },
+      { title: 'Overflow project capacity', description: 'Take on a defined backlog, campaign build or delivery phase when your team is at capacity, with scope and handoff agreed before work begins.' },
+      { title: 'Front-end and full-stack builds', description: 'Implement responsive websites, landing pages, CMS work and application features using the stack that fits the project and your existing team.' },
+      { title: 'Rescue and specialist work', description: 'Investigate inherited code, unblock a stalled build, resolve complex bugs or add a capability your in-house team does not need to maintain full time.' },
+      { title: 'A reliable working rhythm', description: 'Use your project tools, staging environment, review process and release cadence, with concise progress updates and early escalation of risks.' },
+      { title: 'Clean handover', description: 'Document implementation choices, provide reviewable work and leave the project understandable for your team after delivery.' }
+    ],
+    deliverables: [
+      { title: 'Scoped capacity', description: 'A defined set of tickets, sprint capacity or project milestones with clear acceptance criteria.' },
+      { title: 'Reviewable implementation', description: 'Small, understandable changes delivered through your preferred repository and review workflow.' },
+      { title: 'Status and risk updates', description: 'Visible progress, dependencies and decisions surfaced before they become surprises.' },
+      { title: 'Agency-ready handoff', description: 'Release notes and technical context your team can confidently pass on or maintain.' }
+    ],
+    flow: {
+      title: 'Extra capacity, integrated into your delivery',
+      intro: 'A practical partner model: agree on the work, join the existing workflow, deliver in reviewable increments and hand the result back cleanly.',
+      steps: [
+        { title: 'Scope the gap', description: 'Review the project, backlog, stack, deadlines and client-facing boundaries.' },
+        { title: 'Join your workflow', description: 'Agree tools, access, coding conventions, review points and communication cadence.' },
+        { title: 'Deliver in increments', description: 'Build and test defined work in small pieces that your team can review.' },
+        { title: 'Handover with context', description: 'Document what changed, remaining risks and the next useful step.' }
+      ]
+    },
+    systemMap: {
+      title: 'How a white-label partnership fits',
+      intro: 'Your agency retains the client relationship and delivery direction; scoped implementation capacity joins the workflow and returns work your team can own.',
+      nodes: [
+        { id: 'client-goal', title: 'Client goal', summary: 'The outcome and delivery commitment', detail: 'Understand the client need, agreed outcome, deadlines and constraints before choosing an implementation approach.', examples: ['Project brief and acceptance criteria', 'Delivery milestone', 'Client-facing commitments'], group: 'source' },
+        { id: 'agency-workflow', title: 'Agency workflow', summary: 'Tools, reviews and release process', detail: 'Fit into the agency’s established project, repository, communication and QA practices.', examples: ['Issue tracker and repository', 'Code review conventions', 'Staging and release process'], group: 'source' },
+        { id: 'scope', title: 'Defined scope', summary: 'Work with clear boundaries', detail: 'Break the need into work that can be estimated, reviewed and accepted without blurring ownership.', examples: ['In-scope tickets', 'Dependencies and access', 'Definition of done'], group: 'work' },
+        { id: 'implementation', title: 'Implementation', summary: 'Build, fix or extend', detail: 'Deliver the agreed web or software work in reviewable changes, raising blockers and risks early.', examples: ['Website and landing pages', 'Feature development', 'Bug fixes and integrations'], group: 'work' },
+        { id: 'quality', title: 'Quality and review', summary: 'Evidence before handoff', detail: 'Check the work against acceptance criteria and the project’s existing quality process.', examples: ['Responsive checks', 'Regression review', 'Pull request notes'], group: 'work' },
+        { id: 'agency-handoff', title: 'Agency-owned delivery', summary: 'Context returned to your team', detail: 'Return the implementation with enough technical and release context for the agency to own the next client conversation.', examples: ['Release notes', 'Known limitations', 'Next-step recommendations'], group: 'outcome' }
+      ],
+      connections: [['client-goal', 'scope'], ['agency-workflow', 'scope'], ['scope', 'implementation'], ['implementation', 'quality'], ['quality', 'agency-handoff']]
+    }
+  },
+  'app-development': {
+    slug: 'app-development',
+    tab: 'app-development',
+    title: 'iPhone and Android App Development',
+    description: 'iPhone and Android app development for useful mobile products, from product discovery and MVPs to integrations, testing and release planning.',
+    eyebrow: 'IPHONE / ANDROID APP DEVELOPMENT',
+    headline: 'MOBILE APPS, BUILT FOR REAL USE.',
+    intro: 'Turn a mobile product idea into a clear, testable app. Start with the user problem and the smallest useful release, then build the experience, backend and integrations around how people will actually use it.',
+    points: [
+      { title: 'Product discovery and MVP scope', description: 'Clarify the audience, core task and first-release boundary so the app solves a real problem before extra features inflate cost and complexity.' },
+      { title: 'iPhone and Android experiences', description: 'Plan for both platforms, choosing a shared or platform-specific implementation based on product needs, device capabilities and long-term ownership.' },
+      { title: 'UX and interface design', description: 'Map key journeys, navigation, empty states, errors and accessibility needs, then shape a focused interface around the actions users come to complete.' },
+      { title: 'Backend, accounts and data', description: 'Connect the app to the right APIs, authentication, database and admin workflows, with clear handling for permissions and sensitive information.' },
+      { title: 'Payments, notifications and integrations', description: 'Add agreed capabilities such as subscriptions, bookings, push notifications, maps, analytics or links to existing business systems.' },
+      { title: 'Device testing and release support', description: 'Test important flows on representative devices, prepare release assets and guide the handoff for App Store and Google Play submission.' }
+    ],
+    deliverables: [
+      { title: 'Product and MVP outline', description: 'A prioritised feature set, user journeys and release boundary for the first useful version.' },
+      { title: 'Mobile interface', description: 'A cohesive set of screens and states shaped around the needs of iPhone and Android users.' },
+      { title: 'Connected app foundations', description: 'Agreed APIs, authentication, data flows and integrations documented with the build.' },
+      { title: 'Test and release checklist', description: 'Device coverage, key-flow checks and a practical store-submission handoff.' }
+    ],
+    flow: {
+      title: 'From useful idea to release-ready app',
+      intro: 'Keep the first release focused: validate the user journey, build the core experience, test it on devices and plan a responsible launch.',
+      steps: [
+        { title: 'Define the first release', description: 'Identify users, the core problem, platform needs and what can wait.' },
+        { title: 'Design the key journeys', description: 'Map screens, data, permissions and edge cases before implementation.' },
+        { title: 'Build and test', description: 'Implement the app and supporting services, then verify important flows on devices.' },
+        { title: 'Prepare the release', description: 'Review store requirements, analytics, support needs and the next iteration.' }
+      ]
+    },
+    systemMap: {
+      title: 'How a mobile product comes together',
+      intro: 'The user problem shapes journeys and platform choices; app, backend and integrations are tested together before release.',
+      nodes: [
+        { id: 'user-need', title: 'User need', summary: 'A task worth making easier', detail: 'Identify who will use the product, the context they are in and the task the app should help them complete.', examples: ['User interviews or existing feedback', 'Core job to be done', 'Accessibility and device context'], group: 'source' },
+        { id: 'product-scope', title: 'MVP scope', summary: 'The smallest useful release', detail: 'Prioritise essential flows and defer optional features until the first release can be tested with real users.', examples: ['Must-have user journeys', 'iOS and Android requirements', 'Release assumptions'], group: 'work' },
+        { id: 'mobile-app', title: 'Mobile experience', summary: 'Screens, navigation and states', detail: 'Design and implement the interface, including loading, error, empty and permission states.', examples: ['Onboarding and account flows', 'Core task screens', 'Responsive device layouts'], group: 'work' },
+        { id: 'services', title: 'Backend and APIs', summary: 'Data, identity and integrations', detail: 'Connect the application to secure data services, authentication and the external systems it needs.', examples: ['API and database', 'User identity and permissions', 'Payments or notifications'], group: 'work' },
+        { id: 'device-quality', title: 'Device quality', summary: 'Key flows checked in context', detail: 'Test performance, usability and important app journeys on representative devices and operating system versions.', examples: ['iPhone and Android device checks', 'Network and error handling', 'Analytics event validation'], group: 'work' },
+        { id: 'release', title: 'Release and learning', summary: 'A launch that can improve', detail: 'Prepare store submission and support basics, then use feedback and product events to prioritise the next release.', examples: ['Store listing and review checklist', 'Crash and usage monitoring', 'Post-release improvement backlog'], group: 'outcome' }
+      ],
+      connections: [['user-need', 'product-scope'], ['product-scope', 'mobile-app'], ['product-scope', 'services'], ['mobile-app', 'device-quality'], ['services', 'device-quality'], ['device-quality', 'release']]
+    }
+  },
+  'ai-automation': {
+    slug: 'ai-automation',
+    tab: 'ai-automation',
+    title: 'AI Integration and Business Automation',
+    description: 'Practical AI integrations and business process automation that connect your existing tools, reduce repetitive work and keep people in control.',
+    eyebrow: 'AI INTEGRATION / BUSINESS AUTOMATION',
+    headline: 'AUTOMATE THE WORK THAT SLOWS YOU DOWN.',
+    intro: 'Use AI where it makes a real process better. Connect the tools you already use, remove repetitive handoffs and add human review where accuracy, privacy or judgement matters.',
+    points: [
+      { title: 'Process discovery', description: 'Map how work moves today, who handles each step, where information gets re-entered and which exceptions still need a person.' },
+      { title: 'AI inside existing workflows', description: 'Add summarisation, classification, drafting, extraction or natural-language search to a process where the input and expected output can be checked.' },
+      { title: 'Business system integrations', description: 'Connect CRM, email, forms, databases, calendars and APIs so information moves between systems without brittle copy-and-paste routines.' },
+      { title: 'Human review and safeguards', description: 'Set confidence checks, approval points, fallbacks and audit trails so important decisions remain visible and reversible.' },
+      { title: 'Internal tools and assistants', description: 'Build focused dashboards, knowledge assistants or task interfaces that give teams useful access to approved data and actions.' },
+      { title: 'Monitoring and iteration', description: 'Track completion, exceptions, time saved and output quality. Refine the workflow using real operating evidence, not an AI demo alone.' }
+    ],
+    deliverables: [
+      { title: 'Process map', description: 'A before-and-after view of systems, manual steps, exceptions and human approvals.' },
+      { title: 'Working integration', description: 'A tested connection between agreed tools, with clear handling for failures and retries.' },
+      { title: 'AI task with guardrails', description: 'A bounded AI capability with defined inputs, output checks and escalation paths.' },
+      { title: 'Operational handover', description: 'Monitoring, ownership and improvement measures your team can use after launch.' }
+    ],
+    flow: {
+      title: 'Automate a real process, not just a demo',
+      intro: 'Start with the repetitive task, connect the right systems, keep decisions reviewable and measure whether the new process is genuinely better.',
+      steps: [
+        { title: 'Map the current work', description: 'Document triggers, tools, handoffs, exceptions and the time involved.' },
+        { title: 'Choose the right intervention', description: 'Decide whether rules, integration, AI or a combination fits the task.' },
+        { title: 'Build with controls', description: 'Add permissions, validation, human approval and failure handling.' },
+        { title: 'Measure in operation', description: 'Review time, completion, exceptions and output quality after launch.' }
+      ]
+    },
+    systemMap: {
+      title: 'How practical automation works',
+      intro: 'An existing business process becomes a connected workflow with explicit checks, human decisions and operating measures.',
+      nodes: [
+        { id: 'manual-process', title: 'Current process', summary: 'Tasks, handoffs and repeated work', detail: 'Understand the workflow as it actually operates, including exceptions and the information people re-enter.', examples: ['Email and spreadsheet handoffs', 'Repeated data entry', 'Approval and exception paths'], group: 'source' },
+        { id: 'business-systems', title: 'Existing systems', summary: 'Tools and data already in use', detail: 'Identify the systems that own the data and the supported ways they can be connected.', examples: ['CRM and email', 'Forms and databases', 'Document stores and APIs'], group: 'source' },
+        { id: 'workflow-design', title: 'Workflow design', summary: 'Triggers, rules and ownership', detail: 'Define what starts the process, which steps are deterministic, where AI helps and who owns exceptions.', examples: ['Event triggers', 'Business rules', 'Escalation and retry paths'], group: 'work' },
+        { id: 'ai-capability', title: 'AI capability', summary: 'A bounded task with checks', detail: 'Use a model for a specific task and validate its output before it can affect important business records or decisions.', examples: ['Document extraction', 'Message classification', 'Drafting with human approval'], group: 'work' },
+        { id: 'human-control', title: 'Human control', summary: 'Review and approval points', detail: 'Keep people involved where judgement, confidence, compliance or customer impact requires a decision.', examples: ['Confidence thresholds', 'Approval queues', 'Audit and correction history'], group: 'work' },
+        { id: 'measured-workflow', title: 'Measured workflow', summary: 'Visible quality and operating impact', detail: 'Monitor successful completions, exceptions, processing time and quality to guide safe iteration.', examples: ['Completion and exception rate', 'Time per task', 'Output review and correction rate'], group: 'outcome' }
+      ],
+      connections: [['manual-process', 'workflow-design'], ['business-systems', 'workflow-design'], ['workflow-design', 'ai-capability'], ['ai-capability', 'human-control'], ['human-control', 'measured-workflow']]
     }
   }
 };
