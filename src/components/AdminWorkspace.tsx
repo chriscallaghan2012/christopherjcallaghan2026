@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLink, LoaderCircle, Plus, Save, Send, Sparkles, Trash2 } from 'lucide-react';
 import type { BlogPost, BlogPostInput, BlogPostStatus } from '../../lib/database';
-import { AdminControlCenter } from './AdminControlCenter';
+import { AdminDashboard } from './AdminDashboard';
 
 type AdminMode = 'checking' | 'login' | 'unconfigured' | 'workspace';
 
@@ -190,7 +190,7 @@ export const AdminWorkspace: React.FC = () => {
   const blogContent = <section className="mt-7">
     <div className="mb-5 border-b border-white/10 pb-4">
       <h2 className="font-mono text-xs uppercase tracking-widest text-white/55">Blog posts</h2>
-      <p className="mt-2 text-sm text-white/55">Write, review, and publish articles alongside your other command-center work.</p>
+      <p className="mt-2 text-sm text-white/55">Draft with AI, review the article and search details, then save it or publish it.</p>
     </div>
     <div className="grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside>
@@ -240,5 +240,5 @@ export const AdminWorkspace: React.FC = () => {
     </div>
   </section>;
 
-  return <AdminControlCenter blogContent={blogContent} onLogout={handleLogout} />;
+  return <AdminDashboard blogContent={blogContent} postCount={posts.length} onLogout={handleLogout} />;
 };

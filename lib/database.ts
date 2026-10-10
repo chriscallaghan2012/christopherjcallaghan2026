@@ -269,7 +269,6 @@ export async function listAdminBlogPosts(): Promise<BlogPost[]> {
     SELECT ${sql.unsafe(BLOG_POST_COLUMNS)}
     FROM blog_posts
     ORDER BY updated_at DESC
-    LIMIT 200
   `;
   return rows as unknown as BlogPost[];
 }
@@ -432,7 +431,6 @@ export async function listAdminSubmissions(): Promise<AdminSubmission[]> {
       FROM consultation_requests
     ) AS submissions
     ORDER BY "createdAt" DESC
-    LIMIT 300
   `;
   return rows as unknown as AdminSubmission[];
 }

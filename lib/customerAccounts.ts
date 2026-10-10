@@ -25,6 +25,15 @@ export interface CustomerPurchase {
   createdAt: string;
 }
 
+export interface AdminCustomerAccount extends CustomerAccount {
+  createdAt: string;
+}
+
+export interface AdminCustomerPurchase extends CustomerPurchase {
+  customerName: string;
+  customerEmail: string;
+}
+
 function requireDatabase() {
   if (!sql) throw new Error('DATABASE_URL is not configured.');
   return sql;
@@ -200,6 +209,36 @@ export async function listCustomerPurchases(customerId: string): Promise<Custome
     LIMIT 100
   `;
   return rows as unknown as CustomerPurchase[];
+}
+
+export async function listAdminCustomerAccounts(): Promise<AdminCustomerAccount[]> {
+  const database = requireDatabase();
+  const rows = await database`
+    SELECT id::text AS id, name, email, created_at::text AS "createdAt"
+    FROM customer_accounts
+    ORDER BY created_at DESC
+  `;
+  return rows as unknown as AdminCustomerAccount[];
+}
+
+export async function listAdminCustomerPurchases(): Promise<AdminCustomerPurchase[]> {
+  const database = requireDatabase();
+  const rows = await database`
+    SELECT
+      purchases.id::text AS id,
+      purchases.offer_id AS "offerId",
+      purchases.offer_name AS "offerName",
+      purchases.amount,
+      purchases.currency,
+      purchases.status,
+      purchases.created_at::text AS "createdAt",
+      customers.name AS "customerName",
+      customers.email AS "customerEmail"
+    FROM customer_purchases AS purchases
+    INNER JOIN customer_accounts AS customers ON customers.id = purchases.customer_id
+    ORDER BY purchases.created_at DESC
+  `;
+  return rows as unknown as AdminCustomerPurchase[];
 }
 
 export async function recordPaidCustomerPurchase(session: Stripe.Checkout.Session): Promise<void> {
