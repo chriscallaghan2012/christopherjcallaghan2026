@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowDown, ArrowRight, Code, MapPin, MousePointerClick, Search } from 'lucide-react';
+import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
@@ -142,24 +143,40 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
           </div>
           <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
         </div>
-        <nav aria-label="SEO, local SEO, Google Ads and web design services" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {growthServices.map((service) => {
-            const Icon = service.icon;
-            return (
-              <a key={service.href} href={service.href} className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}>
-              <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
-                <span className="flex w-full flex-col items-center text-center">
-                <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
-                  <Icon aria-hidden="true" className="h-5 w-5" />
-                </span>
-                <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
-                <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
-              </span>
-              <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
-              </a>
-            );
-          })}
-        </nav>
+        <MotionConfig reducedMotion="user">
+          <motion.nav
+            aria-label="SEO, local SEO, Google Ads and web design services"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
+            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {growthServices.map((service) => {
+              const Icon = service.icon;
+              return (
+                <motion.a
+                  key={service.href}
+                  href={service.href}
+                  variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.99 }}
+                  className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}
+                >
+                  <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
+                  <span className="flex w-full flex-col items-center text-center">
+                    <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
+                      <Icon aria-hidden="true" className="h-5 w-5" />
+                    </span>
+                    <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
+                    <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
+                  </span>
+                  <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
+                </motion.a>
+              );
+            })}
+          </motion.nav>
+        </MotionConfig>
       </div>
     </section>
   </>
