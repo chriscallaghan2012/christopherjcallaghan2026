@@ -340,10 +340,103 @@ select:focus {
   }
 }
 
-@media (min-width: 1024px) {
-  .academy-flow-grid .academy-flow-dash-desktop-x {
-    display: block;
+/*
+  ============================================================
+  Constant ALWAYS-ON shine on every enabled button — the sheen
+  sweeps regardless of hover (no hover needed). Plus a universal
+  hover rule that shifts the perceived background colour on ALL
+  buttons by nudging brightness/saturation — works for any
+  background colour, no per-button styling required.
+  Escapes: add `no-constant-shine` or `no-button-hover-shift`.
+  ============================================================ */
+@layer components {
+  button:not(:disabled):not(.no-constant-shine) {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
   }
+
+  button:not(:disabled):not(.no-constant-shine)::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    bottom: -50%;
+    left: -45%;
+    width: 30%;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.14) 46%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.14) 54%, transparent 100%);
+    transform: skewX(-18deg);
+    animation: constantButtonShine 3.4s ease-in-out infinite;
+    will-change: left;
+  }
+
+  @keyframes constantButtonShine {
+    0%, 10% { left: -55%; }
+    55%, 100% { left: 150%; }
+  }
+
+  button:not(:disabled):not(.no-button-hover-shift):hover {
+    filter: brightness(1.06) saturate(1.1);
+  }
+}
+
+/* ============================================================
+   Academy flow connector arrows — dead-centre in the gap with a
+   gentle always-on float (previously the arrows used ad-hoc
+   offsets [-right-3/-bottom-3] that 5–11px off the gap centre and
+   never animated). 
+   ============================================================ */
+.academy-flow-grid .academy-flow-arrow-x {
+  right: -17px;
+}
+
+.academy-flow-grid .academy-flow-arrow-y {
+  bottom: -23px;
+}
+
+
+/* ============================================================
+   Academy flow card connectors — bug fix
+   Cards are separated by gap-x-5 (20px) / gap-y-8 (32px).
+   The old arrow offsets (-right-3 / -bottom-3 = 12px) parked the
+   icons ~5px (x) / ~11px (y) away from the exact centre of each gap.
+   We now centre them precisely: for a 20px gap the centre sits
+   10px out, so a 14px (h-3.5) arrow needs right:-17px; for a 32px
+   gap the centre is 16px out, so a 14px arrow needs bottom:-23px.
+   ============================================================ */
+.academy-flow-x-arrow,
+.academy-flow-x-arrow-tablet,
+.academy-flow-x-arrow-desktop {
+  right: -17px;
+}
+
+.academy-flow-y-arrow,
+.academy-flow-y-arrow-mobile {
+  bottom: -23px;
+}
+
+.academy-flow-y-arrow-tablet {
+  bottom: -23px;
+}
+
+/* Gentle "keep moving" float for the sharp arrows between cards */
+.academy-flow-arrow-x {
+  animation: academyFlowArrowRight 1.2s ease-in-out infinite;
+}
+
+.academy-flow-arrow-y {
+  animation: academyFlowArrowDown 1.2s ease-in-out infinite;
+}
+
+@keyframes academyFlowArrowRight {
+  0%, 100% { opacity: 0.55; transform: translate(-1px, -50%); }
+  50% { opacity: 1; transform: translate(3px, -50%); }
+}
+
+@keyframes academyFlowArrowDown {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -1px); }
+  50% { opacity: 1; transform: translate(-50%, 3px); }
 }
 
 .website-flow-arrow {
@@ -394,6 +487,22 @@ select:focus {
 
 @keyframes flowDashY {
   to { background-position-y: 12px; }
+}
+
+/* ============================================================
+   Academy flow — precise, centred, always-animated connectors
+   The dashes sit inside the grid gaps; the arrow icons hover exactly
+   at the centre point of each gap and gently float toward the next card.
+   ============================================================ */
+
+/* Horizontal connector: dash fills the 20px gap; arrow centred dead-centre */
+.academy-flow-arrow-x {
+  animation: websiteFlowArrowRight 1.1s ease-in-out infinite;
+}
+
+/* Vertical connector: arrow centred dead-centre of the 32px gap */
+.academy-flow-arrow-y {
+  animation: websiteFlowArrowDown 1.1s ease-in-out infinite;
 }
 
 /* Marching-ants animation for the dashed links between system map nodes */

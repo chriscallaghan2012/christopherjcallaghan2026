@@ -263,10 +263,10 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
               {index < 5 && <>
                 {index % 2 === 0 ? <>
                   <span className="flow-dash-x academy-flow-dash academy-flow-dash-mobile-x absolute -right-5 top-1/2 z-0 w-5 -translate-y-1/2" />
-                  <ArrowRight aria-hidden="true" className="absolute -right-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:hidden" />
+                  <ArrowRight aria-hidden="true" className="academy-flow-arrow-x absolute top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#FF5575] sm:hidden" />
                 </> : <>
                   <span className="flow-dash-y academy-flow-dash academy-flow-dash-mobile-y absolute -bottom-8 left-1/2 z-0 h-8 -translate-x-1/2" />
-                  <ArrowDown aria-hidden="true" className="absolute -bottom-3 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 text-[#FF5575] sm:hidden" />
+                  <ArrowDown aria-hidden="true" className="academy-flow-arrow-y absolute left-1/2 z-10 h-3.5 w-3.5 text-[#FF5575] sm:hidden" />
                 </>}
                 {index === 2 ? <>
                   <span className="flow-dash-y academy-flow-dash academy-flow-dash-tablet-y absolute -bottom-8 left-1/2 z-0 h-8 -translate-x-1/2" />
