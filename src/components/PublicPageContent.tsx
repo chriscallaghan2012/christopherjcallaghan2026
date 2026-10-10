@@ -55,24 +55,30 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
   return (
     <section className="mt-16 max-w-5xl" aria-labelledby="service-chart-title">
       <div className="border-b border-white/10 pb-5">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">A REPORTING VIEW</p>
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">{chart.eyebrow}</p>
         <h2 id="service-chart-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">{chart.title}</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/55">{chart.description}</p>
       </div>
       <figure className="mt-6 border border-white/10 bg-black/35 p-4 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-white/50">
-          <span>Illustrative index</span>
-          <span>Starting period = 100</span>
+        <div className="flex flex-col gap-2 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#FFB347]">Illustrative example only</p>
+            <p className="mt-1 text-xs text-white/50">Each series is indexed to its own baseline (100).</p>
+          </div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/40">BASELINE + 5 MONTHS</p>
         </div>
-        <svg className="mt-5 block w-full" viewBox="0 0 640 232" role="img" aria-label={`${chart.title}, an illustrative normalized trend chart`}>
+        <svg className="mt-5 block w-full" viewBox="0 0 640 252" role="img" aria-label={`${chart.title}, illustrative indexed values across a baseline and five months`}>
+          <text x="48" y="12" fill="rgba(255,255,255,0.4)" fontSize="9" fontFamily="monospace">INDEX</text>
           {ticks.map((tick) => (
             <g key={tick}>
               <line x1={chartLeft} x2={chartRight} y1={yFor(tick)} y2={yFor(tick)} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 7" />
               <text x="0" y={yFor(tick) + 4} fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="monospace">{tick}</text>
             </g>
           ))}
-          {Array.from({ length: 6 }, (_, index) => (
-            <text key={index} x={xFor(index)} y="220" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="monospace">P{index + 1}</text>
+          {chart.periods.map((period, index) => (
+            <text key={period} x={xFor(index)} y="220" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="10" fontFamily="monospace">{period}</text>
           ))}
+          <text x={chartLeft} y="244" fill="rgba(255,255,255,0.38)" fontSize="9" fontFamily="monospace">REPORTING PERIOD</text>
           {chart.series.map((series) => (
             <g key={series.label}>
               <polyline
@@ -97,7 +103,7 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
             </li>
           ))}
         </ul>
-        <figcaption className="mt-4 text-xs leading-relaxed text-white/45">Illustrative data only, not client results or a forecast. Real reporting is based on your agreed baseline, analytics access and conversion definitions.</figcaption>
+        <figcaption className="mt-4 max-w-3xl text-xs leading-relaxed text-white/45">The lines above are sample data, not client results or a forecast. A live report uses your Search Console and analytics data, agreed conversion definitions, and comparable reporting periods.</figcaption>
       </figure>
     </section>
   );
@@ -179,9 +185,9 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
-              <h2 id="service-metrics-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">A baseline before a percentage</h2>
+              <h2 id="service-metrics-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">Set a baseline. Measure meaningful change.</h2>
             </div>
-            <p className="max-w-md text-sm leading-relaxed text-white/55">These are reporting measures, not promised uplifts. We agree a starting period and track change against your actual data.</p>
+            <p className="max-w-xl text-sm leading-relaxed text-white/55">{content.measurement?.intro ?? 'Agree what success means, record a starting point and compare results over consistent periods. Percentages describe observed change, never a guaranteed uplift.'}</p>
           </div>
           <dl className="grid border-b border-white/10 sm:grid-cols-2 lg:grid-cols-4">
             {content.metrics.map((metric) => (
@@ -192,6 +198,12 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
               </div>
             ))}
           </dl>
+          {content.measurement?.steps && <ol className="grid gap-4 border-b border-white/10 py-5 sm:grid-cols-3">
+            {content.measurement.steps.map((step, index) => <li key={step.label}>
+              <p className={`font-mono text-[9px] font-bold uppercase tracking-[0.14em] ${index === 0 ? 'text-[#FF003C]' : index === 1 ? 'text-[#00DFC9]' : 'text-[#FFB347]'}`}>{step.label}</p>
+              <p className="mt-2 text-xs leading-relaxed text-white/55">{step.description}</p>
+            </li>)}
+          </ol>}
         </section>}
 
         {content.chart && <KpiTrendChart chart={content.chart} />}

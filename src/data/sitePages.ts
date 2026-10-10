@@ -12,8 +12,15 @@ export interface PublicPage {
   points?: { title: string; description: string }[];
   deliverables?: { title: string; description: string }[];
   metrics?: { label: string; value: string; detail: string }[];
+  measurement?: {
+    intro: string;
+    steps: { label: string; description: string }[];
+  };
   chart?: {
+    eyebrow: string;
     title: string;
+    description: string;
+    periods: string[];
     series: { label: string; color: string; values: number[] }[];
   };
   flow?: ProcessFlowContent;
@@ -66,8 +73,19 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { label: 'Priority pages indexed', value: '%', detail: 'Share of agreed landing pages available in search.' },
       { label: 'Search conversion rate', value: 'Δ %', detail: 'Change in the share of organic visits that take action.' }
     ],
+    measurement: {
+      intro: 'Record where the site is now, then compare like-for-like periods and connect organic visits to meaningful enquiries. Percentages describe observed change, never a guaranteed uplift.',
+      steps: [
+        { label: '01 / Establish', description: 'Choose a representative starting period and record clicks, impressions, priority pages and enquiries.' },
+        { label: '02 / Compare', description: 'Use consistent date ranges and account for seasonality, site changes and tracking differences.' },
+        { label: '03 / Improve', description: 'Use the evidence to choose the next page, technical fix or content improvement to test.' }
+      ]
+    },
     chart: {
-      title: 'Organic search signals',
+      eyebrow: 'EXAMPLE REPORT / ORGANIC SEARCH',
+      title: 'Organic search, made measurable',
+      description: 'See how search discovery and qualified actions move across comparable reporting periods.',
+      periods: ['Base', 'M1', 'M2', 'M3', 'M4', 'M5'],
       series: [
         { label: 'Clicks', color: '#FF003C', values: [100, 102, 98, 106, 111, 114] },
         { label: 'Impressions', color: '#00DFC9', values: [100, 108, 105, 113, 116, 119] },
@@ -172,8 +190,19 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { label: 'Tracked conversions', value: '%', detail: 'Share of agreed campaign actions with verified tracking.' },
       { label: 'Irrelevant search spend', value: 'Δ %', detail: 'Change identified through search-term and exclusion reviews.' }
     ],
+    measurement: {
+      intro: 'Agree what counts as a qualified action, capture current spend and conversion performance, then compare equivalent campaign periods. Changes are measured outcomes, not promised results.',
+      steps: [
+        { label: '01 / Define', description: 'Agree which calls, enquiries, bookings or sales count as qualified conversions.' },
+        { label: '02 / Baseline', description: 'Record spend, conversions, cost per qualified action and landing-page conversion rate.' },
+        { label: '03 / Optimise', description: 'Review search terms and outcomes together before changing targeting, creative or budget.' }
+      ]
+    },
     chart: {
-      title: 'Paid campaign signals',
+      eyebrow: 'EXAMPLE REPORT / GOOGLE ADS',
+      title: 'Paid campaign performance',
+      description: 'Read conversion volume and cost efficiency together, not clicks in isolation. A lower cost-per-lead index can indicate improved efficiency.',
+      periods: ['Base', 'M1', 'M2', 'M3', 'M4', 'M5'],
       series: [
         { label: 'Qualified conversions', color: '#FF003C', values: [100, 106, 103, 111, 108, 116] },
         { label: 'Conversion rate', color: '#00DFC9', values: [100, 103, 99, 108, 105, 112] },
