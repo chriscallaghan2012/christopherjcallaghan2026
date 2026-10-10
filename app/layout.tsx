@@ -12,8 +12,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://christopherjcallaghan.com'),
-  title: 'Christopher J. Callaghan | I Build Things',
-  description: 'Full-stack developer, AI builder and business creator. I turn ideas, problems and opportunities into working technology.',
+  title: 'Freelance Web Developer Manchester | Christopher J. Callaghan',
+  description: 'Freelance web developer in Manchester building and improving websites, apps, e-commerce and custom software for businesses across Greater Manchester and the UK.',
   applicationName: 'Christopher J. Callaghan',
   alternates: {
     canonical: '/',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     url: 'https://christopherjcallaghan.com',
-    title: 'Christopher J. Callaghan | I Build Things',
-    description: 'I turn ideas, problems and opportunities into working technology.',
+    title: 'Freelance Web Developer Manchester | Christopher J. Callaghan',
+    description: 'Websites, apps, e-commerce and custom software, built and improved by a freelance web developer in Manchester.',
     siteName: 'Christopher J. Callaghan Portfolio',
     images: [
       {
@@ -59,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Christopher J. Callaghan | I Build Things',
-    description: 'Full-stack developer, AI builder and business creator.',
+    title: 'Freelance Web Developer Manchester | Christopher J. Callaghan',
+    description: 'Websites, apps and custom software from a freelance web developer in Manchester.',
     creator: '@christopherjcallaghan',
     images: [
       '/assets/cjc-social-preview.svg',

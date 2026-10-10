@@ -205,7 +205,7 @@ export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onNavigate })
           <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-[#FFB347]">Full-stack developer / AI / business / builder</p>
           <ScrollWritingTitle text={'CHRISTOPHER\nJ. CALLAGHAN'} accentWords={[{ word: 'CHRISTOPHER', color: 'orange' }, { word: 'CALLAGHAN', color: 'purple' }]} className="text-4xl font-black leading-none text-white sm:text-5xl md:text-6xl" />
         </div>
-        <p className="max-w-xl text-base leading-relaxed text-white/60 md:justify-self-end">15+ years building websites, applications, software, integrations, AI systems and digital businesses.</p>
+        <p className="max-w-xl text-base leading-relaxed text-white/60 md:justify-self-end">A Manchester-based freelance web developer with 15+ years building websites, apps, e-commerce and custom software for businesses across Greater Manchester and the UK.</p>
       </div>
     </section>
 

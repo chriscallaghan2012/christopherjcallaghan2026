@@ -286,11 +286,11 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
   'web-design-development': {
     slug: 'web-design-development',
     tab: 'web-design-development',
-    title: 'Web Design & Development',
-    description: 'Websites designed, built, fixed and maintained. New builds, redesigns, repairs, updates and software fixes without the need for a full project brief or business setup.',
+    title: 'Website Design, Development & Repairs in Manchester',
+    description: 'Website design, development, repairs and maintenance in Manchester. New websites, redesigns, e-commerce and fixes for businesses across Greater Manchester and the UK.',
     eyebrow: 'WEB DESIGN / DEVELOPMENT',
     headline: 'MAKE YOUR WEBSITE WORK.',
-    intro: 'A better website, built or fixed. Design, development and repair for websites and software that need to look right, work properly and turn visitors into enquiries.',
+    intro: 'Need a website built, improved or fixed? I provide freelance website design and development in Manchester, including new builds, redesigns, e-commerce and practical repairs for businesses across Greater Manchester and the UK.',
     points: [
       { title: 'Web design', description: 'Clear, on-brand design that guides visitors towards the next step, with responsive layouts that work on mobile, tablet and desktop.' },
       { title: 'Website development', description: 'Fast, reliable websites built on modern foundations such as Next.js, React and WordPress, with clean code that is easy to update and maintain.' },
