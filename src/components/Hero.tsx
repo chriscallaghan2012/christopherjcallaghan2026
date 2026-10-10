@@ -19,7 +19,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
       cancelIdleCallback?: (handle: number) => void;
     };
-
     if (browser.requestIdleCallback) {
       const idleHandle = browser.requestIdleCallback(() => setLoadNetworkScene(true), { timeout: 1200 });
       return () => browser.cancelIdleCallback?.(idleHandle);
