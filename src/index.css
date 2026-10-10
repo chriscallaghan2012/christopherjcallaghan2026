@@ -351,23 +351,15 @@ select:focus {
   }
 }
 
-/*
-  ============================================================
-  Constant ALWAYS-ON shine on every enabled button — the sheen
-  sweeps regardless of hover (no hover needed). Plus a universal
-  hover rule that shifts the perceived background colour on ALL
-  buttons by nudging brightness/saturation — works for any
-  background colour, no per-button styling required.
-  Escapes: add `no-constant-shine` or `no-button-hover-shift`.
-  ============================================================ */
+/* Keep the sheen on demand so idle pages do not animate every button. */
 @layer components {
-  button:not(:disabled):not(.no-constant-shine) {
+  button:not(:disabled) {
     position: relative;
     isolation: isolate;
     overflow: hidden;
   }
 
-  button:not(:disabled):not(.no-constant-shine)::before {
+  button:not(:disabled)::before {
     content: "";
     position: absolute;
     top: -50%;
@@ -377,14 +369,13 @@ select:focus {
     z-index: 0;
     pointer-events: none;
     background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.14) 46%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.14) 54%, transparent 100%);
-    transform: skewX(-18deg);
-    animation: constantButtonShine 3.4s ease-in-out infinite;
-    will-change: left;
+    transform: translateX(0) skewX(-18deg);
+    transition: transform 650ms ease;
   }
 
-  @keyframes constantButtonShine {
-    0%, 10% { left: -55%; }
-    55%, 100% { left: 150%; }
+  button:not(:disabled):hover::before,
+  button:not(:disabled):focus-visible::before {
+    transform: translateX(650%) skewX(-18deg);
   }
 
   button:not(:disabled):not(.no-button-hover-shift):hover {
