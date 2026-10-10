@@ -48,9 +48,9 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
   const chartRight = 608;
   const chartTop = 22;
   const chartBottom = 190;
-  const ticks = [130, 120, 110, 100, 90, 80];
+  const ticks = [20, 10, 0, -10, -20];
   const xFor = (index: number) => chartLeft + index * ((chartRight - chartLeft) / 5);
-  const yFor = (value: number) => chartBottom - ((value - 80) / 50) * (chartBottom - chartTop);
+  const yFor = (value: number) => chartBottom - ((value + 20) / 40) * (chartBottom - chartTop);
 
   return (
     <section className="mt-16 max-w-5xl" aria-labelledby="service-chart-title">
@@ -63,16 +63,16 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
         <div className="flex flex-col gap-2 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#FFB347]">Illustrative example only</p>
-            <p className="mt-1 text-xs text-white/50">Each series is indexed to its own baseline (100).</p>
+            <p className="mt-1 text-xs text-white/50">Change from each series&apos; baseline; 0% means no change.</p>
           </div>
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/40">BASELINE + 5 MONTHS</p>
         </div>
-        <svg className="mt-5 block w-full" viewBox="0 0 640 252" role="img" aria-label={`${chart.title}, illustrative indexed values across a baseline and five months`}>
-          <text x="48" y="12" fill="rgba(255,255,255,0.4)" fontSize="9" fontFamily="monospace">INDEX</text>
+        <svg className="mt-5 block w-full" viewBox="0 0 640 252" role="img" aria-label={`${chart.title}, illustrative percentage change from baseline across five months`}>
+          <text x="48" y="12" fill="rgba(255,255,255,0.4)" fontSize="9" fontFamily="monospace">CHANGE</text>
           {ticks.map((tick) => (
             <g key={tick}>
-              <line x1={chartLeft} x2={chartRight} y1={yFor(tick)} y2={yFor(tick)} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 7" />
-              <text x="0" y={yFor(tick) + 4} fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="monospace">{tick}</text>
+              <line x1={chartLeft} x2={chartRight} y1={yFor(tick)} y2={yFor(tick)} stroke={tick === 0 ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.1)'} strokeDasharray={tick === 0 ? undefined : '3 7'} />
+              <text x="0" y={yFor(tick) + 4} fill="rgba(255,255,255,0.55)" fontSize="10" fontFamily="monospace">{tick > 0 ? '+' : ''}{tick}%</text>
             </g>
           ))}
           {chart.periods.map((period, index) => (
@@ -87,10 +87,10 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                points={series.values.map((value, index) => `${xFor(index)},${yFor(value)}`).join(' ')}
+                points={series.values.map((value, index) => `${xFor(index)},${yFor(value - 100)}`).join(' ')}
               />
               {series.values.map((value, index) => (
-                <circle key={`${series.label}-${index}`} cx={xFor(index)} cy={yFor(value)} r="3.5" fill={series.color} />
+                <circle key={`${series.label}-${index}`} cx={xFor(index)} cy={yFor(value - 100)} r="3.5" fill={series.color} />
               ))}
             </g>
           ))}
@@ -103,7 +103,7 @@ const KpiTrendChart: React.FC<{ chart: NonNullable<PublicPage['chart']> }> = ({ 
             </li>
           ))}
         </ul>
-        <figcaption className="mt-4 max-w-3xl text-xs leading-relaxed text-white/45">The lines above are sample data, not client results or a forecast. A live report uses your Search Console and analytics data, agreed conversion definitions, and comparable reporting periods.</figcaption>
+        <figcaption className="mt-4 max-w-3xl text-xs leading-relaxed text-white/45">Each point shows percentage change from that metric&apos;s own baseline, not a percentage-point change. The lines are illustrative sample data, not client results or a forecast. A live report uses your Search Console and analytics data, agreed conversion definitions, and comparable reporting periods.</figcaption>
       </figure>
     </section>
   );
