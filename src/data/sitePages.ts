@@ -68,10 +68,10 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Baseline reporting', description: 'A consistent comparison of impressions, clicks, visits and qualified enquiries.' }
     ],
     metrics: [
-      { label: 'Organic clicks', value: 'Δ %', detail: 'Change against the agreed Search Console baseline.' },
-      { label: 'Qualified enquiries', value: 'Δ %', detail: 'Change in relevant enquiries attributed to organic search.' },
-      { label: 'Priority pages indexed', value: '%', detail: 'Share of agreed landing pages available in search.' },
-      { label: 'Search conversion rate', value: 'Δ %', detail: 'Change in the share of organic visits that take action.' }
+      { label: 'Organic clicks', value: '+14%', detail: 'Change against the agreed Search Console baseline.' },
+      { label: 'Qualified enquiries', value: '+8%', detail: 'Change in relevant enquiries attributed to organic search.' },
+      { label: 'Priority pages indexed', value: '94%', detail: 'Share of agreed landing pages available in search.' },
+      { label: 'Search conversion rate', value: '+6%', detail: 'Change in the share of organic visits that take action.' }
     ],
     measurement: {
       intro: 'Record where the site is now, then compare like-for-like periods and connect organic visits to meaningful enquiries. Percentages describe observed change, never a guaranteed uplift.',
@@ -185,10 +185,10 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
       { title: 'Optimisation report', description: 'Spend, search terms and conversion trends reviewed against the campaign baseline.' }
     ],
     metrics: [
-      { label: 'Cost per qualified lead', value: '£ / lead', detail: 'Cost measured against the agreed qualified lead definition.' },
-      { label: 'Landing-page conversion', value: 'Δ %', detail: 'Change in conversion rate against the starting period.' },
-      { label: 'Tracked conversions', value: '%', detail: 'Share of agreed campaign actions with verified tracking.' },
-      { label: 'Irrelevant search spend', value: 'Δ %', detail: 'Change identified through search-term and exclusion reviews.' }
+      { label: 'Cost per qualified lead', value: '£42 / lead', detail: 'Cost measured against the agreed qualified lead definition.' },
+      { label: 'Landing-page conversion', value: '+12%', detail: 'Change in conversion rate against the starting period.' },
+      { label: 'Tracked conversions', value: '96%', detail: 'Share of agreed campaign actions with verified tracking.' },
+      { label: 'Irrelevant search spend', value: '-18%', detail: 'Change identified through search-term and exclusion reviews.' }
     ],
     measurement: {
       intro: 'Agree what counts as a qualified action, capture current spend and conversion performance, then compare equivalent campaign periods. Changes are measured outcomes, not promised results.',

@@ -186,6 +186,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
               <h2 id="service-metrics-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">Set a baseline. Measure meaningful change.</h2>
+              <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-white/40">Illustrative values only / not client results</p>
             </div>
             <p className="max-w-xl text-sm leading-relaxed text-white/55">{content.measurement?.intro ?? 'Agree what success means, record a starting point and compare results over consistent periods. Percentages describe observed change, never a guaranteed uplift.'}</p>
           </div>
