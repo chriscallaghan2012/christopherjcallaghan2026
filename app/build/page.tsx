@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { BuildServiceSlug } from '@/src/types';
 import App from '@/src/App';
 
 const title = 'Build a Website, App or Software | Christopher J. Callaghan';
@@ -17,18 +18,26 @@ type BuildPageProps = {
   searchParams: Promise<{ service?: string | string[] }>;
 };
 
-const GROWTH_SERVICE_SLUGS = ['seo-services', 'local-seo', 'google-ads-management', 'web-design-development'] as const;
-type GrowthServiceSlug = (typeof GROWTH_SERVICE_SLUGS)[number];
+const BUILD_SERVICE_SLUGS: readonly BuildServiceSlug[] = [
+  'seo-services',
+  'local-seo',
+  'google-ads-management',
+  'social-media-marketing',
+  'web-design-development',
+  'agency-development-partner',
+  'app-development',
+  'ai-automation'
+];
 
-const LEGACY_SERVICE_ALIASES: Record<string, GrowthServiceSlug> = {
+const LEGACY_SERVICE_ALIASES: Record<string, BuildServiceSlug> = {
   seo: 'seo-services',
   'google-maps': 'local-seo',
   ppc: 'google-ads-management'
 };
 
-function resolveInitialService(raw?: string): GrowthServiceSlug | undefined {
+function resolveInitialService(raw?: string): BuildServiceSlug | undefined {
   if (!raw) return undefined;
-  if ((GROWTH_SERVICE_SLUGS as readonly string[]).includes(raw)) return raw as GrowthServiceSlug;
+  if ((BUILD_SERVICE_SLUGS as readonly string[]).includes(raw)) return raw as BuildServiceSlug;
   return LEGACY_SERVICE_ALIASES[raw];
 }
 

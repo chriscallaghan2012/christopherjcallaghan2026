@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab } from './types';
+import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab, BuildServiceSlug } from './types';
 import { PUBLIC_PAGES } from './data/sitePages';
 import { SimpleNavbar } from './components/SimpleNavbar';
 import { Hero } from './components/Hero';
@@ -28,7 +28,7 @@ const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes',
 
 interface AppProps {
   initialTab?: ScreenTab;
-  initialService?: 'seo-services' | 'local-seo' | 'google-ads-management' | 'web-design-development';
+  initialService?: BuildServiceSlug;
 }
 
 /** Reads the browser URL (pathname or ?tab=) and resolves the active tab. */

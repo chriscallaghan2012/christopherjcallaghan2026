@@ -130,13 +130,64 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         </header>
 
         {isAbout ? (
-          <section className="mt-20 grid gap-8 border-y border-white/10 py-10 md:grid-cols-[180px_1fr]">
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">THE WAY I WORK</p>
-            <div className="max-w-3xl space-y-5 text-base leading-relaxed text-white/70">
-              <p>I work across product, software and business problems, from the first idea through to a live digital experience.</p>
-              <p>The aim is straightforward: understand what you are trying to achieve, then build the technology that helps get you there.</p>
-            </div>
-          </section>
+          <div className="mt-16 max-w-5xl">
+            <section className="grid gap-8 border-y border-white/10 py-10 md:grid-cols-[180px_1fr]" aria-labelledby="about-profile-title">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">01 / ABOUT ME</p>
+              <div className="max-w-3xl space-y-5 text-base leading-relaxed text-white/70">
+                <h2 id="about-profile-title" className="text-2xl font-black leading-tight text-white sm:text-3xl">An independent developer who thinks about the whole product.</h2>
+                <p>I&apos;m Christopher J. Callaghan, a Manchester-based full-stack developer, AI builder and business creator. I work with founders, growing businesses and agencies to turn ideas, bottlenecks and opportunities into useful digital products.</p>
+                <p>My work moves between product thinking and hands-on engineering. I can help shape an early idea, build a customer-facing website or app, connect the services behind it, and keep improving the product after launch. The point is not to add technology for its own sake; it is to make something clearer, more useful or easier to run.</p>
+                <p>I work directly with clients and can also join an agency team as a white-label development partner. In either case, I aim to make decisions understandable, progress visible and the finished work straightforward for the people who will own it next.</p>
+              </div>
+            </section>
+
+            <section className="grid gap-8 border-b border-white/10 py-10 md:grid-cols-[180px_1fr]" aria-labelledby="about-work-title">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">02 / THE WORK</p>
+              <div>
+                <h2 id="about-work-title" className="text-2xl font-black text-white sm:text-3xl">From the first screen to the systems behind it.</h2>
+                <dl className="mt-7 grid gap-x-10 sm:grid-cols-2">
+                  <div className="border-t border-white/10 py-4">
+                    <dt className="text-base font-bold text-white">Websites and commerce</dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-white/60">New builds, redesigns, e-commerce journeys, content platforms and improvements to sites that already have customers and operational needs.</dd>
+                  </div>
+                  <div className="border-t border-white/10 py-4">
+                    <dt className="text-base font-bold text-white">Apps and digital products</dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-white/60">Product discovery, MVP scope, user journeys, account and data flows, integrations, testing and a practical path to release.</dd>
+                  </div>
+                  <div className="border-t border-white/10 py-4">
+                    <dt className="text-base font-bold text-white">Software and integrations</dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-white/60">Custom tools, APIs, dashboards, payments and connections between platforms, designed around the way a team actually works.</dd>
+                  </div>
+                  <div className="border-t border-white/10 py-4">
+                    <dt className="text-base font-bold text-white">AI and automation</dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-white/60">Focused AI features and repeatable workflows, with validation and human oversight where decisions or business data matter.</dd>
+                  </div>
+                </dl>
+              </div>
+            </section>
+
+            <section className="grid gap-8 border-b border-white/10 py-10 md:grid-cols-[180px_1fr]" aria-labelledby="about-approach-title">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">03 / MY APPROACH</p>
+              <div>
+                <h2 id="about-approach-title" className="text-2xl font-black text-white sm:text-3xl">Make the next decision easier.</h2>
+                <ol className="mt-6 divide-y divide-white/10 border-y border-white/10">
+                  <li className="grid gap-2 py-4 sm:grid-cols-[52px_1fr]"><span className="font-mono text-xs text-[#FF003C]">01</span><div><h3 className="text-sm font-bold text-white">Start with the outcome</h3><p className="mt-1 text-sm leading-relaxed text-white/60">Understand who the work is for, what needs to change and how you will know it is helping.</p></div></li>
+                  <li className="grid gap-2 py-4 sm:grid-cols-[52px_1fr]"><span className="font-mono text-xs text-[#FF003C]">02</span><div><h3 className="text-sm font-bold text-white">Find a useful scope</h3><p className="mt-1 text-sm leading-relaxed text-white/60">Separate what matters now from what can wait, and make important assumptions and dependencies visible.</p></div></li>
+                  <li className="grid gap-2 py-4 sm:grid-cols-[52px_1fr]"><span className="font-mono text-xs text-[#FF003C]">03</span><div><h3 className="text-sm font-bold text-white">Build and check the real journey</h3><p className="mt-1 text-sm leading-relaxed text-white/60">Connect the interface to its data and services, then test the important paths people and teams will use.</p></div></li>
+                  <li className="grid gap-2 py-4 sm:grid-cols-[52px_1fr]"><span className="font-mono text-xs text-[#FF003C]">04</span><div><h3 className="text-sm font-bold text-white">Hand over with context</h3><p className="mt-1 text-sm leading-relaxed text-white/60">Leave clear notes about what changed, how to operate it and what would make sense to improve next.</p></div></li>
+                </ol>
+              </div>
+            </section>
+
+            <section className="grid gap-8 border-b border-white/10 py-10 md:grid-cols-[180px_1fr]" aria-labelledby="about-experience-title">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">04 / IN PRACTICE</p>
+              <div className="max-w-3xl space-y-5 text-base leading-relaxed text-white/70">
+                <h2 id="about-experience-title" className="text-2xl font-black leading-tight text-white sm:text-3xl">I like work where the details have to connect.</h2>
+                <p>That might mean taking an event-booking product beyond its public website: connecting venue discovery to live availability, checkout and payment services, then giving staff an offline-capable way to validate bookings. It might mean building a tutor directory where profiles, filters, booking and management tools work as one experience.</p>
+                <p>Those projects reflect the kind of problems I enjoy: the visible product matters, but so do the data, integrations and operational steps that make it dependable. I bring that same end-to-end attention to smaller websites, focused fixes and agency delivery work.</p>
+              </div>
+            </section>
+          </div>
         ) : null}
 
         {content.flow && <div className="mt-12"><ProcessFlow {...content.flow} /></div>}

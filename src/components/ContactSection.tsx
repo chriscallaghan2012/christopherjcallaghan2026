@@ -11,10 +11,13 @@ const PROJECT_TYPES = [
   'Start a business',
   'Just a website',
   'Website or app',
+  'Mobile app development',
   'Software or AI',
+  'AI and automation',
   'SEO or Google Maps',
   'PPC or advertising',
-  'Social media',
+  'Social media marketing',
+  'White-label agency development',
   'Something else'
 ];
 

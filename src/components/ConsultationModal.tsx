@@ -14,12 +14,16 @@ const STANDARD_SCOPES = [
   'Start a business',
   'Just a website',
   'Build a website or app',
+  'Mobile app development',
   'Build software or AI',
+  'AI and automation',
   'Grow an existing business',
   'Marketing',
   'SEO',
   'Google visibility',
-  'Social media',
+  'Google Ads / PPC',
+  'Social media marketing',
+  'White-label agency development',
   'Something else'
 ];
 

@@ -93,6 +93,8 @@ export interface Testimonial {
 
 export type PublicPageTab = 'about' | 'contact' | 'seo-services' | 'local-seo' | 'google-ads-management' | 'social-media-marketing' | 'web-design-development' | 'agency-development-partner' | 'app-development' | 'ai-automation';
 
+export type BuildServiceSlug = Exclude<PublicPageTab, 'about' | 'contact'>;
+
 export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
 
 export interface ArchitectureBlueprint {

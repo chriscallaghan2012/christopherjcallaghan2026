@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, ChevronDown, LoaderCircle, Paperclip, X } from 'lucide-react';
+import type { BuildServiceSlug } from '../types';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 
 type BriefMode = 'build' | 'start';
-type GrowthServiceSlug = 'seo-services' | 'local-seo' | 'google-ads-management' | 'web-design-development';
 
 interface ProjectBriefPageProps {
   mode: BriefMode;
-  initialService?: GrowthServiceSlug;
+  initialService?: BuildServiceSlug;
 }
 
 const BUILD_GOALS = [
@@ -20,6 +20,9 @@ const BUILD_GOALS = [
   { title: 'An app or platform', detail: 'A digital product people can use', color: 'purple' },
   { title: 'Software or AI', detail: 'A custom tool, workflow or AI feature', color: 'teal' },
   { title: 'Automation or integration', detail: 'Connect systems and remove repeat work', color: 'pink' },
+  { title: 'Social media marketing', detail: 'Plan content and campaigns around your audience', color: 'pink' },
+  { title: 'White-label development', detail: 'Add delivery capacity under your agency brand', color: 'purple' },
+  { title: 'AI and automation', detail: 'Improve a workflow with practical AI or integrations', color: 'teal' },
   { title: 'Not sure yet', detail: 'I know the problem, not the solution', color: 'orange' }
 ];
 
@@ -33,7 +36,14 @@ const BUILD_FOCUS = ['Plan and scope the idea', 'Design and build the first vers
 const GROWTH_FOCUS: Record<string, string[]> = {
   SEO: ['Improve technical SEO and site structure', 'Create useful search-focused content', 'Improve local search visibility', 'Measure search traffic and enquiries', 'Review the right SEO approach together'],
   'Google Maps': ['Set up or improve my Google Business Profile', 'Improve local visibility and service areas', 'Make business details consistent online', 'Turn Maps views into calls and enquiries', 'Review local search together'],
-  PPC: ['Plan a Google Ads campaign', 'Improve landing pages and conversion tracking', 'Review or optimise existing ads', 'Reach a specific audience or location', 'Work out whether paid ads are right for me']
+  PPC: ['Plan a Google Ads campaign', 'Improve landing pages and conversion tracking', 'Review or optimise existing ads', 'Reach a specific audience or location', 'Work out whether paid ads are right for me'],
+  'A website': ['Design and build a new website', 'Improve an existing website', 'Build a landing page or online shop', 'Add bookings, payments or integrations', 'Improve accessibility, speed or search visibility'],
+  'An app or platform': ['Define the first useful release', 'Design the main user journeys', 'Build iPhone and Android apps', 'Connect the app to accounts, data or payments', 'Test and prepare for app-store release'],
+  'Software or AI': ['Build a custom internal tool', 'Add an AI assistant or smart search', 'Create a data or reporting dashboard', 'Integrate software with existing systems', 'Plan a secure deployment and handover'],
+  'Automation or integration': ['Connect existing tools and systems', 'Automate a repeat workflow', 'Synchronise data between platforms', 'Build an API integration', 'Add alerts, reporting or approvals'],
+  'Social media marketing': ['Plan channels and content themes', 'Create a practical publishing calendar', 'Improve social profiles and messaging', 'Plan a paid social campaign', 'Measure visits, enquiries or sales'],
+  'White-label development': ['Add development capacity to my agency', 'Deliver a project under my agency brand', 'Clear a backlog or overflow workload', 'Get specialist or rescue support', 'Explore an ongoing agency partnership'],
+  'AI and automation': ['Identify a useful AI opportunity', 'Automate a manual business process', 'Connect AI to existing tools or data', 'Build an AI-powered feature or assistant', 'Review privacy, reliability and ongoing costs']
 };
 const START_FOCUS = ['Business plan and setup', 'Brand, website or online shop', 'Marketing and customer growth', 'Funding options and launch planning', 'A joined-up plan from idea to launch'];
 const BUILD_EXTRAS: Record<string, string[]> = {
@@ -44,6 +54,9 @@ const BUILD_EXTRAS: Record<string, string[]> = {
   'An app or platform': ['User accounts and permissions', 'Admin dashboards', 'Payments or subscriptions', 'Notifications and messaging', 'Third-party integrations', 'Reporting and analytics'],
   'Software or AI': ['AI assistant or smart search', 'Workflow automation', 'Data and reporting dashboards', 'API or systems integration', 'Internal admin tools', 'Cloud deployment and support'],
   'Automation or integration': ['Connect existing tools', 'Automate repeat workflows', 'CRM or email integration', 'Move or synchronise data', 'Custom API integration', 'Alerts and reporting'],
+  'Social media marketing': ['Channel and audience plan', 'Content themes and calendar', 'Platform-specific post formats', 'Paid social and campaign tracking', 'Engagement and conversion reporting'],
+  'White-label development': ['Front-end or full-stack implementation', 'Client projects under my agency brand', 'Overflow or sprint capacity', 'Code review and technical QA', 'Rescue or inherited-code work', 'Integrations and API development', 'Release notes and handover'],
+  'AI and automation': ['AI assistant or smart search', 'Workflow automation', 'Data and reporting dashboards', 'API or systems integration', 'Internal admin tools', 'Cloud deployment and support'],
   'Not sure yet': ['Discovery and project scoping', 'User or customer research', 'Technical recommendations', 'MVP roadmap', 'Clickable prototype']
 };
 const START_EXTRAS: Record<string, string[]> = {
@@ -59,6 +72,9 @@ const GOAL_CONTEXT_PROMPTS: Record<string, string> = {
   'An app or platform': 'What should people be able to do with the app or platform?',
   'Software or AI': 'What task or problem should the software or AI help with?',
   'Automation or integration': 'Which tools or systems do you use, and what would you like to connect or automate?',
+  'Social media marketing': 'Which channels do you use, who do you want to reach, and what would you like social media to achieve?',
+  'White-label development': 'What kind of agency work or delivery capacity would you like support with?',
+  'AI and automation': 'What task or process would you like AI or automation to improve?',
   'Not sure yet': 'What problem are you trying to solve, and who does it affect?',
   'I have an idea': 'What is the idea, and who do you imagine using it?',
   'I am getting ready to launch': 'What are you launching? Include the business, product, or industry if you know it.',
@@ -85,6 +101,26 @@ const FOCUS_CONTEXT_PROMPTS: Record<string, string> = {
   'Review or optimise existing ads': 'Which campaigns are running, and what results do you want to improve?',
   'Reach a specific audience or location': 'Who do you want to reach, and where are they based?',
   'Work out whether paid ads are right for me': 'What are you hoping to achieve, and what have you tried so far?',
+  'Design and build a new website': 'What should the new website help visitors understand or do?',
+  'Improve an existing website': 'Share the website and tell me what needs to work better.',
+  'Build a landing page or online shop': 'What are you promoting or selling, and who is it for?',
+  'Add bookings, payments or integrations': 'Which booking, payment or business systems need to connect?',
+  'Improve accessibility, speed or search visibility': 'Share the website and the issues or goals you have noticed.',
+  'Define the first useful release': 'Who will use the app, and what is the first task it should help them complete?',
+  'Design the main user journeys': 'What should users be able to do from opening the app to completing their task?',
+  'Build iPhone and Android apps': 'Do you need iPhone, Android or both, and do you have an existing product or design?',
+  'Connect the app to accounts, data or payments': 'What accounts, data sources, payment flows or APIs should connect?',
+  'Test and prepare for app-store release': 'What platforms, devices or release date should the testing and handoff support?',
+  'Add development capacity to my agency': 'What skills, capacity or delivery window does your team need?',
+  'Deliver a project under my agency brand': 'What is the project scope, and how should the work fit your client-facing process?',
+  'Clear a backlog or overflow workload': 'What work is in the backlog, and how does your team prioritise it?',
+  'Get specialist or rescue support': 'What is blocked or needs specialist attention? Share the stack or project context.',
+  'Explore an ongoing agency partnership': 'What kind of work and collaboration rhythm would be useful to your agency?',
+  'Plan channels and content themes': 'Which audience and channels should the plan focus on?',
+  'Create a practical publishing calendar': 'How often can you publish, and what resources or content do you already have?',
+  'Improve social profiles and messaging': 'Share the profiles and explain what you want people to understand or do.',
+  'Plan a paid social campaign': 'Which platform, audience, offer and campaign goal do you have in mind?',
+  'Measure visits, enquiries or sales': 'Which outcomes should be tracked, and where do people convert today?',
   'Business plan and setup': 'What kind of business are you considering, and where are you in the process?',
   'Brand, website or online shop': 'What are you selling or offering, and do you have an existing site or brand?',
   'Marketing and customer growth': 'How do you currently reach customers, and what would you like to improve?',
@@ -107,7 +143,16 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
   const isStart = mode === 'start';
   const goals = isStart ? START_GOALS : BUILD_GOALS;
   const initialGoal = !isStart && initialService
-    ? { 'seo-services': 'SEO', 'local-seo': 'Google Maps', 'google-ads-management': 'PPC', 'web-design-development': 'A website' }[initialService]
+    ? {
+      'seo-services': 'SEO',
+      'local-seo': 'Google Maps',
+      'google-ads-management': 'PPC',
+      'social-media-marketing': 'Social media marketing',
+      'web-design-development': 'A website',
+      'agency-development-partner': 'White-label development',
+      'app-development': 'An app or platform',
+      'ai-automation': 'AI and automation'
+    }[initialService]
     : '';
   const [step, setStep] = useState(initialGoal ? 1 : 0);
   const [goal, setGoal] = useState(initialGoal);
@@ -202,7 +247,7 @@ export const ProjectBriefPage: React.FC<ProjectBriefPageProps> = ({ mode, initia
         name,
         email,
         phone,
-        projectType: pageTitle,
+        projectType: goal || pageTitle,
         packageScope: briefScope,
         budget,
         timeline,
