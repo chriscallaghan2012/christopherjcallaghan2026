@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { MotionConfig, motion } from 'motion/react';
 import { 
   VENTURE_PACKAGE_MODULES, 
   VENTURE_STAGES 
@@ -314,10 +315,18 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
                 Includes SME Grants & Startups Up to £25k
               </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
+            <MotionConfig reducedMotion="user">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3"
+            >
               {VENTURE_STAGES.map((stg) => (
-                <button
+                <motion.button
                   key={stg.stage}
+                  variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
                   onClick={() => setSelectedStage(stg)}
                   className={`p-4 rounded-2xl border text-left transition-all relative ${
                     selectedStage.stage === stg.stage
@@ -337,9 +346,10 @@ export const TheWholePackage: React.FC<TheWholePackageProps> = ({
                   <div className="text-[11px] text-white/50 leading-snug line-clamp-2">
                     {stg.focus}
                   </div>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
+            </MotionConfig>
           </div>
 
           {/* Filter Pills */}

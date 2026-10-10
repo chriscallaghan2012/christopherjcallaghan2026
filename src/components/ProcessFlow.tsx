@@ -19,15 +19,21 @@ export const ProcessFlow: React.FC<ProcessFlowProps> = ({ title, intro, steps, e
           <p className="mt-3 text-sm leading-relaxed text-white/60 md:text-base">{intro}</p>
         </header>
 
-        <ol className="grid items-stretch gap-2 md:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] md:gap-3">
+        <motion.ol
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.14 } } }}
+          className="grid items-stretch gap-2 md:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] md:gap-3"
+        >
           {steps.map((step, index) => (
             <React.Fragment key={step.title}>
               <motion.li
-                initial={{ opacity: 1, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: index * 0.09 }}
-                className="min-w-0 border-t-2 border-[#FF003C]/60 bg-white/[0.025] px-4 py-4 sm:px-5 sm:py-5"
+                variants={{ hidden: { opacity: 0, y: 20, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1 } }}
+                whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.18 } }}
+                whileTap={{ scale: 0.99 }}
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+                className="min-w-0 border-t-2 border-[#FF003C]/60 bg-white/[0.025] px-4 py-4 transition-colors hover:border-[#FF003C] hover:bg-white/[0.045] sm:px-5 sm:py-5"
               >
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#00DFC9]">STEP {String(index + 1).padStart(2, '0')}</p>
                 <h3 className="mt-3 text-base font-bold leading-snug text-white">{step.title}</h3>
@@ -41,7 +47,7 @@ export const ProcessFlow: React.FC<ProcessFlowProps> = ({ title, intro, steps, e
               </div>}
             </React.Fragment>
           ))}
-        </ol>
+        </motion.ol>
       </div>
     </section>
   </MotionConfig>

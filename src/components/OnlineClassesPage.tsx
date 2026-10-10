@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowRight, Check, Laptop, ShieldCheck, ShoppingCart, Sparkles, X } from 'lucide-react';
+import { MotionConfig, motion } from 'motion/react';
 import { ACADEMY_URL } from '@/lib/academy';
 import { WEBSITE_BOOTCAMP_PRICE, WEBSITE_CLASS_OFFERS, WEBSITE_CLASS_PRICE, type WebsiteClassOfferId } from '@/lib/websiteClassOffer';
 
@@ -75,7 +76,14 @@ export function OnlineClassesPage() {
             <h2 className="mt-3 text-3xl font-black text-white">A clear path, built around you</h2>
             <p className="mt-4 text-sm leading-relaxed text-white/75">Go from a clear brief to an AI-assisted design, a clickable prototype and a practical first version. Ask questions and learn by making your own project.</p>
           </div>
-          <ol className="website-flow-grid mt-10 grid items-stretch gap-x-3 gap-y-2 xl:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] xl:gap-3">
+          <MotionConfig reducedMotion="user">
+          <motion.ol
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.13 } } }}
+            className="website-flow-grid mt-10 grid items-stretch gap-x-3 gap-y-2 xl:grid-cols-[minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)_36px_minmax(0,1fr)] xl:gap-3"
+          >
             {[
               ['01', 'Shape the idea', 'Use AI to clarify your audience, offer and what the site needs to do.'],
               ['02', 'Design with AI', 'Explore visual directions, page layouts and starter content using online tools.'],
@@ -84,11 +92,11 @@ export function OnlineClassesPage() {
               ['05', 'Launch and own it', 'Connect a domain, understand deployment and keep your site files and code.']
             ].map(([number, title, detail], index) => (
               <Fragment key={number}>
-                <li className="website-flow-step min-w-0 border-t-2 border-[#FF003C]/60 bg-white/[0.025] px-4 py-4 sm:px-5 sm:py-5" style={{ animationDelay: `${index * 110}ms` }}>
+                <motion.li variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }} className="min-w-0 border-t-2 border-[#FF003C]/60 bg-white/[0.025] px-4 py-4 transition-colors hover:border-[#FF003C] hover:bg-white/[0.045] sm:px-5 sm:py-5">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#00DFC9]">STEP {number}</p>
                   <h3 className="mt-3 text-base font-bold leading-snug text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/75">{detail}</p>
-                </li>
+                </motion.li>
                 {index < 4 && <li aria-hidden="true" className="flex items-center justify-center gap-0 py-1 text-[#FF003C] xl:py-0">
                   <span className="flow-dash-y website-flow-y" />
                   <span className="flow-dash-x website-flow-x w-full" />
@@ -97,7 +105,8 @@ export function OnlineClassesPage() {
                 </li>}
               </Fragment>
             ))}
-          </ol>
+          </motion.ol>
+          </MotionConfig>
         </div>
       </section>
 
@@ -146,9 +155,17 @@ export function OnlineClassesPage() {
                 <div><div className="flex items-center gap-3"><Sparkles className="h-5 w-5 text-[#FF5575]" /><h3 className="text-lg font-bold text-white">Website to MVP bootcamp</h3></div><p className="mt-2 text-sm text-white/75">Six one-hour sessions. Learn by building your own project.</p></div>
                 <p className="text-4xl font-black text-white">{WEBSITE_BOOTCAMP_PRICE}</p>
               </div>
-              <ol className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2">
-                {bootcampSessions.map((session, index) => <li key={session.title} className="website-flow-step border-t border-white/10 pt-3" style={{ animationDelay: `${index * 90}ms` }}><span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#FF5575]">Session {index + 1} · 60 minutes</span><h4 className="mt-2 text-sm font-bold text-white">{session.title}</h4><p className="mt-1 text-xs leading-relaxed text-white/75">{session.detail}</p></li>)}
-              </ol>
+              <MotionConfig reducedMotion="user">
+                <motion.ol
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.15 }}
+                  variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
+                  className="mt-6 grid gap-x-6 gap-y-5 sm:grid-cols-2"
+                >
+                  {bootcampSessions.map((session, index) => <motion.li key={session.title} variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }} className="border-t border-white/10 pt-3"><span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#FF5575]">Session {index + 1} · 60 minutes</span><h4 className="mt-2 text-sm font-bold text-white">{session.title}</h4><p className="mt-1 text-xs leading-relaxed text-white/75">{session.detail}</p></motion.li>)}
+                </motion.ol>
+              </MotionConfig>
               <button onClick={() => cartOfferId === 'bootcamp' ? setShowCartDialog(true) : selectOffer('bootcamp')} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035]">
                 {cartOfferId === 'bootcamp' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD BOOTCAMP TO CART</>}
               </button>

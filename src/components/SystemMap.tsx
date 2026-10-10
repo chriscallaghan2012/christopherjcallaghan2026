@@ -76,7 +76,14 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
             <div className="grid grid-cols-3 gap-4 px-2 pb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-white/45">
               {groups.map((group) => <span key={group.id}>{group.label}</span>)}
             </div>
-            <div className="relative overflow-hidden" style={{ height: chartHeight }}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+              className="relative overflow-hidden"
+              style={{ height: chartHeight }}
+            >
               <svg aria-hidden="true" viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
                 {connections.map(([sourceId, targetId]) => {
                   const source = nodes.find((node) => node.id === sourceId);
@@ -108,8 +115,8 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
                 return <motion.button
                   key={node.id}
                   type="button"
-                  initial={false}
-                  whileHover={{ scale: 1.015 }}
+                  variants={{ hidden: { opacity: 0, scale: 0.96 }, visible: { opacity: 1, scale: 1 } }}
+                  whileHover={{ scale: 1.025 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={() => setSelectedNodeId(selected ? null : node.id)}
                   aria-pressed={selected}
@@ -123,31 +130,40 @@ export const SystemMap: React.FC<SystemMapProps> = ({ title, intro, nodes, conne
                   <span className="mt-1 block text-[11px] leading-relaxed text-white/55">{node.summary}</span>
                 </motion.button>;
               }))}
-            </div>
+            </motion.div>
           </div>
 
-          <div className="border border-white/10 bg-[#08080a] p-4 md:hidden">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+            className="border border-white/10 bg-[#08080a] p-4 md:hidden"
+          >
             {groupedNodes.map((group, groupIndex) => <React.Fragment key={group.id}>
               {!!group.nodes.length && <section aria-label={group.label}>
                 <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-white/45">{group.label}</p>
                 <div className="space-y-2">
-                  {group.nodes.map((node) => <button
+                  {group.nodes.map((node) => <motion.button
                     key={node.id}
                     type="button"
+                    variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => setSelectedNodeId(selectedNodeId === node.id ? null : node.id)}
                     aria-pressed={selectedNodeId === node.id}
                     aria-haspopup="dialog"
                     aria-controls="system-map-node-detail"
-                    className={`w-full border bg-white/[0.025] p-3 text-left transition-colors ${selectedNodeId === node.id ? 'border-[#FF003C]' : groupStyles[node.id === 'output' ? 'outcome' : node.group]}`}
+                    className={`w-full border bg-white/[0.025] p-3 text-left transition-colors hover:bg-white/[0.05] ${selectedNodeId === node.id ? 'border-[#FF003C]' : groupStyles[node.group]}`}
                   >
                     <span className="block text-sm font-bold text-white">{node.title}</span>
                     <span className="mt-1 block text-xs leading-relaxed text-white/55">{node.summary}</span>
-                  </button>)}
+                  </motion.button>)}
                 </div>
               </section>}
               {groupIndex < groupedNodes.length - 1 && <div aria-hidden="true" className="flex flex-col items-center py-2 text-[#FF003C]"><span className="flow-dash-y" /><ArrowDown className="h-4 w-4" /></div>}
             </React.Fragment>)}
-          </div>
+          </motion.div>
 
           {selectedNode && createPortal(<div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4" onClick={() => setSelectedNodeId(null)}>
             <section id="system-map-node-detail" role="dialog" aria-modal="true" aria-labelledby="system-map-node-title" onClick={(event) => event.stopPropagation()} className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto overscroll-contain border border-white/15 bg-[#101014] p-5 shadow-2xl sm:p-6">
