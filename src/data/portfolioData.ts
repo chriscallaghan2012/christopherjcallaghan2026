@@ -465,7 +465,7 @@ export const PROJECTS_DATA: Project[] = [
     description: 'A staff-facing event order and ticket-scanning app for check-in teams, with offline scanning and automatic sync when service returns.',
     longDescription: 'An installable Progressive Web App for event staff to load event orders, scan and validate tickets at check-in, and keep the entry workflow moving when connectivity is unreliable. Scan results are queued on the device and synchronized when service returns.',
     techStack: ['Progressive Web App', 'Event orders', 'Ticket scanning', 'Offline sync'],
-    imageUrls: ['/images/scnner2.jpg'],
+    imageUrls: ['/images/scaner1.jpg', '/images/scnner2.jpg', '/images/scanner5.jpg'],
     caseStudy: {
       business: 'Matchday Parking event teams handling order check-in at busy venues.',
       built: 'A staff scanner PWA covering event-order loading, ticket validation and check-in, with offline scanning and queued result synchronization as part of the workflow.',
@@ -487,7 +487,11 @@ export const PROJECTS_DATA: Project[] = [
     description: 'A cross-platform React Native mobile app for MWFitness, built for iOS and Android.',
     longDescription: 'A React Native mobile application created for MWFitness and targeting both iOS and Android devices.',
     techStack: ['React Native', 'iOS', 'Android'],
-    imageUrls: ['/images/app1.mwfitness.app.jpg'],
+    imageUrls: [
+      '/images/app2.mwfitness.app.jpg',
+      '/images/app3.mwfitness.app.jpg',
+      '/images/Screenshot_20260928_192332_uk.co.mwfitness.app.jpg'
+    ],
     caseStudy: {
       business: 'MWFitness, a personal training and online coaching business in Stockport.',
       built: 'A cross-platform mobile app using React Native for iOS and Android.',

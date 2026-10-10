@@ -23,7 +23,7 @@ const CATEGORIES = [
   'APIs & Integrations'
 ];
 
-const PRIORITIZED_PROJECT_IDS = [17, 18, 14, 4, 5, 15, 16, 11, 6, 13];
+const PRIORITIZED_PROJECT_IDS = [4, 15, 17, 18, 14, 5, 16, 11, 6, 13];
 const PROJECT_ORDER = new Map(PRIORITIZED_PROJECT_IDS.map((id, index) => [id, index]));
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
@@ -103,9 +103,9 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
         </div>}
 
         {/* Projects Grid */}
-        <div className={`grid grid-cols-1 md:grid-cols-2 ${compact ? 'gap-5 lg:gap-7' : 'lg:grid-cols-3 gap-6'}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 ${compact ? 'gap-5 lg:grid-cols-3 lg:gap-7' : 'lg:grid-cols-3 gap-6'}`}>
           {filteredProjects.map((project) => {
-            const projectImageUrl = getProjectImageUrl(project.imageUrls[0]);
+            const projectImageUrls = project.imageUrls.map(getProjectImageUrl);
 
             return (
               <div
@@ -129,16 +129,35 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   onClick={() => onSelectProject(project)}
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 z-10" />
-                  <img
-                    src={projectImageUrl}
-                    alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/projects/project-preview.svg';
-                    }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                  {projectImageUrls.length > 1 ? (
+                    <div className="absolute inset-0 grid grid-cols-3 bg-[#08090D]">
+                      {projectImageUrls.slice(0, 3).map((imageUrl) => (
+                        <div key={imageUrl} className="flex min-w-0 items-center justify-center overflow-hidden border-r border-white/10 p-1.5">
+                          <img
+                            src={imageUrl}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            onError={(event) => {
+                              (event.target as HTMLImageElement).src = '/assets/projects/project-preview.svg';
+                            }}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <img
+                      src={projectImageUrls[0]}
+                      alt={project.title}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(event) => {
+                        (event.target as HTMLImageElement).src = '/assets/projects/project-preview.svg';
+                      }}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  )}
                   <div className="absolute top-3 right-3 z-20">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold text-white/80">
                       {project.category}
