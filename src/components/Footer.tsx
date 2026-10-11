@@ -23,9 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenConsultation }
               className="flex items-center gap-3 text-left group"
             >
               <div className="rounded-full p-0.5 bg-gradient-to-r from-[#FF003C] via-purple-500 to-yellow-300">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-black flex items-center justify-center font-black text-white text-base shadow-[0_0_20px_rgba(255,0,60,0.3)]">
-                  CJC
-                </div>
+                <img src="/icon.svg" alt="" className="relative h-12 w-12 rounded-full object-cover shadow-[0_0_20px_rgba(255,0,60,0.3)]" />
               </div>
               <div>
                 <span className="text-xl font-black tracking-tighter text-white block">

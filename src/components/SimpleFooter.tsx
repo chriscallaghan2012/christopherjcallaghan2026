@@ -11,8 +11,11 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
   <footer className="relative z-10 border-t border-white/10 bg-black/40">
     <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 md:px-8 lg:grid-cols-[190px_minmax(0,1fr)_auto] lg:items-start">
       <div>
-        <p className="text-sm font-bold text-white">Christopher J. Callaghan</p>
-        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-white/65">I build things on the internet.</p>
+        <div className="flex items-center gap-3">
+          <img src="/icon.svg" alt="" className="h-10 w-10 rounded-full object-cover" />
+          <p className="text-sm font-bold text-white">Christopher J. Callaghan</p>
+        </div>
+        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/65">I build things on the internet.</p>
       </div>
       <div className="grid grid-cols-2 gap-x-8 gap-y-7 sm:grid-cols-3">
         <nav aria-label="Site links">

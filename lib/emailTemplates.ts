@@ -79,7 +79,7 @@ function renderEmail(data: EmailPayload, options: {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;max-width:620px;background:${BRAND.panel};border:1px solid ${BRAND.border};">
         <tr><td style="padding:24px 26px;border-bottom:1px solid ${BRAND.border};">
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
-            <td width="44" valign="middle"><div style="width:38px;height:38px;background:${BRAND.red};color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;line-height:38px;text-align:center;">CJC</div></td>
+            <td width="44" valign="middle"><img src="https://christopherjcallaghan.com/icon.svg" width="38" height="38" alt="" style="display:block;width:38px;height:38px;border-radius:50%;"></td>
             <td valign="middle" style="padding-left:12px;color:${BRAND.text};font-size:13px;font-weight:bold;">Christopher J. Callaghan<br><span style="color:${BRAND.muted};font-family:monospace;font-size:10px;font-weight:normal;">DIGITAL BUILDER / MANCHESTER, UK</span></td>
           </tr></table>
         </td></tr>
