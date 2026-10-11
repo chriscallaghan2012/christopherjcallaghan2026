@@ -101,7 +101,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060608]/90 backdrop-blur-2xl">
       <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-5 px-5 md:px-8">
         <a href="/" className="flex shrink-0 items-center gap-3 text-left" aria-label="Christopher J. Callaghan home">
-          <span className="flex h-9 w-9 items-center justify-center border border-[#FF003C]/60 bg-[#FF003C]/10 font-mono text-xs font-bold text-white shadow-[0_0_20px_rgba(255,0,60,0.16)]">CJC</span>
+          <img src="/icon.svg" alt="" className="h-9 w-9 rounded-full object-cover shadow-[0_0_20px_rgba(255,0,60,0.16)]" />
           <span className="hidden text-sm font-bold tracking-tight text-white sm:block">Christopher J. Callaghan</span>
         </a>
 
@@ -206,7 +206,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
         >
           <div className="sticky top-0 z-10 flex min-h-[72px] items-center justify-between border-b border-white/10 bg-[#070709]/95 px-5 backdrop-blur-xl sm:px-8">
             <a href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3" aria-label="Christopher J. Callaghan home">
-              <span className="flex h-9 w-9 items-center justify-center border border-[#FF003C]/60 bg-[#FF003C]/10 font-mono text-xs font-bold text-white">CJC</span>
+              <img src="/icon.svg" alt="" className="h-9 w-9 rounded-full object-cover" />
               <span>
                 <span className="block text-sm font-bold text-white">Christopher J. Callaghan</span>
                 <span className="mt-0.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/45">Navigation / Manchester, UK</span>
