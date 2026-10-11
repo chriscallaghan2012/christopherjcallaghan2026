@@ -17,7 +17,8 @@ const nextConfig: NextConfig = {
       { source: '/seo', destination: '/seo-services', permanent: true },
       { source: '/google-maps', destination: '/local-seo', permanent: true },
       { source: '/ppc', destination: '/google-ads-management', permanent: true },
-      { source: '/social-media', destination: '/social-media-marketing', permanent: true }
+      { source: '/social-media', destination: '/social-media-marketing', permanent: true },
+      { source: '/ai-solutions', destination: '/ai-automation', permanent: true }
     ];
   }
 };
