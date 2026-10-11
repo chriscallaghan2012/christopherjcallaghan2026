@@ -39,6 +39,9 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   title TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
   excerpt TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'Full-Stack Development',
+  cover_image TEXT NOT NULL DEFAULT '',
+  cover_image_alt TEXT NOT NULL DEFAULT '',
   content_markdown TEXT NOT NULL,
   meta_title TEXT NOT NULL,
   meta_description TEXT NOT NULL,
@@ -48,6 +51,11 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   published_at TIMESTAMPTZ
 );
+
+ALTER TABLE blog_posts
+  ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'Full-Stack Development',
+  ADD COLUMN IF NOT EXISTS cover_image TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS cover_image_alt TEXT NOT NULL DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS idx_contact_submissions_created_at
   ON contact_submissions (created_at DESC);

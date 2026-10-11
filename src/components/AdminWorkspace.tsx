@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ExternalLink, LoaderCircle, Plus, Save, Send, Sparkles, Trash2 } from 'lucide-react';
-import type { BlogPost, BlogPostInput, BlogPostStatus } from '../../lib/database';
+import { BLOG_CATEGORIES, type BlogPost, type BlogPostInput, type BlogPostStatus } from '../../lib/database';
 import { AdminDashboard } from './AdminDashboard';
 
 type AdminMode = 'checking' | 'login' | 'unconfigured' | 'workspace';
@@ -11,6 +11,9 @@ const blankPost: BlogPostInput = {
   title: '',
   slug: '',
   excerpt: '',
+  category: 'Full-Stack Development',
+  coverImage: '',
+  coverImageAlt: '',
   contentMarkdown: '',
   metaTitle: '',
   metaDescription: '',
@@ -224,6 +227,9 @@ export const AdminWorkspace: React.FC = () => {
         <div className="grid gap-4 md:grid-cols-2">
           <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">Title<input value={post.title} onChange={(event) => setPost({ ...post, title: event.target.value })} maxLength={140} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
           <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">URL slug<input value={post.slug} onChange={(event) => setPost({ ...post, slug: event.target.value })} maxLength={120} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">Category<select value={post.category} onChange={(event) => setPost({ ...post, category: event.target.value as BlogPostInput['category'] })} className="mt-2 min-h-11 w-full border border-white/15 bg-[#101013] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]">{BLOG_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}</select></label>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">Local cover image<input value={post.coverImage} onChange={(event) => setPost({ ...post, coverImage: event.target.value })} maxLength={240} placeholder="/assets/project-image.jpg" className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none placeholder:text-white/30 focus:border-[#FFB347]" /></label>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-white/55 md:col-span-2">Cover image alt text<input value={post.coverImageAlt} onChange={(event) => setPost({ ...post, coverImageAlt: event.target.value })} maxLength={300} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
           <label className="font-mono text-[10px] uppercase tracking-widest text-white/55 md:col-span-2">Excerpt<textarea value={post.excerpt} onChange={(event) => setPost({ ...post, excerpt: event.target.value })} rows={2} maxLength={420} className="mt-2 w-full resize-y border border-white/15 bg-white/[0.03] px-3 py-2 font-sans text-sm normal-case leading-relaxed tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
           <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">SEO title<input value={post.metaTitle} onChange={(event) => setPost({ ...post, metaTitle: event.target.value })} maxLength={180} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>
           <label className="font-mono text-[10px] uppercase tracking-widest text-white/55">SEO description<input value={post.metaDescription} onChange={(event) => setPost({ ...post, metaDescription: event.target.value })} maxLength={320} className="mt-2 min-h-11 w-full border border-white/15 bg-white/[0.03] px-3 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" /></label>

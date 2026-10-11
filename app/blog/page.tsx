@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
-import { listPublishedBlogPosts } from '@/lib/database';
+import { BLOG_CATEGORIES, type BlogCategory, listPublishedBlogPosts } from '@/lib/database';
 
 export const metadata: Metadata = {
   title: 'Blog | Christopher J. Callaghan',
@@ -19,9 +19,17 @@ function formatDate(value: string | null): string {
   return new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-export default async function BlogIndexPage() {
+type BlogIndexPageProps = {
+  searchParams: Promise<{ category?: string | string[] }>;
+};
+
+export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps) {
   await connection();
-  const posts = await listPublishedBlogPosts();
+  const [posts, query] = await Promise.all([listPublishedBlogPosts(), searchParams]);
+  const activeCategory = typeof query.category === 'string' && BLOG_CATEGORIES.includes(query.category as BlogCategory)
+    ? query.category
+    : 'All';
+  const visiblePosts = activeCategory === 'All' ? posts : posts.filter((post) => post.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-[#060608] text-[#ededed]">
@@ -44,13 +52,21 @@ export default async function BlogIndexPage() {
         <h1 className="max-w-4xl text-5xl font-black leading-[0.95] text-white sm:text-7xl">NOTES ON <span className="text-[#FFB347]">BUILDING</span> THINGS.</h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65">Practical thinking on software, AI, digital products and building businesses around the work.</p>
 
-        {posts.length ? (
+        <nav aria-label="Filter articles by category" className="mt-8 flex flex-wrap gap-2">
+          <a href="/blog" aria-current={activeCategory === 'All' ? 'page' : undefined} className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-wider ${activeCategory === 'All' ? 'border-[#FFB347] text-[#FFB347]' : 'border-white/15 text-white/55 hover:text-white'}`}>All topics</a>
+          {BLOG_CATEGORIES.map((category) => (
+            <a key={category} href={`/blog?category=${encodeURIComponent(category)}`} aria-current={activeCategory === category ? 'page' : undefined} className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-wider ${activeCategory === category ? 'border-[#FFB347] text-[#FFB347]' : 'border-white/15 text-white/55 hover:text-white'}`}>{category}</a>
+          ))}
+        </nav>
+
+        {visiblePosts.length ? (
           <div className="mt-14 divide-y divide-white/10 border-y border-white/10">
-            {posts.map((post) => (
+            {visiblePosts.map((post) => (
               <article key={post.id} className="grid gap-3 py-7 md:grid-cols-[1fr_220px] md:items-start">
                 <div>
                   <h2 className="text-2xl font-bold leading-tight text-white md:text-3xl"><a href={`/blog/${post.slug}`} className="transition-colors hover:text-[#FFB347]">{post.title}</a></h2>
                   <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65">{post.excerpt}</p>
+                  <span className="mt-4 inline-block font-mono text-[10px] uppercase tracking-[0.12em] text-[#DF80FF]">{post.category}</span>
                 </div>
                 <time className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 md:text-right" dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt)}</time>
               </article>
@@ -59,7 +75,7 @@ export default async function BlogIndexPage() {
         ) : (
           <div className="mt-14 border-y border-white/10 py-10">
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#DF80FF]">First notes are in progress</p>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">New writing on software, AI and digital products will appear here.</p>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">{activeCategory === 'All' ? 'New writing on software, AI and digital products will appear here.' : `No published articles in ${activeCategory} yet.`}</p>
           </div>
         )}
       </main>

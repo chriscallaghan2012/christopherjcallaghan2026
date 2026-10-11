@@ -6,12 +6,23 @@ const sql = databaseUrl ? neon(databaseUrl) : null;
 export const isDatabaseConfigured = Boolean(databaseUrl);
 
 export type BlogPostStatus = 'draft' | 'published';
+export const BLOG_CATEGORIES = [
+  'Full-Stack Development',
+  'AI & Automation',
+  'SaaS & Digital Products',
+  'E-commerce & Integrations',
+  'Business & Growth'
+] as const;
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
 export interface BlogPost {
   id: string;
   title: string;
   slug: string;
   excerpt: string;
+  category: BlogCategory;
+  coverImage: string;
+  coverImageAlt: string;
   contentMarkdown: string;
   metaTitle: string;
   metaDescription: string;
@@ -161,6 +172,9 @@ const BLOG_POST_COLUMNS = `
   title,
   slug,
   excerpt,
+  category,
+  cover_image AS "coverImage",
+  cover_image_alt AS "coverImageAlt",
   content_markdown AS "contentMarkdown",
   meta_title AS "metaTitle",
   meta_description AS "metaDescription",
@@ -282,6 +296,9 @@ export async function saveBlogPost(data: BlogPostInput): Promise<BlogPost> {
           title = ${data.title},
           slug = ${data.slug},
           excerpt = ${data.excerpt},
+          category = ${data.category},
+          cover_image = ${data.coverImage},
+          cover_image_alt = ${data.coverImageAlt},
           content_markdown = ${data.contentMarkdown},
           meta_title = ${data.metaTitle},
           meta_description = ${data.metaDescription},
@@ -293,9 +310,9 @@ export async function saveBlogPost(data: BlogPostInput): Promise<BlogPost> {
         RETURNING ${sql.unsafe(BLOG_POST_COLUMNS)}
       `
     : await sql`
-        INSERT INTO blog_posts (title, slug, excerpt, content_markdown, meta_title, meta_description, ai_prompt, status, published_at)
+        INSERT INTO blog_posts (title, slug, excerpt, category, cover_image, cover_image_alt, content_markdown, meta_title, meta_description, ai_prompt, status, published_at)
         VALUES (
-          ${data.title}, ${data.slug}, ${data.excerpt}, ${data.contentMarkdown}, ${data.metaTitle}, ${data.metaDescription}, ${data.aiPrompt}, ${data.status},
+          ${data.title}, ${data.slug}, ${data.excerpt}, ${data.category}, ${data.coverImage}, ${data.coverImageAlt}, ${data.contentMarkdown}, ${data.metaTitle}, ${data.metaDescription}, ${data.aiPrompt}, ${data.status},
           CASE WHEN ${data.status} = 'published' THEN NOW() ELSE NULL END
         )
         RETURNING ${sql.unsafe(BLOG_POST_COLUMNS)}

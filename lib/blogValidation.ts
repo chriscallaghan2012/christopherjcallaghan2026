@@ -1,4 +1,4 @@
-import type { BlogPostInput } from './database';
+import { BLOG_CATEGORIES, type BlogCategory, type BlogPostInput } from './database';
 
 function cleanText(value: unknown, maxLength: number): string | null {
   if (typeof value !== 'string') return null;
@@ -22,6 +22,9 @@ export function validateBlogPostInput(value: unknown): { post?: BlogPostInput; e
   const body = value as Record<string, unknown>;
   const title = cleanText(body.title, 140);
   const excerpt = cleanText(body.excerpt, 420);
+  const category = BLOG_CATEGORIES.includes(body.category as BlogCategory) ? body.category as BlogCategory : null;
+  const coverImage = cleanText(body.coverImage ?? '', 240);
+  const coverImageAlt = cleanText(body.coverImageAlt ?? '', 300);
   const contentMarkdown = cleanText(body.contentMarkdown, 60000);
   const metaTitle = cleanText(body.metaTitle, 180);
   const metaDescription = cleanText(body.metaDescription, 320);
@@ -32,6 +35,12 @@ export function validateBlogPostInput(value: unknown): { post?: BlogPostInput; e
 
   if (!title || title.length < 4) return { error: 'Title must be at least 4 characters.' };
   if (!excerpt || excerpt.length < 10) return { error: 'Excerpt must be at least 10 characters.' };
+  if (!category) return { error: 'Choose a valid post category.' };
+  if (coverImage === null || coverImageAlt === null) return { error: 'Cover image details are too long.' };
+  if (coverImage && !/^\/(?:assets|images)\/[A-Za-z0-9/_-]+\.(?:jpe?g|png|webp|avif)$/i.test(coverImage)) {
+    return { error: 'Cover images must use a local image in /assets or /images.' };
+  }
+  if (coverImage && !coverImageAlt) return { error: 'Add alt text for the cover image.' };
   if (!contentMarkdown || contentMarkdown.length < 40) return { error: 'Post content must be at least 40 characters.' };
   if (!metaTitle || metaTitle.length < 4) return { error: 'SEO title must be at least 4 characters.' };
   if (!metaDescription || metaDescription.length < 20) return { error: 'SEO description must be at least 20 characters.' };
@@ -46,6 +55,9 @@ export function validateBlogPostInput(value: unknown): { post?: BlogPostInput; e
       title,
       slug,
       excerpt,
+      category,
+      coverImage,
+      coverImageAlt,
       contentMarkdown,
       metaTitle,
       metaDescription,

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
@@ -32,9 +33,10 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       description,
       url: `/blog/${post.slug}`,
       publishedTime: post.publishedAt ?? undefined,
-      modifiedTime: post.updatedAt
+      modifiedTime: post.updatedAt,
+      images: post.coverImage ? [{ url: post.coverImage, alt: post.coverImageAlt || post.title }] : undefined
     },
-    twitter: { card: 'summary_large_image', title, description }
+    twitter: { card: 'summary_large_image', title, description, images: post.coverImage ? [post.coverImage] : undefined }
   };
 }
 
@@ -49,6 +51,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.metaDescription || post.excerpt,
+    articleSection: post.category,
+    image: post.coverImage ? [`https://christopherjcallaghan.com${post.coverImage}`] : undefined,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
     author: { '@type': 'Person', name: 'Christopher J. Callaghan', url: 'https://christopherjcallaghan.com' },
@@ -73,11 +77,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <nav aria-label="Breadcrumb" className="mb-9 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45"><a href="/blog" className="hover:text-[#FFB347]">Blog</a><span className="mx-3 text-[#FF003C]">/</span><span>Article</span></nav>
         <article>
           <header className="border-b border-white/10 pb-9">
-            <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-[#DF80FF]">Christopher J. Callaghan / Field notes</p>
+            <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-[#DF80FF]">{post.category} / Field notes</p>
             <h1 className="text-4xl font-black leading-[1.02] text-white sm:text-6xl">{post.title}</h1>
             <p className="mt-5 max-w-3xl text-lg leading-relaxed text-white/65">{post.excerpt}</p>
             <time className="mt-6 block font-mono text-[10px] uppercase tracking-[0.12em] text-white/40" dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt)}</time>
           </header>
+          {post.coverImage && <div className="relative mt-8 aspect-[16/9] overflow-hidden border border-white/10 bg-white/[0.03]">
+            <Image src={post.coverImage} alt={post.coverImageAlt || post.title} fill priority sizes="(max-width: 896px) 100vw, 896px" className="object-cover" />
+          </div>}
           <div className="prose-blog mx-auto max-w-3xl py-10 text-[16px] leading-[1.85] text-white/75">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

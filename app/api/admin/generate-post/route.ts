@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { NextResponse } from 'next/server';
 import { isSameOriginRequest, verifyAdminSession } from '@/lib/adminAuth';
+import { BLOG_CATEGORIES, type BlogCategory } from '@/lib/database';
 import { slugifyBlogTitle, validateBlogPostInput } from '@/lib/blogValidation';
 
 export async function POST(request: Request) {
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
-      contents: `Create an original, useful blog post draft for Christopher J. Callaghan, a Manchester-based full-stack developer and technology builder. Write in clear British English, use a confident first-person professional voice, and return valid JSON only with these string fields: title, slug, excerpt, metaTitle, metaDescription, contentMarkdown. The Markdown should have a short introduction, descriptive H2 sections, practical detail, and a concise conclusion. Do not invent client results, statistics, credentials, or quotations. Do not publish or claim the post is live. Topic and direction: ${prompt}`,
+      contents: `Create an original, useful blog post draft for Christopher J. Callaghan, a Manchester-based full-stack developer and technology builder. Write in clear British English, use a confident first-person professional voice, and return valid JSON only with these string fields: title, slug, excerpt, category, metaTitle, metaDescription, contentMarkdown. Set category to exactly one of: ${BLOG_CATEGORIES.join(', ')}. The Markdown should have a short introduction, descriptive H2 sections, practical detail, and a concise conclusion. Do not invent client results, statistics, credentials, or quotations. Do not publish or claim the post is live. Topic and direction: ${prompt}`,
       config: { responseMimeType: 'application/json' }
     });
 
@@ -28,6 +29,9 @@ export async function POST(request: Request) {
     const generated = JSON.parse(response.text) as Record<string, unknown>;
     const { post, error } = validateBlogPostInput({
       ...generated,
+      category: BLOG_CATEGORIES.includes(generated.category as BlogCategory) ? generated.category : BLOG_CATEGORIES[0],
+      coverImage: '',
+      coverImageAlt: '',
       slug: typeof generated.slug === 'string' ? slugifyBlogTitle(generated.slug) : slugifyBlogTitle(String(generated.title || '')),
       aiPrompt: prompt,
       status: 'draft'
