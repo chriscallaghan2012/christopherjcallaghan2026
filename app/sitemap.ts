@@ -5,6 +5,11 @@ import { listPublishedBlogPosts } from '@/lib/database';
 const SITE_URL = 'https://christopherjcallaghan.com';
 export const dynamic = 'force-dynamic';
 
+function parseSitemapDate(value: string): Date | undefined {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await listPublishedBlogPosts();
   return [
@@ -22,11 +27,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: page.tab === 'contact' ? 0.8 : 0.7
     })),
-    ...posts.map((post) => ({
-      url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: post.updatedAt,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6
-    }))
+    ...posts.map((post) => {
+      const lastModified = parseSitemapDate(post.updatedAt);
+      return {
+        url: `${SITE_URL}/blog/${post.slug}`,
+        ...(lastModified ? { lastModified } : {}),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6
+      };
+    })
   ];
 }
