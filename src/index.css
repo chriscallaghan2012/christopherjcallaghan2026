@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@layer utilities {
+  .text-white\/30 { color: rgb(255 255 255 / 0.5); }
+  .text-white\/35 { color: rgb(255 255 255 / 0.55); }
+  .text-white\/40 { color: rgb(255 255 255 / 0.6); }
+  .text-white\/45 { color: rgb(255 255 255 / 0.65); }
+}
+
 /* Horizontal scroller scrollbar-hiding utility (Projects filter pills etc.) */
 .scrollbar-none {
   scrollbar-width: none;

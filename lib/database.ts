@@ -8,7 +8,13 @@ export const isDatabaseConfigured = Boolean(databaseUrl);
 export type BlogPostStatus = 'draft' | 'published';
 export const BLOG_CATEGORIES = [
   'Full-Stack Development',
+  'Web Design & Development',
+  'SEO & Local Search',
+  'Google Ads & PPC',
   'AI & Automation',
+  'Mobile App Development',
+  'Social Media Marketing',
+  'Agency Partnerships',
   'SaaS & Digital Products',
   'E-commerce & Integrations',
   'Business & Growth'

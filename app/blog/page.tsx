@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { BLOG_CATEGORIES, type BlogCategory, listPublishedBlogPosts } from '@/lib/database';
+import { BlogFooter, BlogHeader } from '@/src/components/BlogChrome';
 
 export const metadata: Metadata = {
   title: 'Blog | Christopher J. Callaghan',
@@ -33,19 +34,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
 
   return (
     <div className="min-h-screen bg-[#060608] text-[#ededed]">
-      <header className="border-b border-white/10">
-        <div className="mx-auto flex min-h-[68px] max-w-7xl items-center justify-between gap-5 px-5 md:px-8">
-          <a href="/" className="flex items-center gap-3 text-sm font-bold text-white" aria-label="Christopher J. Callaghan home">
-            <span className="flex h-9 w-9 items-center justify-center border border-[#FF003C]/60 bg-[#FF003C]/10 font-mono text-xs">CJC</span>
-            <span>Christopher J. Callaghan</span>
-          </a>
-          <nav className="flex items-center gap-5 font-mono text-[10px] font-bold tracking-[0.14em] text-white/60" aria-label="Blog navigation">
-            <a href="/" className="hover:text-white">HOME</a>
-            <a href="/build" className="hover:text-white">BUILD</a>
-            <a href="/contact" className="hover:text-white">CONTACT</a>
-          </nav>
-        </div>
-      </header>
+      <BlogHeader />
 
       <main className="mx-auto min-h-[70svh] max-w-6xl px-5 py-16 md:px-8 md:py-24">
         <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-[#FF003C]">Field notes / ideas into practice</p>
@@ -68,7 +57,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
                   <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65">{post.excerpt}</p>
                   <span className="mt-4 inline-block font-mono text-[10px] uppercase tracking-[0.12em] text-[#DF80FF]">{post.category}</span>
                 </div>
-                <time className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 md:text-right" dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt)}</time>
+                <time className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/70 md:text-right" dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt)}</time>
               </article>
             ))}
           </div>
@@ -80,9 +69,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
         )}
       </main>
 
-      <footer className="border-t border-white/10 px-5 py-5 font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 md:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:justify-between"><span>© {new Date().getFullYear()} Christopher J. Callaghan</span><span>Manchester, United Kingdom</span></div>
-      </footer>
+      <BlogFooter />
     </div>
   );
 }

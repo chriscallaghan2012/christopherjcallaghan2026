@@ -9,6 +9,7 @@ import { ScreenTab } from '../types';
 interface SimpleNavbarProps {
   currentTab: ScreenTab;
   onSelectTab: (tab: ScreenTab) => void;
+  activeHref?: string;
 }
 
 const SERVICE_MENU = [
@@ -22,7 +23,7 @@ const SERVICE_MENU = [
   { href: '/ai-automation', label: 'AI & Business Automation', description: 'Useful AI integrations and connected workflows.', icon: Bot }
 ];
 
-export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab }) => {
+export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab, activeHref }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
@@ -92,10 +93,12 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
 
   const linksAfter: Array<{ label: string; href?: string; action?: () => void; description: string; icon: LucideIcon }> = [
     { label: 'WORK', action: selectWork, description: 'Selected projects and case studies.', icon: BriefcaseBusiness },
+    { label: 'BLOG', href: '/blog', description: 'Practical notes on building and growing online.', icon: BookOpen },
     { label: 'CONTACT', href: '/contact', description: 'Talk through a problem or idea.', icon: Mail }
   ];
 
   const isOnServicePage = SERVICE_MENU.some((item) => currentTab === item.href.slice(1));
+  const isCurrentHref = (href: string) => activeHref ? activeHref === href : currentTab === (href === '/' ? 'home' : href.slice(1));
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060608]/90 backdrop-blur-2xl">
@@ -223,7 +226,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
               <div className="grid gap-x-5 sm:grid-cols-2">
                 {linksBefore.map(({ label, href, action, description, icon: Icon }) => (
                   href ? (
-                    <a key={label} href={href} onClick={() => setMenuOpen(false)} aria-current={currentTab === (href === '/' ? 'home' : href.slice(1)) ? 'page' : undefined} className="group flex min-h-[76px] items-center gap-3 border-b border-white/10 text-left transition-colors hover:text-[#FF5575]">
+                    <a key={label} href={href} onClick={() => setMenuOpen(false)} aria-current={isCurrentHref(href) ? 'page' : undefined} className="group flex min-h-[76px] items-center gap-3 border-b border-white/10 text-left transition-colors hover:text-[#FF5575]">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03] text-[#FF5575] transition-colors group-hover:border-[#FF003C]/45"><Icon className="h-4 w-4" /></span>
                       <span className="min-w-0 flex-1">
                         <span className="block font-mono text-[11px] font-bold tracking-[0.12em] text-white">{label}</span>
@@ -263,7 +266,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
               <div className="grid gap-x-5 sm:grid-cols-2">
                 {linksAfter.map(({ label, href, action, description, icon: Icon }) => (
                   href ? (
-                    <a key={label} href={href} onClick={() => setMenuOpen(false)} aria-current={currentTab === href.slice(1) ? 'page' : undefined} className="group flex min-h-[76px] items-center gap-3 border-b border-white/10 text-left transition-colors hover:text-[#FF5575]">
+                    <a key={label} href={href} onClick={() => setMenuOpen(false)} aria-current={isCurrentHref(href) ? 'page' : undefined} className="group flex min-h-[76px] items-center gap-3 border-b border-white/10 text-left transition-colors hover:text-[#FF5575]">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03] text-[#FF5575]"><Icon className="h-4 w-4" /></span>
                       <span className="min-w-0 flex-1"><span className="block font-mono text-[11px] font-bold tracking-[0.12em] text-white">{label}</span><span className="mt-1 block text-xs leading-snug text-white/50">{description}</span></span>
                       <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/25 transition-transform group-hover:translate-x-1" />
