@@ -2,9 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import Link from 'next/link';
 import { ArrowRight, Bot, BookOpen, BriefcaseBusiness, ChevronDown, Code, FileText, Gauge, Home, ListChecks, Mail, MapPin, Menu, MousePointerClick, Rocket, Search, Share2, Smartphone, Users, Wrench, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { ScreenTab } from '../types';
+import { TOOLS } from '../data/tools';
 
 interface SimpleNavbarProps {
   currentTab: ScreenTab;
@@ -26,7 +28,9 @@ const SERVICE_MENU = [
 export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab, activeHref }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileCloseRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
@@ -48,7 +52,15 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
   const openServices = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
     closeTimer.current = null;
+    setToolsOpen(false);
     setServicesOpen(true);
+  };
+
+  const openTools = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+    setServicesOpen(false);
+    setToolsOpen(true);
   };
 
   const closeServices = () => {
@@ -56,17 +68,22 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
     closeTimer.current = window.setTimeout(() => setServicesOpen(false), 150);
   };
 
+  const closeTools = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setToolsOpen(false), 150);
+  };
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setServicesOpen(false);
+        setToolsOpen(false);
         setMenuOpen(false);
       }
     };
     const onDocumentClick = (event: MouseEvent) => {
-      if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
-        setServicesOpen(false);
-      }
+      if (!servicesRef.current?.contains(event.target as Node)) setServicesOpen(false);
+      if (!toolsRef.current?.contains(event.target as Node)) setToolsOpen(false);
     };
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('click', onDocumentClick);
@@ -99,6 +116,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
   ];
 
   const isOnServicePage = SERVICE_MENU.some((item) => currentTab === item.href.slice(1));
+  const isOnToolsPage = activeHref ? activeHref.startsWith('/tools') : currentTab === 'tools' || TOOLS.some((tool) => currentTab === tool.tab);
   const isCurrentHref = (href: string) => activeHref ? activeHref === href : currentTab === (href === '/' ? 'home' : href.slice(1));
 
   return (
@@ -184,10 +202,53 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
             )}
           </div>
 
-          {linksAfter.map((link) => (
-            link.href
-              ? <a key={link.label} href={link.href} className="whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{link.label}</a>
-              : <button key={link.label} onClick={link.action} className={`whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
+          {linksAfter.map((link) => link.label === 'TOOLS' ? (
+            <div key={link.label} ref={toolsRef} className="relative" onMouseEnter={openTools} onMouseLeave={closeTools}>
+              <Link href="/tools" onFocus={openTools} aria-expanded={toolsOpen} aria-haspopup="true" aria-controls="tools-mega-menu" className={`flex items-center gap-1 whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${isOnToolsPage ? 'text-[#FF003C]' : 'text-white/60'}`}>
+                TOOLS <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${toolsOpen ? 'rotate-180' : ''}`} />
+              </Link>
+
+              {toolsOpen && (
+                <div id="tools-mega-menu" aria-label="Tools menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openTools} onMouseLeave={closeTools}>
+                  <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 md:px-8 lg:grid-cols-[1fr_280px]">
+                    <div>
+                      <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">Free tools</p>
+                          <h2 className="mt-1 text-xl font-black text-white">Make your next move clear</h2>
+                        </div>
+                        <Link href="/tools" className="font-mono text-[9px] font-bold tracking-[0.12em] text-white/55 transition-colors hover:text-white">VIEW ALL TOOLS <ArrowRight className="ml-1 inline h-3 w-3" aria-hidden="true" /></Link>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                        {TOOLS.map(({ href, name, tagline, icon: Icon }) => (
+                          <Link key={href} href={href} className="group relative flex min-h-[132px] flex-col border border-white/10 bg-white/[0.02] p-4 transition-colors hover:border-[#FF003C]/50 hover:bg-[#FF003C]/[0.05]">
+                            <span className="flex h-8 w-8 items-center justify-center border border-white/10 bg-white/5 text-[#FF5575] transition-colors group-hover:border-[#FF003C]/40 group-hover:bg-[#FF003C]/10">
+                              <Icon className="h-4 w-4" aria-hidden="true" />
+                            </span>
+                            <span className="mt-3 pr-5 text-sm font-bold text-white group-hover:text-[#FF5575]">{name}</span>
+                            <span className="mt-1 text-xs leading-relaxed text-white/55">{tagline}</span>
+                            <ArrowRight className="absolute right-3 top-3 h-3.5 w-3.5 text-white/30 transition-colors group-hover:text-[#FF5575]" aria-hidden="true" />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    <aside className="relative hidden border border-white/10 bg-gradient-to-br from-[#FF003C]/15 via-black to-[#00dfc9]/10 p-6 lg:flex lg:flex-col">
+                      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Start here</p>
+                      <h3 className="mt-3 text-2xl font-black leading-tight text-white">Find out what your website needs next.</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-white/60">Get a scored report across SEO, AI search, performance, accessibility and security.</p>
+                      <Link href="/tools/website-grader" className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.14em] text-white shadow-[0_0_20px_rgba(255,0,60,0.25)]">OPEN WEBSITE GRADER <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+                      <p className="mt-4 text-xs leading-relaxed text-white/45">Free to use. No account required.</p>
+                    </aside>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : link.href ? (
+            <a key={link.label} href={link.href} className="whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] text-white/60 transition-colors hover:bg-white/5 hover:text-[#FF003C]">{link.label}</a>
+          ) : (
+            <button key={link.label} onClick={link.action} className={`whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${currentTab === 'projects' ? 'text-[#FF003C]' : 'text-white/60'}`}>{link.label}</button>
           ))}
         </nav>
 
@@ -280,10 +341,29 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
               </div>
             </section>
 
-            <section className="mt-8" aria-labelledby="mobile-more-title">
+            <section className="mt-8 mb-8" aria-labelledby="mobile-tools-title">
+                <div className="mb-3 flex items-baseline justify-between gap-3">
+                  <h2 id="mobile-tools-title" className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Tools</h2>
+                  <Link href="/tools" onClick={() => setMenuOpen(false)} className="font-mono text-[9px] font-bold tracking-[0.12em] text-white/45 transition-colors hover:text-white">ALL TOOLS <ArrowRight className="ml-1 inline h-3 w-3" aria-hidden="true" /></Link>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {TOOLS.map(({ href, name, tagline, icon: Icon }) => (
+                    <Link key={href} href={href} onClick={() => setMenuOpen(false)} aria-current={isCurrentHref(href) ? 'page' : undefined} className="group flex min-h-[88px] items-center gap-3 border border-white/10 bg-white/[0.025] p-3 text-left transition-colors hover:border-[#FF003C]/45 hover:bg-[#FF003C]/[0.045]">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/10 bg-black/30 text-[#FF5575] group-hover:border-[#FF003C]/45"><Icon className="h-4 w-4" aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-xs font-bold leading-snug text-white group-hover:text-[#FF5575]">{name}</span>
+                        <span className="mt-1 block text-[11px] leading-relaxed text-white/50">{tagline}</span>
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/25 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
+            </section>
+
+            <section aria-labelledby="mobile-more-title">
               <h2 id="mobile-more-title" className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">More</h2>
               <div className="grid gap-x-5 sm:grid-cols-2">
-                {linksAfter.map(({ label, href, action, description, icon: Icon }) => (
+                {linksAfter.filter(({ label }) => label !== 'TOOLS').map(({ label, href, action, description, icon: Icon }) => (
                   href ? (
                     <a key={label} href={href} onClick={() => setMenuOpen(false)} aria-current={isCurrentHref(href) ? 'page' : undefined} className="group flex min-h-[76px] items-center gap-3 border-b border-white/10 text-left transition-colors hover:text-[#FF5575]">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03] text-[#FF5575]"><Icon className="h-4 w-4" /></span>
