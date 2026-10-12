@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, Bot, BookOpen, BriefcaseBusiness, ChevronDown, Code, Home, Mail, MapPin, Menu, MousePointerClick, Rocket, Search, Share2, Smartphone, Users, Wrench, X } from 'lucide-react';
+import { ArrowRight, Bot, BookOpen, BriefcaseBusiness, ChevronDown, Code, FileText, Gauge, Home, ListChecks, Mail, MapPin, Menu, MousePointerClick, Rocket, Search, Share2, Smartphone, Users, Wrench, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { ScreenTab } from '../types';
 
@@ -117,9 +117,9 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
           ))}
 
           <div ref={servicesRef} className="relative" onMouseEnter={openServices} onMouseLeave={closeServices}>
-            <button onClick={() => setServicesOpen((open) => !open)} aria-expanded={servicesOpen} aria-haspopup="true" aria-controls="services-mega-menu" className={`flex items-center gap-1 whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${isOnServicePage ? 'text-[#FF003C]' : 'text-white/60'}`}>
+            <a href="/services" onFocus={openServices} aria-expanded={servicesOpen} aria-haspopup="true" aria-controls="services-mega-menu" className={`flex items-center gap-1 whitespace-nowrap rounded px-2.5 py-2 font-mono text-[9px] font-bold tracking-[0.12em] transition-colors hover:bg-white/5 hover:text-[#FF003C] ${isOnServicePage ? 'text-[#FF003C]' : 'text-white/60'}`}>
               SERVICES <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
-            </button>
+            </a>
 
             {servicesOpen && (
               <div id="services-mega-menu" aria-label="Services menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openServices} onMouseLeave={closeServices}>
@@ -143,6 +143,24 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
                           <ArrowRight className="absolute right-3 top-3 h-3.5 w-3.5 text-white/30 group-hover:text-[#FF003C]" />
                         </a>
                       ))}
+                    </div>
+
+                    <div className="mt-6 border-t border-white/10 pt-4">
+                      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Free tools</p>
+                        <a href="/tools" className="font-mono text-[9px] font-bold tracking-[0.12em] text-white/55 transition-colors hover:text-white">VIEW ALL TOOLS <ArrowRight className="ml-1 inline h-3 w-3" aria-hidden="true" /></a>
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-3">
+                        <a href="/tools/business-launch-checklist" className="flex min-h-11 items-center gap-2 border border-white/10 bg-white/[0.025] px-3 py-2 text-xs font-bold text-white/75 transition-colors hover:border-[#FF003C]/45 hover:text-white">
+                          <ListChecks className="h-4 w-4 shrink-0 text-[#FF5575]" aria-hidden="true" /> Business Launch Checklist
+                        </a>
+                        <a href="/tools/website-grader" className="flex min-h-11 items-center gap-2 border border-white/10 bg-white/[0.025] px-3 py-2 text-xs font-bold text-white/75 transition-colors hover:border-[#FF003C]/45 hover:text-white">
+                          <Gauge className="h-4 w-4 shrink-0 text-[#FF5575]" aria-hidden="true" /> Website Grader
+                        </a>
+                        <a href="/tools/llms-txt" className="flex min-h-11 items-center gap-2 border border-white/10 bg-white/[0.025] px-3 py-2 text-xs font-bold text-white/75 transition-colors hover:border-[#FF003C]/45 hover:text-white">
+                          <FileText className="h-4 w-4 shrink-0 text-[#FF5575]" aria-hidden="true" /> llms.txt Builder
+                        </a>
+                      </div>
                     </div>
 
                     <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/10 pt-4 font-mono text-[10px] font-bold tracking-[0.14em]">
