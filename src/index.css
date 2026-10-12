@@ -612,6 +612,29 @@ select:focus {
   .grader-report details[open] > summary {
     display: none;
   }
+
+  body:has(.business-launch-checklist) {
+    background: #ffffff !important;
+  }
+
+  body:has(.business-launch-checklist) nav,
+  body:has(.business-launch-checklist) footer,
+  .business-launch-checklist .launch-print-hide {
+    display: none !important;
+  }
+
+  .business-launch-checklist,
+  .business-launch-checklist * {
+    color: #17171b !important;
+    background: transparent !important;
+    border-color: #d1d5db !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .business-launch-checklist .launch-task {
+    break-inside: avoid;
+  }
 }
 
 .admin-login-input:focus-visible {

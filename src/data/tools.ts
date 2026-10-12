@@ -1,4 +1,4 @@
-import { FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -40,6 +40,19 @@ export const TOOLS: ToolCardData[] = [
     icon: FileText,
     status: 'live',
     capabilities: ['Live Markdown preview', 'Organised page links', 'Copy and download'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'business-launch-checklist',
+    href: '/tools/business-launch-checklist',
+    tab: 'business-launch-checklist',
+    name: 'Business Launch Checklist',
+    tagline: 'A practical next-step plan, without business jargon',
+    description: 'Answer a few simple questions to get a checklist tailored to your stage, offer and how customers will buy. Save progress on your device and download the plan.',
+    icon: BriefcaseBusiness,
+    status: 'live',
+    capabilities: ['Starting or relaunching', 'Personalised next steps', 'Saved progress'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
   }
