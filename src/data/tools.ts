@@ -1,4 +1,4 @@
-import { Gauge, Hammer, type LucideIcon } from 'lucide-react';
+import { FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -27,6 +27,19 @@ export const TOOLS: ToolCardData[] = [
     icon: Gauge,
     status: 'live',
     capabilities: ['Technical & on-page SEO', 'AI search readiness', 'Performance signals', 'Accessibility', 'Security headers'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'llms-txt',
+    href: '/tools/llms-txt',
+    tab: 'llms-builder',
+    name: 'llms.txt Builder',
+    tagline: 'Create a clear guide to your site for AI systems',
+    description: 'Organise your important pages, add accurate descriptions and guidance, then copy or download a ready-to-review llms.txt file.',
+    icon: FileText,
+    status: 'live',
+    capabilities: ['Live Markdown preview', 'Organised page links', 'Copy and download'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
   }
