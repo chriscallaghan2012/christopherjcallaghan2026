@@ -52,7 +52,7 @@ export function OnlineClassesPage() {
             <h2 id="academy-classes-banner-title" className="mt-1 text-xl font-black text-white">AI Builder Academy</h2>
             <p className="mt-2 text-sm leading-relaxed text-white/80">Alongside the one-to-one classes below, the Academy offers live 60-minute practical classes to help you use modern AI tools to turn an idea into a website, app or MVP. No traditional coding background needed.</p>
           </div>
-          <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
+          <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
         </div>
       </section>
 
@@ -62,7 +62,7 @@ export function OnlineClassesPage() {
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5575]">Live one-to-one website classes</p>
           <h1 className="mt-5 max-w-4xl text-4xl font-black leading-[1.06] text-white sm:text-5xl lg:text-6xl">Your website idea,<br /><span className="text-[#FF5575]">built together.</span></h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">Use online AI and design tools to turn your idea into a prototype, then learn how to shape it into an MVP with payments, a domain and code you own. No coding experience needed to start.</p>
-          <a href="#website-package" className="mt-8 inline-flex min-h-12 items-center gap-3 bg-[#FF003C] px-5 text-xs font-black tracking-[0.12em] text-[#171717] transition-colors hover:bg-[#FF2A55]">SEE THE CLASS <ArrowDown className="h-4 w-4 class-arrow-down" /></a>
+          <a href="#website-package" className="mt-8 inline-flex min-h-12 items-center gap-3 bg-[#FF003C] px-5 text-xs font-black tracking-[0.12em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">SEE THE CLASS <ArrowDown className="h-4 w-4 class-arrow-down" /></a>
           <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/10 pt-5 font-mono text-[10px] font-bold uppercase tracking-[0.13em] text-white/75">
             <span>One-to-one online</span><span>No coding needed</span><span>Your project stays yours</span>
           </div>
@@ -143,7 +143,7 @@ export function OnlineClassesPage() {
               <div className="mt-5 flex items-center gap-5 text-xs text-white/75"><span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-[#FF5575]" />One-to-one online</span><span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#FF5575]" />Beginner friendly</span></div>
               <div className="mt-auto pt-8">
                 <p className="text-4xl font-black text-white">{WEBSITE_CLASS_PRICE}</p>
-                <button onClick={() => cartOfferId === 'session' ? setShowCartDialog(true) : selectOffer('session')} aria-pressed={cartOfferId === 'session'} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">
+                <button onClick={() => cartOfferId === 'session' ? setShowCartDialog(true) : selectOffer('session')} aria-pressed={cartOfferId === 'session'} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">
                   {cartOfferId === 'session' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD SESSION TO CART</>}
                 </button>
                 <a href="/contact" className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 border border-white/25 px-5 text-center text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#FF5575] hover:text-[#FF5575]">ASK ABOUT A SESSION <ArrowRight className="h-4 w-4" /></a>
@@ -166,7 +166,7 @@ export function OnlineClassesPage() {
                   {bootcampSessions.map((session, index) => <motion.li key={session.title} variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }} className="border-t border-white/10 pt-3"><span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#FF5575]">Session {index + 1} · 60 minutes</span><h4 className="mt-2 text-sm font-bold text-white">{session.title}</h4><p className="mt-1 text-xs leading-relaxed text-white/75">{session.detail}</p></motion.li>)}
                 </motion.ol>
               </MotionConfig>
-              <button onClick={() => cartOfferId === 'bootcamp' ? setShowCartDialog(true) : selectOffer('bootcamp')} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">
+              <button onClick={() => cartOfferId === 'bootcamp' ? setShowCartDialog(true) : selectOffer('bootcamp')} aria-pressed={cartOfferId === 'bootcamp'} className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">
                 {cartOfferId === 'bootcamp' ? <><Check className="h-4 w-4" /> ADDED TO CART</> : <><ShoppingCart className="h-4 w-4" /> ADD BOOTCAMP TO CART</>}
               </button>
             </article>
@@ -188,7 +188,7 @@ export function OnlineClassesPage() {
               <p className="shrink-0 text-xl font-black text-white">{cartOfferId === 'bootcamp' ? WEBSITE_BOOTCAMP_PRICE : WEBSITE_CLASS_PRICE}</p>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/75">Continue to the secure checkout page to create your account and complete payment.</p>
-            <a ref={continueButtonRef} href={`/checkout?offer=${cartOfferId}`} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">CONTINUE TO CHECKOUT <ArrowRight className="h-4 w-4" /></a>
+            <a ref={continueButtonRef} href={`/checkout?offer=${cartOfferId}`} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">CONTINUE TO CHECKOUT <ArrowRight className="h-4 w-4" /></a>
             <button type="button" onClick={closeCartDialog} className="mt-4 min-h-10 w-full text-sm font-semibold text-white/80 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white">Keep browsing classes</button>
           </section>
         </div>

@@ -1,16 +1,14 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowRight,
   CheckCircle2,
   ChevronDown,
   CircleMinus,
-  Copy,
   ExternalLink,
   Info,
-  Printer,
   RefreshCw,
   XCircle
 } from 'lucide-react';
@@ -18,7 +16,6 @@ import type {
   CategoryId,
   CategoryResult,
   Check,
-  GraderEnquiryContext,
   Recommendation,
   ScanReport
 } from '../../lib/grader/types';
@@ -29,7 +26,10 @@ interface ReportProps {
   /** True when reports are persisted server-side (enables a copyable report link). */
   storageConfigured: boolean;
   onNewScan: () => void;
-  onOpenConsultation: (ctx: GraderEnquiryContext) => void;
+  /** Opens the scan-specific lead form so the owner receives this report. */
+  onOpenConsultation: () => void;
+  /** Navigates to the scan-aware "Fix my website" page with the chosen issues. */
+  onOpenFixForm: (issues: string[] | 'all' | 'high-priority') => void;
 }
 
 type TabId = 'overview' | CategoryId | 'details';
@@ -53,7 +53,7 @@ const STATUS_STYLES: Record<Check['status'], { label: string; className: string;
 };
 
 const SEVERITY_STYLES: Record<string, string> = {
-  critical: 'border-[#FF003C] bg-[#FF003C] text-[#171717] font-bold',
+  critical: 'border-[#FF003C] bg-[#FF003C] text-white font-bold',
   high: 'border-[#FF003C]/60 bg-[#FF003C]/15 text-[#FF5575]',
   medium: 'border-amber-400/40 bg-amber-400/10 text-amber-300',
   low: 'border-white/20 bg-white/[0.06] text-white/60'
@@ -111,82 +111,22 @@ function CountChip({ value, label, className }: { value: number; label: string; 
 /** Full report interface: scores, tabs, checks, recommendations, technical details. */
 export const WebsiteGraderReport: React.FC<ReportProps> = ({
   report,
-  storageConfigured,
   onNewScan,
-  onOpenConsultation
+  onOpenFixForm
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
-  const [copied, setCopied] = useState(false);
-
-  // Expand every evidence block before the browser's print dialog opens so the
-  // printed/PDF report contains the full technical evidence.
-  useEffect(() => {
-    const openDetails = () => {
-      document.querySelectorAll<HTMLDetailsElement>('.grader-report details').forEach((el) => { el.open = true; });
-    };
-    window.addEventListener('beforeprint', openDetails);
-    return () => window.removeEventListener('beforeprint', openDetails);
-  }, []);
-
-  const reportLink = storageConfigured && report.scanId
-    ? `${window.location.origin}${window.location.pathname}?scan=${report.scanId}`
-    : null;
-
-  const copyLink = async () => {
-    if (!reportLink) return;
-    try {
-      await navigator.clipboard.writeText(reportLink);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
-    } catch {
-      setCopied(false);
-    }
-  };
-
-  /** Opens the site enquiry form prefilled with this specific finding. */
-  const openFinding = (rec: Recommendation) => {
-    onOpenConsultation({
-      kind: 'finding',
-      heading: rec.title,
-      category: CATEGORY_LABELS[rec.category],
-      targetUrl: report.targetUrl,
-      scope: rec.cta.service ?? 'Something else',
-      notes: [
-        `Website audit finding: ${rec.title}`,
-        `Category: ${CATEGORY_LABELS[rec.category]}`,
-        `Audited URL: ${report.targetUrl}`,
-        '',
-        `Detected: ${rec.whatDetected}`,
-        `Why it matters: ${rec.whyItMatters}`,
-        `Suggested fix: ${rec.fix}`,
-        `Estimated impact (estimate only): ${rec.estimatedImpact}`,
-        `Difficulty: ${rec.difficulty}`
-      ].join('\n')
-    });
-  };
-
-  /** Opens the site enquiry form prefilled with the whole report. */
-  const openReport = () => {
-    const top = report.recommendations.slice(0, 3).map((r) => `• ${r.title}`).join('\n');
-    onOpenConsultation({
-      kind: 'report',
-      heading: `Website audit: ${report.targetUrl}`,
-      targetUrl: report.targetUrl,
-      scope: 'Something else',
-      notes: [
-        `Website audit report for ${report.targetUrl}`,
-        `Overall score: ${report.overall.score ?? 'n/a'}/100 (${report.overall.grade} — ${report.overall.label})`,
-        '',
-        report.executiveSummary,
-        '',
-        top ? `Highest-priority issues:\n${top}` : 'No failing checks were reported.',
-        '',
-        'Source: Website Grader on christopherjcallaghan.com'
-      ].join('\n')
-    });
-  };
 
   const categories = useMemo(() => report.categories, [report]);
+
+  /** Opens the scan-aware "Fix my website" page for one finding. */
+  const openFinding = (rec: Recommendation) => {
+    onOpenFixForm([rec.checkId]);
+  };
+
+  /** Opens the scan-aware "Fix my website" page for the whole report. */
+  const openReport = () => {
+    onOpenFixForm('all');
+  };
 
   const renderCheck = (check: Check) => {
     const status = STATUS_STYLES[check.status];
@@ -284,7 +224,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
             <button
               type="button"
               onClick={() => openFinding(rec)}
-              className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]"
+              className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black"
             >
               {rec.cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -429,9 +369,9 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
           <button
             type="button"
             onClick={openReport}
-            className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]"
+            className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black"
           >
-            Get a Free Consultation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            Fix My Website <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <a href="/contact" className="inline-flex min-h-11 items-center justify-center border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-white/60">
             Discuss My Audit
@@ -545,22 +485,6 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
             >
               <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" /> New scan
             </button>
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="inline-flex min-h-10 items-center gap-2 border border-white/20 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/75 transition-colors hover:border-white/50 hover:text-white"
-            >
-              <Printer className="h-3.5 w-3.5" aria-hidden="true" /> Print / PDF
-            </button>
-            {reportLink && (
-              <button
-                type="button"
-                onClick={copyLink}
-                className="inline-flex min-h-10 items-center gap-2 border border-white/20 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/75 transition-colors hover:border-white/50 hover:text-white"
-              >
-                <Copy className="h-3.5 w-3.5" aria-hidden="true" /> {copied ? 'Link copied' : 'Copy report link'}
-              </button>
-            )}
           </div>
         </div>
       </div>
@@ -607,7 +531,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
                   const cat = categories.find((c) => c.id === tab.id);
                   const fails = cat?.counts.fail ?? 0;
                   return fails > 0 ? (
-                    <span className="ml-2 inline-block rounded-full bg-[#FF003C] px-1.5 py-0.5 text-[9px] text-[#171717]">{fails}</span>
+                    <span className="ml-2 inline-block rounded-full bg-[#FF003C] px-1.5 py-0.5 text-[9px] text-white">{fails}</span>
                   ) : null;
                 })()}
               </button>

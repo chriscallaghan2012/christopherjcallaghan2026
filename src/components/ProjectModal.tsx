@@ -143,7 +143,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, on
                 onClose();
                 onNavigateToBuild();
               }}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#FF003C] text-[#171717] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,0,60,0.4)] hover:scale-105 transition-all"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#FF003C] text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,0,60,0.4)] hover:scale-105 transition-all"
             >
               Build something similar
             </button>

@@ -149,7 +149,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="nav-consultation-btn"
             onClick={onOpenConsultation}
-            className="group shrink-0 relative flex items-center gap-1.5 xl:gap-2 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full bg-[#FF003C] text-[#171717] text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-black shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all hover:scale-105 active:scale-95 whitespace-nowrap min-h-[38px] xl:min-h-[42px]"
+            className="group shrink-0 relative flex items-center gap-1.5 xl:gap-2 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full bg-[#FF003C] hover:bg-[#ffb347] hover:text-black text-white text-[10px] xl:text-[11px] uppercase tracking-[0.2em] font-black shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all hover:scale-105 active:scale-95 whitespace-nowrap min-h-[38px] xl:min-h-[42px]"
           >
             <span>Start Project</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -161,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
           <button
             id="mobile-consultation-quick-btn"
             onClick={onOpenConsultation}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF003C] text-[#171717] text-[10px] font-bold uppercase tracking-wider shadow-sm"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF003C] text-white text-[10px] font-bold uppercase tracking-wider shadow-sm"
           >
             <span>Consultation</span>
             <ArrowUpRight className="w-3 h-3" />
@@ -218,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
               <button
                 onClick={() => handleNav('package')}
                 className={`flex items-center justify-between text-left px-4 py-3.5 rounded-xl font-black uppercase tracking-wider text-xs sm:text-sm transition-all min-h-[48px] ${
-                  currentTab === 'package' ? 'bg-[#FF003C] text-[#171717] shadow-lg' : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
+                  currentTab === 'package' ? 'bg-[#FF003C] text-white shadow-lg' : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                 }`}
               >
                 <span className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenC
                   setMobileMenuOpen(false);
                   onOpenConsultation();
                 }}
-                className="w-full py-4 rounded-xl bg-[#FF003C] text-[#171717] font-black uppercase tracking-widest text-xs shadow-[0_0_25px_rgba(255,0,60,0.4)] flex items-center justify-center gap-2 min-h-[48px] active:scale-[0.98]"
+                className="w-full py-4 rounded-xl bg-[#FF003C] text-white font-black uppercase tracking-widest text-xs shadow-[0_0_25px_rgba(255,0,60,0.4)] flex items-center justify-center gap-2 min-h-[48px] active:scale-[0.98]"
               >
                 <span>Schedule Project Consultation</span>
                 <ArrowUpRight className="w-4 h-4" />

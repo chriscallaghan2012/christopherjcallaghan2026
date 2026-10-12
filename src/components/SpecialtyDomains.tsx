@@ -106,7 +106,7 @@ export const SpecialtyDomains: React.FC<SpecialtyDomainsProps> = ({ onNavigateTa
               <div className="pt-4 flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={onOpenConsultation}
-                  className="px-7 py-3.5 rounded-xl bg-[#FF003C] text-[#171717] font-bold text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2"
+                  className="px-7 py-3.5 rounded-xl bg-[#FF003C] hover:bg-[#ffb347] hover:text-black text-white font-bold text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2"
                 >
                   <span>Inquire for {activePillar.title}</span>
                   <ArrowRight className="w-4 h-4" />

@@ -351,7 +351,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 rounded-xl bg-[#FF003C] text-[#171717] font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] mt-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-xl bg-[#FF003C] hover:bg-[#ffb347] hover:text-black text-white font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] mt-2 disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

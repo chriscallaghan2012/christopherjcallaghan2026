@@ -16,12 +16,15 @@ import {
   XCircle
 } from 'lucide-react';
 import { validateTargetUrl } from '../../lib/grader/validate';
-import type { GraderEnquiryContext, ScanReport, StageId } from '../../lib/grader/types';
+import type { ScanReport, StageId } from '../../lib/grader/types';
 import { WebsiteGraderReport } from './WebsiteGraderReport';
+import { GraderFixTeaser } from './GraderFixTeaser';
 
 interface WebsiteGraderProps {
   /** Opens the site enquiry form, optionally prefilled with audit context. */
-  onOpenConsultation: (ctx?: GraderEnquiryContext) => void;
+  onOpenConsultation: (ctx?: unknown) => void;
+  /** Navigates to the scan-aware "Fix my website" request page. */
+  onNavigateToFixForm?: () => void;
 }
 
 type Phase = 'idle' | 'scanning' | 'done' | 'error';
@@ -95,7 +98,7 @@ const MEASUREMENT_NOTES = [
 ];
 
 /** Free website audit tool: hero + form, real staged scanning, report, conversion. */
-export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation }) => {
+export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation, onNavigateToFixForm }) => {
   const [url, setUrl] = useState('');
   const [phase, setPhase] = useState<Phase>('idle');
   const [stages, setStages] = useState<StageState[]>(
@@ -106,6 +109,17 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
   const [errorMessage, setErrorMessage] = useState('');
   const [scannedUrl, setScannedUrl] = useState('');
   const abortRef = useRef<AbortController | null>(null);
+  const reportRef = useRef<HTMLDivElement | null>(null);
+
+  // When a scan finishes (or a shared report link loads), bring the results
+  // into view so the visitor immediately sees the outcome.
+  useEffect(() => {
+    if (phase !== 'done' || !report) return;
+    const id = window.setTimeout(() => {
+      reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, [phase, report]);
 
   // Support shareable report links: /tools/website-grader?scan=<id> loads the
   // persisted report so a copied link always resolves to a real result.
@@ -266,27 +280,32 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
     }
   };
 
-  const openConsultation = () => {
-    if (report) {
-      const top = report.recommendations.slice(0, 3).map((r) => `• ${r.title}`).join('\n');
-      onOpenConsultation({
-        kind: 'report',
-        heading: `Website audit: ${report.targetUrl}`,
-        targetUrl: report.targetUrl,
-        scope: 'Something else',
-        notes: [
-          `Website audit report for ${report.targetUrl}`,
-          `Overall score: ${report.overall.score ?? 'n/a'}/100 (${report.overall.grade} — ${report.overall.label})`,
-          '',
-          report.executiveSummary,
-          '',
-          top ? `Highest-priority issues:\n${top}` : 'No failing checks were reported.'
-        ].join('\n')
-      });
-    } else {
+  const openLeadModal = () => {
+    if (!report) {
       onOpenConsultation();
+      return;
     }
+    const params = new URLSearchParams({
+      scan: report.scanId,
+      issues: 'all'
+    });
+    window.location.assign(`/tools/website-grader/fix-my-website?${params.toString()}`);
   };
+
+  const openFixForm = (issues: string[] | 'all' | 'high-priority') => {
+    if (!report) return;
+    const value = Array.isArray(issues) ? issues.join(',') : issues;
+    const params = new URLSearchParams({ scan: report.scanId, issues: value });
+    window.location.assign(`/tools/website-grader/fix-my-website?${params.toString()}`);
+  };
+
+  const reportDigest = report ? {
+    targetUrl: report.targetUrl,
+    overallLabel: report.overall.score === null ? 'Not enough measurable data' : `${report.overall.score}/100 · ${report.overall.grade} · ${report.overall.label}`,
+    summaryLine: `${report.summary.fail} failed, ${report.summary.warning} warnings, ${report.summary.pass} passed.`,
+    issueCount: report.recommendations.length,
+    recommendations: report.recommendations.slice(0, 12)
+  } : null;
 
   const stageIcon = (status: StageStatus) => {
     if (status === 'complete') return <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />;
@@ -329,7 +348,7 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
               <button
                 type="submit"
                 disabled={phase === 'scanning'}
-                className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-[#171717] transition-colors hover:bg-[#FF2A55] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-[#ffb347] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {phase === 'scanning' ? (<><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Scanning…</>) : (<>Analyse My Website <ArrowRight className="h-4 w-4" aria-hidden="true" /></>)}
               </button>
@@ -420,16 +439,24 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
 
       {/* ============ Results ============ */}
       {phase === 'done' && report && (
-        <section className="border-b border-white/10 px-5 py-12 md:px-8" aria-label="Audit report">
+        <section ref={reportRef} className="scroll-mt-20 border-b border-white/10 px-5 py-12 md:px-8" aria-label="Audit report">
           <div className="mx-auto max-w-5xl">
             <WebsiteGraderReport
               report={report}
               storageConfigured={storageConfigured}
               onNewScan={resetToIdle}
-              onOpenConsultation={(ctx) => onOpenConsultation(ctx)}
+              onOpenConsultation={() => openFixForm('high-priority')}
+              onOpenFixForm={openFixForm}
             />
           </div>
         </section>
+      )}
+
+      {phase === 'done' && report && (
+        <GraderFixTeaser
+          reportDigest={reportDigest}
+          onNavigateHome={() => reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+        />
       )}
 
       {/* ============ Trust & capability ============ */}
@@ -493,10 +520,10 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
               type="button"
-              onClick={openConsultation}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-[#171717] transition-colors hover:bg-[#FF2A55] sm:w-auto"
+              onClick={openLeadModal}
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-[#ffb347] hover:text-black sm:w-auto"
             >
-              Get a Free Consultation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Fix My Website <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
             <a href="/contact" className="inline-flex min-h-12 w-full items-center justify-center border border-white/25 px-7 text-xs font-bold tracking-[0.14em] text-white transition-colors hover:border-white/60 sm:w-auto">
               Discuss My Audit

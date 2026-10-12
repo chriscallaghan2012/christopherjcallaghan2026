@@ -32,7 +32,7 @@ export const ToolCard: React.FC<{ tool: ToolCardData }> = ({ tool }) => {
         </ul>
       )}
       {isLive ? (
-        <a href={tool.href} className="mt-6 inline-flex min-h-11 items-center gap-2 self-start bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">
+        <a href={tool.href} className="mt-6 inline-flex min-h-11 items-center gap-2 self-start bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">
           Open tool <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
         </a>
       ) : (

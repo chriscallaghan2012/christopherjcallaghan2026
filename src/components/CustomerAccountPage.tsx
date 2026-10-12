@@ -120,7 +120,7 @@ export function CustomerAccountPage() {
             ) : (
               <div className="mt-5 border border-white/10 bg-black/25 px-5 py-8 text-center">
                 <p className="text-sm leading-relaxed text-white/75">No completed purchases yet. Your paid one-to-one sessions and six-session MVP bootcamp will appear here.</p>
-                <a href="/classes#website-package" className="mt-5 inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">EXPLORE CLASSES <ArrowRight className="h-4 w-4" /></a>
+                <a href="/classes#website-package" className="mt-5 inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">EXPLORE CLASSES <ArrowRight className="h-4 w-4" /></a>
               </div>
             )}
           </section>
@@ -130,7 +130,7 @@ export function CustomerAccountPage() {
             <div className="mt-6 grid gap-4">
               <label className="text-sm text-white/85">Email<span className="premium-input-wrap mt-1"><input type="email" autoComplete="email" maxLength={254} value={email} onChange={(event) => setEmail(event.target.value)} className="premium-input min-h-11 w-full px-3 text-sm text-white" /></span></label>
               <label className="text-sm text-white/85">Password<span className="premium-input-wrap mt-1"><input type="password" autoComplete="current-password" maxLength={128} value={password} onChange={(event) => setPassword(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !isSubmitting) void signIn(); }} className="premium-input min-h-11 w-full px-3 text-sm text-white" /></span></label>
-              <button onClick={signIn} disabled={isSubmitting || !email || !password} className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] hover:bg-[#FF2A55] disabled:cursor-not-allowed disabled:opacity-40">{isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null} SIGN IN</button>
+              <button onClick={signIn} disabled={isSubmitting || !email || !password} className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white hover:bg-[#ffb347] hover:text-black disabled:cursor-not-allowed disabled:opacity-40">{isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null} SIGN IN</button>
             </div>
           </section>
         )}

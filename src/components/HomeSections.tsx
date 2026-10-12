@@ -194,7 +194,7 @@ export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onNavigate })
         <div className="max-w-xl md:justify-self-end">
           <p className="text-base leading-relaxed text-white/65">From the first idea through business planning, setup, website, technology, marketing and launch, I can help build the foundations around it.</p>
           <p className="mt-3 text-sm text-white/60">Funding support can be part of the plan when it makes sense.</p>
-          <button onClick={() => onNavigate('start')} className="mt-7 inline-flex items-center gap-2 bg-[#FF003C] px-6 py-4 text-xs font-black tracking-[0.16em] text-[#171717] shadow-[0_0_30px_rgba(255,0,60,0.22)] transition-all hover:gap-4 hover:shadow-[0_0_40px_rgba(255,0,60,0.4)]">START YOUR BUSINESS <ArrowRight className="h-4 w-4" /></button>
+          <button onClick={() => onNavigate('start')} className="mt-7 inline-flex items-center gap-2 bg-[#FF003C] hover:bg-[#ffb347] hover:text-black px-6 py-4 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_30px_rgba(255,0,60,0.22)] transition-all hover:gap-4 hover:shadow-[0_0_40px_rgba(255,0,60,0.4)]">START YOUR BUSINESS <ArrowRight className="h-4 w-4" /></button>
         </div>
       </div>
     </section>
@@ -215,7 +215,7 @@ export const HomeClosingSections: React.FC<HomeSectionsProps> = ({ onNavigate })
         <p className="mb-6 font-mono text-xs uppercase tracking-[0.24em] text-[#FF003C]">Your move</p>
         <ScrollWritingTitle text={'WHAT ARE YOU\nBUILDING?'} accentWords={[{ word: 'WHAT', color: 'purple' }, { word: 'BUILDING?', color: 'orange' }]} className="text-5xl font-black leading-[0.9] text-white sm:text-7xl md:text-8xl" />
         <p className="mt-6 text-sm text-white/55 md:text-base">You don&apos;t need the technical plan. Start with the idea.</p>
-        <button onClick={() => onNavigate('build')} className="mt-9 inline-flex items-center gap-3 bg-[#FF003C] px-8 py-4 text-xs font-black tracking-[0.16em] text-[#171717] shadow-[0_0_35px_rgba(255,0,60,0.35)] transition-all hover:gap-5 hover:shadow-[0_0_50px_rgba(255,0,60,0.55)]">LET&apos;S BUILD IT <ArrowRight className="h-4 w-4" /></button>
+        <button onClick={() => onNavigate('build')} className="mt-9 inline-flex items-center gap-3 bg-[#FF003C] hover:bg-[#ffb347] hover:text-black px-8 py-4 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_35px_rgba(255,0,60,0.35)] transition-all hover:gap-5 hover:shadow-[0_0_50px_rgba(255,0,60,0.55)]">LET&apos;S BUILD IT <ArrowRight className="h-4 w-4" /></button>
       </div>
     </section>
   </>
@@ -235,7 +235,7 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
           <h2 id="academy-home-title" className="mt-5 text-4xl font-black leading-[1.05] text-white sm:text-5xl md:text-6xl">AI Builder Academy</h2>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Learn how to use AI to turn your ideas into real websites, apps and MVPs, even if you don&apos;t have a traditional coding background. Practical, live 60-minute classes teach you to build with modern AI-assisted tools, not follow a traditional coding course.</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55]">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
+            <a href={ACADEMY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">EXPLORE THE ACADEMY <ArrowRight aria-hidden="true" className="h-4 w-4" /></a>
             <button onClick={onNavigateToClasses} className="inline-flex min-h-12 items-center gap-2 border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-[#FF003C] hover:text-[#FF5575]">VIEW CLASSES <ArrowRight aria-hidden="true" className="h-4 w-4" /></button>
           </div>
           <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">New practical classes added regularly.</p>

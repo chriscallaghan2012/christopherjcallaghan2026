@@ -24,9 +24,10 @@ const AiToolStudio = dynamic(() => import('./components/AiToolStudio').then((mod
 const EmailTemplateSandbox = dynamic(() => import('./components/EmailTemplateSandbox').then((module) => module.EmailTemplateSandbox));
 const PublicPageContent = dynamic(() => import('./components/PublicPageContent').then((module) => module.PublicPageContent));
 const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').then((module) => module.ProjectBriefPage));
+const GraderFixForm = dynamic(() => import('./components/GraderFixForm').then((module) => module.GraderFixForm));
 const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'website-grader-fix', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -44,6 +45,7 @@ function getTabFromBrowser(): ScreenTab {
   if (path === '/email-sandbox') return 'email-sandbox';
   if (path === '/tools') return 'tools';
   if (path === '/tools/website-grader') return 'website-grader';
+  if (path === '/tools/website-grader/fix-my-website') return 'website-grader-fix';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
   if (page) return page.tab;
   const requested = new URLSearchParams(window.location.search).get('tab');
@@ -59,6 +61,7 @@ function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'build' || tab === 'start' || tab === 'package' || tab === 'classes' || tab === 'email-sandbox') return `/${tab}`;
   if (tab === 'tools') return '/tools';
   if (tab === 'website-grader') return '/tools/website-grader';
+  if (tab === 'website-grader-fix') return '/tools/website-grader/fix-my-website';
   if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
@@ -253,7 +256,14 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
         {currentTab === 'tools' && <ToolsDirectory />}
 
         {currentTab === 'website-grader' && (
-          <WebsiteGrader onOpenConsultation={handleOpenConsultationFromGrader} />
+          <WebsiteGrader onOpenConsultation={handleOpenConsultationFromGrader} onNavigateToFixForm={() => handleSelectTab('website-grader-fix')} />
+        )}
+
+        {currentTab === 'website-grader-fix' && (
+          <GraderFixForm
+            onNavigateHome={() => handleSelectTab('website-grader')}
+            onNavigateToGrader={() => handleSelectTab('website-grader')}
+          />
         )}
       </main>
 

@@ -95,7 +95,7 @@ export type PublicPageTab = 'about' | 'contact' | 'seo-services' | 'local-seo' |
 
 export type BuildServiceSlug = Exclude<PublicPageTab, 'about' | 'contact'>;
 
-export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | 'tools' | 'website-grader' | PublicPageTab;
+export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | 'tools' | 'website-grader' | 'website-grader-fix' | PublicPageTab;
 
 export interface ArchitectureBlueprint {
   title: string;

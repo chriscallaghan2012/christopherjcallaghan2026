@@ -29,10 +29,13 @@ const brotliDecompress = promisify(zlib.brotliDecompress);
 
 export class SafeNetworkError extends Error {
   code: string;
-  constructor(code: string, message: string) {
+  /** True when a single immediate retry is worthwhile (reset mid-flight). */
+  retryable: boolean;
+  constructor(code: string, message: string, retryable = false) {
     super(message);
     this.name = 'SafeNetworkError';
     this.code = code;
+    this.retryable = retryable;
   }
 }
 
@@ -155,16 +158,39 @@ async function resolveAndValidate(hostname: string): Promise<string> {
   return chosen.address;
 }
 interface LookupCallback {
-  (err: Error | null, address?: string, family?: number): void;
+  (err: Error | null, address: string, family: number): void;
+  (err: Error | null, addresses: Array<{ address: string; family: number }>): void;
+  (err: Error): void;
 }
 
 /**
  * Returns a `lookup` function for `http.request` that pins DNS to a single
  * verified address. Because the lookup is invoked for every connection a
  * request chain makes, redirects to other hosts are validated too.
+ *
+ * Node's default `autoSelectFamily` (Happy Eyeballs) invokes `lookup` with
+ * `{ all: true }` and expects an array of `{ address, family }`. We honour
+ * that contract exactly, while still returning only the single address we
+ * already validated — so DNS pinning / SSRF protection is preserved.
  */
 function createPinnedLookup(cache: Map<string, Promise<string>>) {
-  return (hostname: string, _options: unknown, callback: LookupCallback) => {
+  const emit = (
+    options: unknown,
+    callback: LookupCallback,
+    address: string
+  ): void => {
+    const family = net.isIPv4(address) ? 4 : 6;
+    if (options && typeof options === 'object' && (options as { all?: boolean }).all) {
+      (callback as (err: Error | null, addresses: Array<{ address: string; family: number }>) => void)(
+        null,
+        [{ address, family }]
+      );
+      return;
+    }
+    (callback as (err: Error | null, address: string, family: number) => void)(null, address, family);
+  };
+
+  return (hostname: string, options: unknown, callback: LookupCallback) => {
     const h = hostname.toLowerCase().replace(/\.$/, '');
     if (isBlockedHostname(h)) {
       callback(new SafeNetworkError('ERR_BLOCKED', 'This destination is not allowed.'));
@@ -175,7 +201,7 @@ function createPinnedLookup(cache: Map<string, Promise<string>>) {
         callback(new SafeNetworkError('ERR_BLOCKED', 'This destination is not allowed.'));
         return;
       }
-      callback(null, h, net.isIPv4(h) ? 4 : 6);
+      emit(options, callback, h);
       return;
     }
 
@@ -185,7 +211,7 @@ function createPinnedLookup(cache: Map<string, Promise<string>>) {
       cache.set(h, pending);
     }
     pending.then(
-      (address) => callback(null, address, net.isIPv4(address) ? 4 : 6),
+      (address) => emit(options, callback, address),
       (err) => callback(err instanceof Error ? err : new Error(String(err)))
     );
   };
@@ -294,10 +320,10 @@ function requestOnce(
         reject(new SafeNetworkError('ERR_TLS', 'The site has a TLS/certificate problem.'));
       } else if (code === 'ECONNREFUSED') {
         reject(new SafeNetworkError('ERR_CONNECTION', 'The site refused the connection.'));
-      } else if (code === 'ECONNRESET') {
-        reject(new SafeNetworkError('ERR_CONNECTION', 'The connection was reset.'));
+      } else if (code === 'ECONNRESET' || code === 'EPIPE') {
+        reject(new SafeNetworkError('ERR_CONNECTION', 'The connection was reset.', true));
       } else {
-        reject(new SafeNetworkError('ERR_NETWORK', 'The site could not be reached.'));
+        reject(new SafeNetworkError('ERR_NETWORK', 'The site could not be reached.', true));
       }
     });
 
@@ -321,6 +347,27 @@ function decodeBody(body: Buffer, contentEncoding: string | undefined): Promise<
 /** True when the IP must be refused; honours the private-network test flag. */
 function shouldBlockIp(ip: string): boolean {
   return allowPrivateNetworks() ? false : isIpBlocked(ip);
+}
+
+/** Strips IPv6 brackets ("[::1]" -> "::1") so isIP()/blocking work. */
+function stripBrackets(hostname: string): string {
+  return hostname.startsWith('[') && hostname.endsWith(']') ? hostname.slice(1, -1) : hostname;
+}
+
+/**
+ * Authoritative per-hop SSRF guard. `net.connect` does NOT invoke the custom
+ * `lookup` for IP-literal hosts, so private/loopback/metadata IPs written
+ * directly (e.g. http://169.254.169.254/) would otherwise be connected to.
+ * This blocks them before any socket is opened.
+ */
+function assertDestinationAllowed(url: URL): void {
+  const raw = stripBrackets(url.hostname.toLowerCase().replace(/\.$/, ''));
+  if (isBlockedHostname(raw)) {
+    throw new SafeNetworkError('ERR_BLOCKED', 'This destination is not allowed.');
+  }
+  if (net.isIP(raw) && shouldBlockIp(raw)) {
+    throw new SafeNetworkError('ERR_BLOCKED', 'This destination is not allowed.');
+  }
 }
 
 /**
@@ -352,6 +399,9 @@ export async function safeFetch(rawUrl: string, options: SafeRequestOptions = {}
   };
 
   let currentUrl = new URL(normalized.url);
+  // Block private/loopback/metadata IP literals before any socket is opened
+  // (the custom lookup only guards DNS names, not literal IPs).
+  assertDestinationAllowed(currentUrl);
   const redirectChain: string[] = [currentUrl.toString()];
   let redirects = 0;
 
@@ -366,7 +416,19 @@ export async function safeFetch(rawUrl: string, options: SafeRequestOptions = {}
     const remaining = Math.max(1000, deadline - Date.now());
     const hopTimeout = Math.min(timeoutMs, remaining);
 
-    const response = await requestOnce(currentUrl, method, headers, hopTimeout, maxBytes, lookup);
+    // Re-assert on every hop so a redirect to a literal private IP is blocked.
+    assertDestinationAllowed(currentUrl);
+    let response;
+    try {
+      response = await requestOnce(currentUrl, method, headers, hopTimeout, maxBytes, lookup);
+    } catch (err) {
+      // A single retry covers flaky first connections (keep-alive race, TLS
+      // blip, Happy-Eyeballs attempt) so reachable sites are not misreported.
+      const retryable = err instanceof SafeNetworkError && err.retryable && Date.now() + 1500 < deadline;
+      if (!retryable) throw err;
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      response = await requestOnce(currentUrl, method, headers, Math.max(1000, deadline - Date.now()), maxBytes, lookup);
+    }
     const location = (response.headers['location'] || '').trim();
 
     const isRedirect = response.status >= 300 && response.status < 400 && location;

@@ -16,8 +16,9 @@ import { scoreCategory, scoreCategories, overallScore, gradeFor, CATEGORY_WEIGHT
 import { buildRecommendations } from '../lib/grader/recommendations';
 import { runSeoChecks } from '../lib/grader/checks/seo';
 import { runScan } from '../lib/grader/engine';
+import { buildReportPdf } from '../lib/grader/pdfReport';
 import type { ScanContext } from '../lib/grader/context';
-import type { Check, CheckStatus } from '../lib/grader/types';
+import type { Check, CheckStatus, ScanReport } from '../lib/grader/types';
 
 interface TestCase {
   name: string;
@@ -342,6 +343,57 @@ test('grades map scores to honest labels', () => {
   assert.equal(gradeFor(75).grade, 'B');
   assert.equal(gradeFor(0).grade, 'F');
   assert.equal(gradeFor(null).label, 'Not enough data');
+});
+
+test('report PDF includes a valid document for all scan results', async () => {
+  const report: ScanReport = {
+    scanId: 'wg_test123',
+    targetUrl: 'https://example.com/',
+    finalUrl: 'https://example.com/',
+    createdAt: '2026-10-12T12:00:00.000Z',
+    status: 'completed',
+    overall: { score: 66, grade: 'C+', label: 'Fair' },
+    categories: [{
+      id: 'seo',
+      label: 'Technical & On-page SEO',
+      weight: 0.3,
+      score: 66,
+      checks: [{
+        id: 'seo-title',
+        category: 'seo',
+        name: 'Page title',
+        status: 'fail',
+        evidence: ['No title was found'],
+        explanation: 'Search engines use the title to understand the page.',
+        fix: 'Add a descriptive title.',
+        measured: 'measured',
+        points: 10
+      }],
+      counts: { pass: 0, warning: 0, fail: 1, info: 0, notMeasured: 0 }
+    }],
+    recommendations: [],
+    summary: { pass: 0, warning: 0, fail: 1, info: 0, notMeasured: 0 },
+    executiveSummary: 'One issue needs attention.',
+    limitations: ['Browser lab metrics were not measured.'],
+    scanMeta: {
+      startedAt: '2026-10-12T11:59:59.000Z',
+      completedAt: '2026-10-12T12:00:00.000Z',
+      durationMs: 1000,
+      pageBytes: 1024,
+      httpStatus: 200,
+      targetUrl: 'https://example.com/',
+      finalUrl: 'https://example.com/',
+      redirectChain: [],
+      userAgent: 'test',
+      checksRun: 1,
+      checksNotMeasured: 0,
+      stages: []
+    },
+    version: '1.0.0'
+  };
+  const pdf = await buildReportPdf(report);
+  assert.equal(pdf.subarray(0, 5).toString('ascii'), '%PDF-');
+  assert.ok(pdf.length > 1000);
 });
 
 // ---------------------------------------------------------------------------

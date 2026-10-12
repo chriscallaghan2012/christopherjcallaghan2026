@@ -158,7 +158,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
                     <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MOST ASKED</p>
                     <h3 className="mt-3 text-2xl font-black leading-tight text-white">Not sure what you need?</h3>
                     <p className="mt-2 text-sm leading-relaxed text-white/60">Tell me the problem or goal — no technical plan needed.</p>
-                    <a href="/contact" className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.14em] text-[#171717] shadow-[0_0_20px_rgba(255,0,60,0.25)]">SEND AN ENQUIRY <ArrowRight className="h-3.5 w-3.5" /></a>
+                    <a href="/contact" className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.14em] text-white shadow-[0_0_20px_rgba(255,0,60,0.25)]">SEND AN ENQUIRY <ArrowRight className="h-3.5 w-3.5" /></a>
                     <a href="/build" className="mt-2.5 inline-flex min-h-11 items-center justify-center border border-white/20 px-4 text-[10px] font-bold tracking-[0.14em] text-white/80 hover:border-white/50 hover:text-white">SEND A PROJECT BRIEF</a>
                   </aside>
                 </div>
@@ -174,7 +174,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
         </nav>
 
         <div className="flex items-center gap-2">
-          <button onClick={() => { onSelectTab('build'); window.scrollTo({ top: 0, behavior: 'smooth' }); setMenuOpen(false); }} className="group flex min-h-10 items-center gap-2 bg-[#FF003C] px-4 text-[10px] font-black tracking-[0.12em] text-[#171717] shadow-[0_0_22px_rgba(255,0,60,0.25)] transition-all hover:shadow-[0_0_32px_rgba(255,0,60,0.45)]">
+          <button onClick={() => { onSelectTab('build'); window.scrollTo({ top: 0, behavior: 'smooth' }); setMenuOpen(false); }} className="group flex min-h-10 items-center gap-2 bg-[#FF003C] hover:bg-[#ffb347] hover:text-black px-4 text-[10px] font-black tracking-[0.12em] text-white shadow-[0_0_22px_rgba(255,0,60,0.25)] transition-all hover:shadow-[0_0_32px_rgba(255,0,60,0.45)]">
             LET&apos;S BUILD <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
           </button>
           <button ref={menuButtonRef} className="flex h-10 w-10 items-center justify-center border border-white/15 text-white lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
@@ -288,7 +288,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
                 <p className="text-sm font-bold text-white">Have something in mind?</p>
                 <p className="mt-1 text-xs text-white/50">Start with the goal. The technical plan can come later.</p>
               </div>
-              <a href="/build" onClick={() => setMenuOpen(false)} className="inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-5 font-mono text-[10px] font-bold tracking-[0.12em] text-[#171717] transition-colors hover:bg-[#FF2A55]">START A PROJECT <ArrowRight className="h-3.5 w-3.5" /></a>
+              <a href="/build" onClick={() => setMenuOpen(false)} className="inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-5 font-mono text-[10px] font-bold tracking-[0.12em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">START A PROJECT <ArrowRight className="h-3.5 w-3.5" /></a>
             </div>
           </div>
         </motion.div>}
