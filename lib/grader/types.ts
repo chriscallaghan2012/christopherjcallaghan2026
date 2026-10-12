@@ -146,7 +146,7 @@ export interface MetaEvent {
 
 export interface EmailEvent {
   type: 'email';
-  status: 'sent' | 'unavailable' | 'skipped';
+  status: 'sent' | 'unavailable' | 'failed' | 'skipped';
   message?: string;
 }
 

@@ -15,7 +15,7 @@ import {
   Wrench,
   XCircle
 } from 'lucide-react';
-import { validateTargetUrl } from '../../lib/grader/validate';
+import { isValidEmail, validateTargetUrl } from '../../lib/grader/validate';
 import type { ScanReport, StageId } from '../../lib/grader/types';
 import { WebsiteGraderReport } from './WebsiteGraderReport';
 import { GraderFixTeaser } from './GraderFixTeaser';
@@ -29,6 +29,7 @@ interface WebsiteGraderProps {
 
 type Phase = 'idle' | 'scanning' | 'done' | 'error';
 type StageStatus = 'pending' | 'started' | 'complete' | 'failed';
+type EmailNotice = { status: 'sent' | 'unavailable' | 'failed' | 'skipped'; message?: string };
 
 interface StageState {
   id: StageId;
@@ -100,6 +101,9 @@ const MEASUREMENT_NOTES = [
 /** Free website audit tool: hero + form, real staged scanning, report, conversion. */
 export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation, onNavigateToFixForm }) => {
   const [url, setUrl] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [emailNotice, setEmailNotice] = useState<EmailNotice | null>(null);
   const [phase, setPhase] = useState<Phase>('idle');
   const [stages, setStages] = useState<StageState[]>(
     STAGE_LIST.map((s) => ({ ...s, status: 'pending' as StageStatus }))
@@ -156,6 +160,7 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
     setPhase('idle');
     setReport(null);
     setErrorMessage('');
+    setEmailNotice(null);
     setStages(STAGE_LIST.map((s) => ({ ...s, status: 'pending' as StageStatus })));
   };
 
@@ -169,10 +174,17 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
       setPhase('error');
       return;
     }
+    if (email.trim() && !isValidEmail(email.trim())) {
+      setEmailError('Enter a valid email address, or leave this field blank.');
+      document.getElementById('grader-email')?.focus();
+      return;
+    }
 
     setPhase('scanning');
     setReport(null);
     setErrorMessage('');
+    setEmailError('');
+    setEmailNotice(null);
     setStages(STAGE_LIST.map((s) => ({ ...s, status: 'pending' as StageStatus })));
 
     const controller = new AbortController();
@@ -200,6 +212,16 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
           );
           break;
         }
+        case 'email': {
+          const status = evt.status;
+          if (status === 'sent' || status === 'unavailable' || status === 'failed' || status === 'skipped') {
+            setEmailNotice({
+              status,
+              message: typeof evt.message === 'string' ? evt.message : undefined
+            });
+          }
+          break;
+        }
         case 'result':
           setReport(evt.report as ScanReport);
           setPhase('done');
@@ -219,7 +241,7 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
       const response = await fetch('/api/tools/website-grader/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: url.trim(), email: email.trim() || undefined }),
         signal: controller.signal
       });
 
@@ -353,6 +375,32 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
                 {phase === 'scanning' ? (<><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Scanning…</>) : (<>Analyse My Website <ArrowRight className="h-4 w-4" aria-hidden="true" /></>)}
               </button>
             </div>
+            <div className="mt-4 text-left">
+              <label htmlFor="grader-email" className="block font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-white/60">
+                Email me the full PDF report <span className="font-normal text-white/40">(optional)</span>
+              </label>
+              <input
+                id="grader-email"
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                maxLength={320}
+                value={email}
+                disabled={phase === 'scanning'}
+                onChange={(event) => { setEmail(event.target.value); setEmailError(''); }}
+                aria-invalid={Boolean(emailError)}
+                aria-describedby="grader-email-help grader-email-error"
+                placeholder="you@example.com"
+                className="mt-2 min-h-11 w-full border border-white/20 bg-black/50 px-4 text-sm text-white placeholder:text-white/35 transition-colors focus:border-[#FF5575] focus:outline-none disabled:opacity-50"
+              />
+              <p id="grader-email-error" aria-live="polite" className={`mt-1 min-h-4 text-xs ${emailError ? 'text-[#FF5575]' : 'text-transparent'}`}>
+                {emailError || 'No email error'}
+              </p>
+              <p id="grader-email-help" className="text-xs leading-relaxed text-white/45">
+                Used only to send your audit PDF. You can still run the scan without it.
+              </p>
+            </div>
             <p id="grader-url-error" aria-live="polite" className={`mt-2 min-h-5 text-left text-xs sm:text-center ${phase === 'error' && errorMessage ? 'text-[#FF5575]' : 'text-transparent'}`}>
               {phase === 'error' && errorMessage ? errorMessage : 'No error'}
             </p>
@@ -444,6 +492,7 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
             <WebsiteGraderReport
               report={report}
               storageConfigured={storageConfigured}
+              emailNotice={emailNotice}
               onNewScan={resetToIdle}
               onOpenConsultation={() => openFixForm('high-priority')}
               onOpenFixForm={openFixForm}

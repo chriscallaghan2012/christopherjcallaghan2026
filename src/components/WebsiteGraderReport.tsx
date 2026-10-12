@@ -6,6 +6,7 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
+  ClipboardCopy,
   CircleMinus,
   ExternalLink,
   Info,
@@ -25,6 +26,7 @@ interface ReportProps {
   report: ScanReport;
   /** True when reports are persisted server-side (enables a copyable report link). */
   storageConfigured: boolean;
+  emailNotice?: { status: 'sent' | 'unavailable' | 'failed' | 'skipped'; message?: string } | null;
   onNewScan: () => void;
   /** Opens the scan-specific lead form so the owner receives this report. */
   onOpenConsultation: () => void;
@@ -111,10 +113,13 @@ function CountChip({ value, label, className }: { value: number; label: string; 
 /** Full report interface: scores, tabs, checks, recommendations, technical details. */
 export const WebsiteGraderReport: React.FC<ReportProps> = ({
   report,
+  storageConfigured,
+  emailNotice,
   onNewScan,
   onOpenFixForm
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   const categories = useMemo(() => report.categories, [report]);
 
@@ -126,6 +131,17 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
   /** Opens the scan-aware "Fix my website" page for the whole report. */
   const openReport = () => {
     onOpenFixForm('all');
+  };
+
+  const copyReportLink = async () => {
+    try {
+      const url = new URL('/tools/website-grader', window.location.origin);
+      url.searchParams.set('scan', report.scanId);
+      await navigator.clipboard.writeText(url.toString());
+      setCopyState('copied');
+    } catch {
+      setCopyState('failed');
+    }
   };
 
   const renderCheck = (check: Check) => {
@@ -308,7 +324,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
       {/* Category scores */}
       <section aria-label="Category scores">
         <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-white/50">Category scores</h3>
-        <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (
             <div key={cat.id} className="border border-white/10 bg-white/[0.02] p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -340,6 +356,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
 
       {/* Highest priority issues */}
       <section aria-label="Highest-priority issues">
+        <div id="grader-priority-fixes" className="scroll-mt-24" />
         <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-white/50">
           Highest-priority issues {report.recommendations.length > 0 ? `(${Math.min(report.recommendations.length, 5)} of ${report.recommendations.length})` : ''}
         </h3>
@@ -478,6 +495,16 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
             )}
           </div>
           <div className="grader-no-print flex flex-wrap gap-2">
+            {storageConfigured && report.scanId && (
+              <button
+                type="button"
+                onClick={copyReportLink}
+                className="inline-flex min-h-10 items-center gap-2 border border-white/20 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/75 transition-colors hover:border-white/50 hover:text-white"
+              >
+                <ClipboardCopy className="h-3.5 w-3.5" aria-hidden="true" />
+                {copyState === 'copied' ? 'Link copied' : copyState === 'failed' ? 'Copy failed' : 'Copy report link'}
+              </button>
+            )}
             <button
               type="button"
               onClick={onNewScan}
@@ -503,6 +530,39 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
           </div>
           <p className="mt-4 text-sm leading-relaxed text-white/75 sm:text-base">{report.executiveSummary}</p>
         </div>
+      </div>
+
+      {emailNotice && (
+        <div
+          role={emailNotice.status === 'sent' ? 'status' : 'alert'}
+          className={`flex items-start gap-3 border p-4 ${emailNotice.status === 'sent' ? 'border-emerald-400/30 bg-emerald-400/[0.06]' : 'border-amber-400/30 bg-amber-400/[0.06]'}`}
+        >
+          {emailNotice.status === 'sent'
+            ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
+            : <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden="true" />}
+          <p className="text-sm leading-relaxed text-white/80">
+            {emailNotice.message || (emailNotice.status === 'sent'
+              ? 'Your full audit PDF has been emailed.'
+              : 'The scan is ready, but the report email could not be delivered.')}
+          </p>
+        </div>
+      )}
+
+      <div className="grader-no-print flex flex-col gap-3 border-y border-white/10 py-4 sm:flex-row sm:items-center">
+        <button
+          type="button"
+          onClick={() => document.getElementById('grader-priority-fixes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          className="inline-flex min-h-11 items-center justify-center gap-2 border border-white/25 px-5 text-xs font-bold tracking-[0.08em] text-white transition-colors hover:border-white/60"
+        >
+          Review {report.recommendations.length} recommended {report.recommendations.length === 1 ? 'fix' : 'fixes'} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenFixForm(report.recommendations.some((item) => item.priority === 'critical' || item.priority === 'high') ? 'high-priority' : 'all')}
+          className="inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.08em] text-white transition-colors hover:bg-[#ffb347] hover:text-black"
+        >
+          {report.recommendations.length > 0 ? 'Help me fix these' : 'Request a scan review'} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
       </div>
 
       {/* Tabs */}
