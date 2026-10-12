@@ -322,6 +322,7 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
   };
 
   const reportDigest = report ? {
+    scanId: report.scanId,
     targetUrl: report.targetUrl,
     overallLabel: report.overall.score === null ? 'Not enough measurable data' : `${report.overall.score}/100 · ${report.overall.grade} · ${report.overall.label}`,
     summaryLine: `${report.summary.fail} failed, ${report.summary.warning} warnings, ${report.summary.pass} passed.`,

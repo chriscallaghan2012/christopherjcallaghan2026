@@ -4,16 +4,31 @@ import { safeFetch, SafeNetworkError } from '@/lib/grader/safeNetwork';
 import { normalizeTargetUrl } from '@/lib/grader/validate';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 20;
+export const maxDuration = 60;
 
 const ScanRequestSchema = z.object({
-  url: z.string().trim().min(1, 'Enter a page address to scan.').max(2048, 'That address is too long.')
+  url: z.string().trim().min(1, 'Enter a page address to scan.').max(2048, 'That address is too long.'),
+  region: z.enum(['gb', 'us', 'ie']).default('gb')
 });
 
 const rateBuckets = new Map<string, number[]>();
 const RATE_LIMIT = 6;
 const RATE_WINDOW_MS = 60 * 1000;
 const MAX_BODY_BYTES = 16 * 1024;
+const MAX_KEYWORDS = 8;
+const STOP_WORDS = new Set([
+  'about', 'after', 'also', 'and', 'are', 'for', 'from', 'get', 'how', 'into', 'its', 'more',
+  'our', 'out', 'the', 'their', 'this', 'with', 'your', 'you', 'was', 'what', 'when', 'where',
+  'which', 'who', 'will', 'have', 'has', 'can', 'not', 'all', 'best', 'new', 'page', 'home'
+]);
+
+interface KeywordRanking {
+  keyword: string;
+  evidence: string[];
+  position: number | null;
+  resultUrl: string | null;
+  status: 'ranked' | 'not-found' | 'unavailable';
+}
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -27,95 +42,94 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-function evaluateOnPageSeo(facts: ReturnType<typeof parsePage>, xRobotsTag: string | undefined) {
-  const robotsDirectives = [...facts.metaRobotsValues, ...(xRobotsTag ? [xRobotsTag] : [])];
-  const checks = [
-    {
-      name: 'Page title',
-      weight: 20,
-      status: !facts.title ? 'needs-work' as const : facts.titleLength >= 30 && facts.titleLength <= 60 ? 'good' as const : 'warning' as const,
-      evidence: facts.title ? `"${facts.title}" (${facts.titleLength} characters)` : 'No title tag was found.',
-      guidance: facts.title ? 'Keep it distinctive and put the page’s main topic near the beginning.' : 'Add a unique, descriptive <title> tag that clearly names this page.'
-    },
-    {
-      name: 'Meta description',
-      weight: 15,
-      status: !facts.metaDescription ? 'needs-work' as const : facts.metaDescriptionLength >= 70 && facts.metaDescriptionLength <= 160 ? 'good' as const : 'warning' as const,
-      evidence: facts.metaDescription ? `"${facts.metaDescription}" (${facts.metaDescriptionLength} characters)` : 'No meta description was found.',
-      guidance: facts.metaDescription ? 'Summarise the page accurately and make the next step clear; search engines may choose other page text.' : 'Add a useful page-specific summary. It can help explain the result, though it is not a direct ranking boost.'
-    },
-    {
-      name: 'Main heading (H1)',
-      weight: 15,
-      status: facts.h1Count === 1 ? 'good' as const : facts.h1Count === 0 ? 'needs-work' as const : 'warning' as const,
-      evidence: facts.h1Count === 0 ? 'No H1 heading was found.' : `${facts.h1Count} H1 heading${facts.h1Count === 1 ? '' : 's'} found${facts.h1Texts[0] ? `; first: "${facts.h1Texts[0]}"` : ''}.`,
-      guidance: facts.h1Count === 1 ? 'Keep one clear main heading that matches what the page is about.' : 'Use one clear H1 as the page’s main heading, then structure subsections beneath it.'
-    },
-    {
-      name: 'Heading structure',
-      weight: 10,
-      status: facts.headingLevels.includes(2) ? 'good' as const : 'warning' as const,
-      evidence: facts.headingLevels.length ? `${facts.headingLevels.length} heading${facts.headingLevels.length === 1 ? '' : 's'} found; ${facts.headingLevels.filter((level) => level === 2).length} H2 subheading${facts.headingLevels.filter((level) => level === 2).length === 1 ? '' : 's'}.` : 'No heading elements were found.',
-      guidance: 'Use descriptive subheadings to make the page easier to scan and its sections easier to understand.'
-    },
-    {
-      name: 'Canonical URL',
-      weight: 10,
-      status: facts.canonical ? 'good' as const : 'warning' as const,
-      evidence: facts.canonical ? `Canonical declared: ${facts.canonical}` : 'No canonical link was found.',
-      guidance: 'Declare the preferred URL when this page may have duplicate or alternate URLs.'
-    },
-    {
-      name: 'Mobile viewport',
-      weight: 10,
-      status: facts.viewport ? 'good' as const : 'needs-work' as const,
-      evidence: facts.viewport ? `Viewport declared: ${facts.viewport}` : 'No viewport meta tag was found.',
-      guidance: 'Add a responsive viewport meta tag so mobile browsers render the page at the device width.'
-    },
-    {
-      name: 'Image alternative text',
-      weight: 10,
-      status: facts.images.length === 0 ? 'not-applicable' as const : facts.images.every((image) => image.hasAlt) ? 'good' as const : 'warning' as const,
-      evidence: facts.images.length === 0 ? 'No images were found on this page.' : `${facts.images.filter((image) => image.hasAlt).length} of ${facts.images.length} images have an alt attribute.`,
-      guidance: 'Add concise, accurate alt text to informative images; use empty alt text for decorative images.'
-    },
-    {
-      name: 'Indexing instructions',
-      weight: 5,
-      status: robotsDirectives.some((value) => /\b(?:noindex|none)\b/i.test(value)) ? 'needs-work' as const : 'good' as const,
-      evidence: robotsDirectives.length ? `Robots directives: ${robotsDirectives.join('; ')}` : 'No page-level robots restriction was found.',
-      guidance: 'Check that noindex is intentional if you want this page to appear in search results.'
-    },
-    {
-      name: 'Social sharing metadata',
-      weight: 5,
-      status: facts.og.title && facts.og.description && facts.og.image ? 'good' as const : 'warning' as const,
-      evidence: [facts.og.title && 'og:title', facts.og.description && 'og:description', facts.og.image && 'og:image'].filter(Boolean).length
-        ? `${[facts.og.title && 'og:title', facts.og.description && 'og:description', facts.og.image && 'og:image'].filter(Boolean).join(', ')} found.`
-        : 'Open Graph title, description and image are incomplete.',
-      guidance: 'Complete Open Graph tags to make shared links display clearly; these mainly affect social previews, not Google rankings.'
-    }
+function extractPageKeywords(facts: ReturnType<typeof parsePage>): Array<{ keyword: string; evidence: string[] }> {
+  const sources = [
+    { label: 'Title', text: facts.title, weight: 5 },
+    ...facts.h1Texts.map((text) => ({ label: 'H1 heading', text, weight: 4 })),
+    { label: 'Meta description', text: facts.metaDescription, weight: 2 }
   ];
+  const candidates = new Map<string, { score: number; evidence: Set<string>; display: string }>();
 
-  const scoredChecks = checks.filter((check) => check.status !== 'not-applicable');
-  const availableWeight = scoredChecks.reduce((total, check) => total + check.weight, 0);
-  const earnedWeight = scoredChecks.reduce((total, check) => total + (check.status === 'good' ? check.weight : check.status === 'warning' ? check.weight * 0.5 : 0), 0);
-  const score = availableWeight ? Math.round((earnedWeight / availableWeight) * 100) : 0;
-  const rankedChecks = [...checks].sort((a, b) => {
-    const issueRank = (status: typeof a.status) => status === 'needs-work' ? 0 : status === 'warning' ? 1 : status === 'good' ? 2 : 3;
-    return issueRank(a.status) - issueRank(b.status) || b.weight - a.weight;
-  });
+  for (const source of sources) {
+    const words = source.text.toLocaleLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}'-]{2,}/gu) ?? [];
+    const filtered = words.filter((word) => !STOP_WORDS.has(word));
+    for (let size = 1; size <= 3; size += 1) {
+      for (let index = 0; index <= filtered.length - size; index += 1) {
+        const parts = filtered.slice(index, index + size);
+        const phrase = parts.join(' ');
+        if (phrase.length < 4) continue;
+        const current = candidates.get(phrase) ?? { score: 0, evidence: new Set<string>(), display: parts.join(' ') };
+        current.score += source.weight * (size === 1 ? 0.7 : 1);
+        current.evidence.add(source.label);
+        candidates.set(phrase, current);
+      }
+    }
+  }
 
-  return { score, checks: rankedChecks };
+  const ranked = [...candidates.entries()]
+    .sort((a, b) => b[1].score - a[1].score || b[0].length - a[0].length)
+    .slice(0, MAX_KEYWORDS);
+
+  return ranked.map(([keyword, data]) => ({
+    keyword: data.display,
+    evidence: [...data.evidence],
+  }));
+}
+
+async function lookupGooglePosition(
+  keyword: string,
+  hostname: string,
+  region: string,
+  apiKey: string
+): Promise<KeywordRanking> {
+  const url = new URL('https://serpapi.com/search.json');
+  url.searchParams.set('engine', 'google');
+  url.searchParams.set('q', keyword);
+  url.searchParams.set('gl', region);
+  url.searchParams.set('hl', 'en');
+  url.searchParams.set('num', '100');
+  url.searchParams.set('api_key', apiKey);
+
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(15000), cache: 'no-store' });
+    if (!response.ok) {
+      console.error('SERP provider returned an error status:', response.status);
+      return { keyword, evidence: [], position: null, resultUrl: null, status: 'unavailable' };
+    }
+    const data = await response.json() as {
+      error?: string;
+      organic_results?: Array<{ position?: number; link?: string }>;
+    };
+    if (data.error) {
+      console.error('SERP provider returned an error response.');
+      return { keyword, evidence: [], position: null, resultUrl: null, status: 'unavailable' };
+    }
+    const match = data.organic_results?.find((result) => {
+      if (!result.link) return false;
+      try {
+        return new URL(result.link).hostname.toLowerCase().replace(/^www\./, '') === hostname.replace(/^www\./, '');
+      } catch {
+        return false;
+      }
+    });
+    return {
+      keyword,
+      evidence: [],
+      position: match?.position ?? null,
+      resultUrl: match?.link ?? null,
+      status: match ? 'ranked' : 'not-found'
+    };
+  } catch (error) {
+    console.error('SERP provider request failed:', error);
+    return { keyword, evidence: [], position: null, resultUrl: null, status: 'unavailable' };
+  }
 }
 
 async function readBody(request: Request): Promise<string | null> {
   const contentLength = Number(request.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return null;
-
   const reader = request.body?.getReader();
   if (!reader) return '';
-
   const chunks: Uint8Array[] = [];
   let total = 0;
   while (true) {
@@ -181,16 +195,29 @@ export async function POST(request: Request) {
 
     const finalUrl = new URL(page.finalUrl);
     const facts = parsePage(page.body.toString('utf8'), finalUrl.origin);
-    const seo = evaluateOnPageSeo(facts, page.headers['x-robots-tag']);
+    const keywords = extractPageKeywords(facts);
+    const apiKey = process.env.SERPAPI_API_KEY;
+    const rankings = apiKey
+      ? await Promise.all(keywords.map((item) => lookupGooglePosition(item.keyword, finalUrl.hostname, parsed.data.region, apiKey)))
+      : keywords.map((item) => ({
+          keyword: item.keyword,
+          evidence: [],
+          position: null,
+          resultUrl: null,
+          status: 'unavailable' as const
+        }));
 
     return Response.json({
-      url: normalized.url,
       finalUrl: page.finalUrl,
       statusCode: page.status,
       title: facts.title,
       description: facts.metaDescription,
-      score: seo.score,
-      checks: seo.checks
+      keywords: keywords.map((item, index) => ({
+        ...rankings[index],
+        evidence: item.evidence
+      })),
+      rankingsConfigured: Boolean(apiKey),
+      region: parsed.data.region
     }, {
       headers: {
         'Cache-Control': 'no-store',

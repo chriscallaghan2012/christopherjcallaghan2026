@@ -49,10 +49,10 @@ export const TOOLS: ToolCardData[] = [
     tab: 'serp-preview',
     name: 'SERP Preview Tool',
     tagline: 'Scan your page SEO and preview its search snippet',
-    description: 'Enter a public page to read its real title and description, preview a Google-style desktop or mobile result, and get a weighted on-page SEO checklist. Scores are not live Google rankings.',
+    description: 'Enter a public page to extract its keywords, check Google positions when ranking data is connected, and preview its search snippet on desktop or mobile.',
     icon: Search,
     status: 'live',
-    capabilities: ['Live page metadata scan', 'Prioritised on-page SEO checks', 'Animated desktop and mobile preview'],
+    capabilities: ['Page-derived keyword suggestions', 'Google ranking table when configured', 'Animated desktop and mobile preview'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE SEO TOOL'
   },

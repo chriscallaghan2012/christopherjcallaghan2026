@@ -9,6 +9,7 @@ import {
   ClipboardCopy,
   CircleMinus,
   ExternalLink,
+  FileDown,
   Info,
   RefreshCw,
   XCircle
@@ -120,6 +121,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const [pdfState, setPdfState] = useState<'idle' | 'downloading' | 'failed'>('idle');
 
   const categories = useMemo(() => report.categories, [report]);
 
@@ -141,6 +143,32 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
       setCopyState('copied');
     } catch {
       setCopyState('failed');
+    }
+  };
+
+  const downloadReportPdf = async () => {
+    setPdfState('downloading');
+    try {
+      const response = await fetch('/api/tools/website-grader/report-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(report)
+      });
+      if (!response.ok) {
+        const payload = await response.json() as { error?: string };
+        throw new Error(payload.error || 'The PDF could not be created.');
+      }
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `website-audit-${report.scanId || 'report'}.pdf`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+      setPdfState('idle');
+    } catch (error) {
+      console.error('Website grader PDF download failed:', error);
+      setPdfState('failed');
     }
   };
 
@@ -507,11 +535,21 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
             )}
             <button
               type="button"
+              onClick={downloadReportPdf}
+              disabled={pdfState === 'downloading'}
+              className="inline-flex min-h-10 items-center gap-2 border border-white/20 bg-[#111114] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575]/60 hover:text-white disabled:cursor-wait disabled:opacity-60"
+            >
+              <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+              {pdfState === 'downloading' ? 'Creating PDF…' : 'Download PDF'}
+            </button>
+            <button
+              type="button"
               onClick={onNewScan}
               className="inline-flex min-h-10 items-center gap-2 border border-white/20 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/75 transition-colors hover:border-white/50 hover:text-white"
             >
               <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" /> New scan
             </button>
+            {pdfState === 'failed' && <span role="alert" className="self-center text-xs text-[#FF8098]">PDF download failed. Please try again.</span>}
           </div>
         </div>
       </div>
@@ -567,7 +605,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
 
       {/* Tabs */}
       <div>
-        <div className="scrollbar-none grader-no-print flex gap-1 overflow-x-auto border-b border-white/10 pb-px" role="tablist" aria-label="Report sections">
+        <div className="scrollbar-none grader-no-print sticky top-[68px] z-40 flex gap-1 overflow-x-auto border-b border-white/10 bg-[#08080a]/95 pb-px shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl" role="tablist" aria-label="Report sections">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (

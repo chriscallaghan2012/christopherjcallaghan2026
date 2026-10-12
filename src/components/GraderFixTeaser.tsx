@@ -3,6 +3,7 @@ import { CATEGORY_LABELS } from '../../lib/grader/types';
 import type { Recommendation } from '../../lib/grader/types';
 
 interface ReportDigest {
+  scanId: string;
   targetUrl: string;
   overallLabel: string;
   summaryLine: string;
@@ -32,10 +33,10 @@ export const GraderFixTeaser: React.FC<GraderFixTeaserProps> = ({ reportDigest, 
   };
 
   const fixHref = pickingSpecific
-    ? `/tools/website-grader/fix-my-website?issues=${encodeURIComponent(selected.join(','))}`
+    ? `/tools/website-grader/fix-my-website?scan=${encodeURIComponent(reportDigest.scanId)}&issues=${encodeURIComponent(selected.join(','))}`
     : pick === ISSUE_OPTIONS[1]
-      ? '/tools/website-grader/fix-my-website?issues=high-priority'
-      : '/tools/website-grader/fix-my-website?issues=all';
+      ? `/tools/website-grader/fix-my-website?scan=${encodeURIComponent(reportDigest.scanId)}&issues=high-priority`
+      : `/tools/website-grader/fix-my-website?scan=${encodeURIComponent(reportDigest.scanId)}&issues=all`;
 
   return (
     <section className="border-b border-white/10 px-5 py-12 md:px-8" aria-label="Fix these findings">

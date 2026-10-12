@@ -1,27 +1,26 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, Copy, LoaderCircle, Monitor, Search, Smartphone, Sparkles } from 'lucide-react';
+import { ArrowRight, Check, CircleAlert, Copy, ExternalLink, LoaderCircle, Monitor, Search, Smartphone, Sparkles } from 'lucide-react';
 
 type PreviewMode = 'desktop' | 'mobile';
-type CheckStatus = 'good' | 'warning' | 'needs-work' | 'not-applicable';
 
-interface SeoCheck {
-  name: string;
-  status: CheckStatus;
-  weight: number;
-  evidence: string;
-  guidance: string;
+interface KeywordRanking {
+  keyword: string;
+  evidence: string[];
+  position: number | null;
+  resultUrl: string | null;
+  status: 'ranked' | 'not-found' | 'unavailable';
 }
 
 interface ScanResult {
-  url: string;
   finalUrl: string;
   statusCode: number;
   title: string;
   description: string;
-  score: number;
-  checks: SeoCheck[];
+  keywords: KeywordRanking[];
+  rankingsConfigured: boolean;
+  region: string;
 }
 
 interface SnippetWidths {
@@ -99,13 +98,6 @@ function escapeHtml(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-function statusLabel(status: CheckStatus): string {
-  if (status === 'good') return 'Looking good';
-  if (status === 'warning') return 'Could improve';
-  if (status === 'needs-work') return 'Needs attention';
-  return 'Not applicable';
-}
-
 export const SerpPreviewTool: React.FC = () => {
   const [pageUrl, setPageUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -115,6 +107,7 @@ export const SerpPreviewTool: React.FC = () => {
   const [copyFailed, setCopyFailed] = useState(false);
   const [widths, setWidths] = useState<SnippetWidths>({ title: { width: 0, lines: 0 }, description: { width: 0, lines: 0 } });
   const [scan, setScan] = useState<ScanResult | null>(null);
+  const [region, setRegion] = useState('gb');
   const [isScanning, setIsScanning] = useState(false);
   const [scanError, setScanError] = useState('');
 
@@ -148,7 +141,7 @@ export const SerpPreviewTool: React.FC = () => {
       const response = await fetch('/api/tools/serp-preview/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: pageUrl.trim() })
+        body: JSON.stringify({ url: pageUrl.trim(), region })
       });
       const payload = await response.json() as ScanResult & { error?: string };
       if (!response.ok) {
@@ -193,11 +186,11 @@ export const SerpPreviewTool: React.FC = () => {
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#FF5575]">Free SEO tool</p>
           <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">See how your page could show up on Google</h1>
           <p className="mt-4 text-sm leading-relaxed text-white/65 sm:text-base">
-            Enter a page address to pull its real title and description, preview the search snippet, and get a prioritised check of its on-page SEO.
+            Enter a page address to read its real title and description, find keywords from its on-page content, check Google positions when ranking data is connected, and preview the search snippet.
           </p>
         </header>
 
-        <form onSubmit={scanWebsite} className="mt-8 grid gap-3 border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5">
+        <form onSubmit={scanWebsite} className="mt-8 grid gap-3 border border-white/10 bg-white/[0.03] p-4 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end sm:p-5">
           <div>
             <label htmlFor="serp-page-url" className={labelClass}>Your page or domain</label>
             <input
@@ -213,6 +206,14 @@ export const SerpPreviewTool: React.FC = () => {
               aria-describedby="serp-url-help"
             />
             <p id="serp-url-help" className="mt-1.5 text-xs text-white/45">We’ll scan the page you enter. No need to type https://.</p>
+          </div>
+          <div>
+            <label htmlFor="serp-region" className={labelClass}>Google region</label>
+            <select id="serp-region" value={region} onChange={(event) => setRegion(event.target.value)} className={`${inputClass} pr-8`}>
+              <option value="gb">United Kingdom</option>
+              <option value="us">United States</option>
+              <option value="ie">Ireland</option>
+            </select>
           </div>
           <button type="submit" disabled={isScanning} className="inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.08em] text-white transition-colors hover:bg-[#ffb347] hover:text-black disabled:cursor-wait disabled:opacity-70">
             {isScanning ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Search className="h-4 w-4" aria-hidden="true" />}
@@ -234,28 +235,80 @@ export const SerpPreviewTool: React.FC = () => {
             <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
               <span className="block h-full w-1/3 animate-pulse rounded-full bg-[#4285F4]" />
             </span>
-            <span className="text-xs text-white/55">Reading page titles, headings and SEO signals…</span>
+            <span className="text-xs text-white/55">Reading page content and finding keyword topics…</span>
           </div>
         )}
 
         {scan && (
-          <section aria-labelledby="serp-score-heading" className="mt-6 grid gap-4 border border-emerald-300/20 bg-emerald-300/[0.04] p-4 sm:grid-cols-[auto_1fr] sm:items-center sm:p-5">
-            <div className="flex h-20 w-20 flex-col items-center justify-center rounded-full border-2 border-emerald-300/50 text-emerald-200">
-              <span className="text-2xl font-black leading-none">{scan.score}</span>
-              <span className="mt-1 font-mono text-[9px] uppercase tracking-wider">/ 100</span>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200">On-page SEO snapshot · HTTP {scan.statusCode}</p>
-              <h2 id="serp-score-heading" className="mt-1 text-xl font-black text-white">Your page’s search-readiness score</h2>
-              <p className="mt-1 break-all text-xs text-white/50">{scan.finalUrl}</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/65">This score reflects the on-page signals we could read on this one page. It is not a Google ranking or a promise of where your page will appear.</p>
-            </div>
+          <section aria-labelledby="serp-scan-heading" className="mt-6 border border-white/10 bg-white/[0.025] p-4 sm:p-5">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">Page scanned · HTTP {scan.statusCode}</p>
+            <h2 id="serp-scan-heading" className="mt-1 text-lg font-black text-white">Keywords found in your page</h2>
+            <p className="mt-1 break-all text-xs text-white/50">{scan.finalUrl}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/65">These are candidate search phrases extracted from the page title, main heading and description. They are not keyword-volume estimates or SEO scores.</p>
           </section>
         )}
 
         {scan && (
           <div className="mt-9 grid items-start gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
             <div className="space-y-7">
+              <section aria-labelledby="serp-keyword-rankings-title">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF5575]">Google · {scan.region.toUpperCase()}</p>
+                    <h2 id="serp-keyword-rankings-title" className="mt-1 text-lg font-black text-white">Keyword ranking table</h2>
+                  </div>
+                </div>
+                <div className="mt-3 overflow-x-auto border border-white/10">
+                  <table className="w-full min-w-[540px] border-collapse text-left text-xs">
+                    <thead className="bg-white/[0.04] font-mono uppercase tracking-[0.1em] text-white/50">
+                      <tr>
+                        <th scope="col" className="px-3 py-3">Keyword</th>
+                        <th scope="col" className="px-3 py-3">Found in</th>
+                        <th scope="col" className="px-3 py-3">Google position</th>
+                        <th scope="col" className="px-3 py-3">Search</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/10">
+                      {scan.keywords.map((item) => (
+                        <tr key={item.keyword} className="align-top">
+                          <th scope="row" className="max-w-44 px-3 py-3 font-semibold text-white">{item.keyword}</th>
+                          <td className="px-3 py-3 text-white/55">{item.evidence.join(', ')}</td>
+                          <td className="px-3 py-3 font-mono font-bold text-white">
+                            {item.position !== null
+                              ? item.resultUrl
+                                ? <a href={item.resultUrl} target="_blank" rel="noreferrer" className="text-[#8ab4f8] hover:underline">#{item.position}</a>
+                                : `#${item.position}`
+                              : item.status === 'not-found'
+                                ? 'Outside top 100'
+                                : scan.rankingsConfigured
+                                  ? 'Unavailable'
+                                  : 'Not connected'}
+                          </td>
+                          <td className="px-3 py-3">
+                            <a
+                              href={`https://www.google.com/search?q=${encodeURIComponent(item.keyword)}&gl=${encodeURIComponent(scan.region)}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-[#8ab4f8] hover:underline"
+                            >
+                              Google <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                      {scan.keywords.length === 0 && (
+                        <tr><td colSpan={4} className="px-3 py-5 text-center text-white/50">No clear keyword phrases were found in the page metadata.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-white/50">
+                  {scan.rankingsConfigured
+                    ? 'Positions are organic Google results from the selected region and can change over time. “Outside top 100” means this page was not found in the results returned for that keyword. SERP provider usage may incur charges.'
+                    : 'Live positions need a SERP data API. The ranking provider is not configured yet, so this table shows page-derived keywords and search links without inventing rank numbers. Configure SERPAPI_API_KEY on the server to enable position checks; provider usage may incur charges.'}
+                </p>
+              </section>
+
               <form className="space-y-5" onSubmit={(event) => event.preventDefault()}>
                 <div>
                   <label htmlFor="serp-title" className={labelClass}>Page title</label>
@@ -283,39 +336,6 @@ export const SerpPreviewTool: React.FC = () => {
                 </div>
               </form>
 
-              <section aria-labelledby="onpage-checks-title" className="border-t border-white/10 pt-6">
-                <div className="flex items-end justify-between gap-3">
-                  <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF5575]">Prioritised checklist</p>
-                    <h2 id="onpage-checks-title" className="mt-1 text-lg font-black text-white">On-page SEO signals</h2>
-                  </div>
-                  <span className="text-[10px] text-white/40">Ordered by this tool’s check weights</span>
-                </div>
-                <ol className="mt-4 space-y-2">
-                  {scan.checks.filter((check) => check.status !== 'good' && check.status !== 'not-applicable').map((check, index) => (
-                    <li key={check.name} className="border border-white/10 bg-white/[0.025] p-3">
-                      <div className="flex items-start gap-3">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FF003C]/15 font-mono text-xs font-bold text-[#FF8098]">{index + 1}</span>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <h3 className="text-sm font-bold text-white">{check.name}</h3>
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${check.status === 'needs-work' ? 'text-[#FF8098]' : 'text-amber-200'}`}>{statusLabel(check.status)} · {check.weight} pts</span>
-                          </div>
-                          <p className="mt-1 text-xs leading-relaxed text-white/50">{check.evidence}</p>
-                          <p className="mt-1.5 flex items-start gap-2 text-xs leading-relaxed text-white/70"><ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#FF5575]" aria-hidden="true" />{check.guidance}</p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                  {scan.checks.every((check) => check.status === 'good' || check.status === 'not-applicable') && (
-                    <li className="flex items-center gap-2 border border-emerald-300/20 bg-emerald-300/[0.04] p-3 text-sm text-emerald-100"><Check className="h-4 w-4" aria-hidden="true" />No high-priority on-page issues were detected in this snapshot.</li>
-                  )}
-                </ol>
-                <details className="mt-3">
-                  <summary className="cursor-pointer text-xs font-bold text-white/55 hover:text-white">What does on-page SEO mean?</summary>
-                  <p className="mt-2 text-xs leading-relaxed text-white/55">On-page SEO is the information and structure on an individual page that helps search engines understand its topic: the page title, description, headings, canonical URL, mobile viewport, index instructions and descriptive image text. These checks show what was present in the page HTML we fetched—not backlinks, competition, search demand, indexing history or live rankings. The score and check weights are this tool’s diagnostic, not Google’s ranking formula.</p>
-                </details>
-              </section>
             </div>
 
             <section aria-labelledby="serp-preview-title" className="min-w-0 border-t border-white/10 pt-6 lg:border-t-0 lg:pt-0">

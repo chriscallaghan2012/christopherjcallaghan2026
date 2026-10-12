@@ -1,6 +1,17 @@
 import PDFDocument from 'pdfkit';
-import type { CategoryId, ScanReport } from './types';
+import type { CategoryId, CategoryCounts, Check, Recommendation, ScanReport } from './types';
 import { CATEGORY_LABELS } from './types';
+
+export type ReportPdfInput = Pick<
+  ScanReport,
+  'targetUrl' | 'finalUrl' | 'createdAt' | 'scanId' | 'overall' | 'summary' | 'executiveSummary' | 'limitations' | 'version'
+> & {
+  categories: Array<Pick<ScanReport['categories'][number], 'id' | 'label' | 'score' | 'counts'> & {
+    checks: Array<Pick<Check, 'status' | 'name' | 'explanation' | 'evidence' | 'fix' | 'docs'>>;
+  }>;
+  recommendations: Array<Pick<Recommendation, 'priority' | 'title' | 'category' | 'whatDetected' | 'whyItMatters' | 'fix' | 'estimatedImpact' | 'difficulty'>>;
+  scanMeta: Pick<ScanReport['scanMeta'], 'httpStatus' | 'pageBytes' | 'durationMs' | 'checksRun' | 'checksNotMeasured'>;
+};
 
 const COLORS = {
   red: '#e6003c',
@@ -57,7 +68,7 @@ function categoryName(id: CategoryId): string {
 }
 
 /** Creates a printable, complete copy of a completed website audit. */
-export async function buildReportPdf(report: ScanReport): Promise<Buffer> {
+export async function buildReportPdf(report: ReportPdfInput): Promise<Buffer> {
   const doc = new PDFDocument({
     size: 'A4',
     margins: { top: 48, right: 48, bottom: 48, left: 48 },
