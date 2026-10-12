@@ -95,7 +95,7 @@ export type PublicPageTab = 'about' | 'contact' | 'seo-services' | 'local-seo' |
 
 export type BuildServiceSlug = Exclude<PublicPageTab, 'about' | 'contact'>;
 
-export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | PublicPageTab;
+export type ScreenTab = 'home' | 'build' | 'start' | 'package' | 'classes' | 'projects' | 'services' | 'expertise' | 'ai-tool' | 'email-sandbox' | 'tools' | 'website-grader' | PublicPageTab;
 
 export interface ArchitectureBlueprint {
   title: string;
@@ -132,4 +132,14 @@ export interface VentureStageConfig {
   timeToMarket: string;
   focus: string;
   badge?: string;
+}
+
+/** Context carried from the Website Grader into the consultation enquiry flow. */
+export interface GraderEnquiryContext {
+  kind: 'finding' | 'report';
+  heading: string;
+  category?: string;
+  targetUrl: string;
+  notes: string;
+  scope: string;
 }

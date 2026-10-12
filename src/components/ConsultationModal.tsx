@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, Send, CheckCircle2, RefreshCw, Sparkles, Bot, Gauge } from 'lucide-react';
-import { ServiceItem, AIStudioContext, ArchitectureBlueprint } from '../types';
+import { ServiceItem, AIStudioContext, ArchitectureBlueprint, GraderEnquiryContext } from '../types';
 
 interface ConsultationModalProps {
   isOpen: boolean;
   onClose: () => void;
   preselectedService?: ServiceItem | null;
   aiContext?: AIStudioContext | null;
+  /** Website Grader context: prefills scope + notes with the audit finding/report. */
+  graderContext?: GraderEnquiryContext | null;
 }
 
 const STANDARD_SCOPES = [
@@ -46,11 +48,24 @@ function formatBlueprintNotes(bp: ArchitectureBlueprint): string {
   ].join('\n');
 }
 
+/** Maps a grader service category onto the closest selectable form scope. */
+function resolveGraderScope(scope: string): string {
+  const value = scope.toLowerCase();
+  if (value.includes('seo')) return 'SEO';
+  if (value.includes('ai')) return 'AI and automation';
+  if (value.includes('performance') || value.includes('accessibility') || value.includes('security') || value.includes('redesign') || value.includes('development')) {
+    return 'Build a website or app';
+  }
+  if (value.includes('maintenance') || value.includes('optimisation')) return 'Build something';
+  return STANDARD_SCOPES.includes(scope) ? scope : 'Something else';
+}
+
 export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   isOpen,
   onClose,
   preselectedService,
-  aiContext
+  aiContext,
+  graderContext
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -83,21 +98,24 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  // When opened from the AI Architecture Studio, carry the generated blueprint
-  // into the real consultation form: pre-fill scope + project notes.
+  // When opened from the AI Architecture Studio or the Website Grader, carry
+  // that context into the real consultation form: pre-fill scope + project notes.
   useEffect(() => {
     if (!isOpen) return;
 
-    if (aiContext?.blueprint) {
+    if (graderContext) {
+      setPackageScope(resolveGraderScope(graderContext.scope));
+      setDetails(graderContext.notes);
+    } else if (aiContext?.blueprint) {
       setPackageScope(aiContext.blueprint.title);
       setDetails(formatBlueprintNotes(aiContext.blueprint));
     } else if (!STANDARD_SCOPES.includes(packageScope)) {
       setPackageScope('Build something');
     }
-    // Intentionally keyed on (isOpen, aiContext) only - running on every
+    // Intentionally keyed on (isOpen, aiContext, graderContext) only - running on every
     // packageScope/details keystroke would clobber the user's edits.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, aiContext]);
+  }, [isOpen, aiContext, graderContext]);
 
   if (!isOpen) return null;
 
@@ -333,7 +351,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 rounded-xl bg-[#FF003C] text-white font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] mt-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-xl bg-[#FF003C] text-[#171717] font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] mt-2 disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

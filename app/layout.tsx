@@ -86,29 +86,57 @@ export default function RootLayout({
 }) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Christopher J. Callaghan',
-    alternateName: ['Christopher J Callaghan', 'Christopher Callaghan'],
-    description: 'Manchester-based full-stack developer, AI builder and business creator building websites, applications, software, integrations and digital products.',
-    jobTitle: 'Full-Stack Developer, AI Builder and Business Creator',
-    url: 'https://christopherjcallaghan.com',
-    sameAs: [
-      'https://www.linkedin.com/in/webdevelopermanchester/'
-    ],
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Manchester',
-      addressCountry: 'UK'
-    },
-    knowsAbout: [
-      'Next.js 16',
-      'React 19',
-      'TypeScript',
-      'Websites and Applications',
-      'Custom Software',
-      'Artificial Intelligence',
-      'Digital Businesses',
-      'Automation'
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': 'https://christopherjcallaghan.com/#person',
+        name: 'Christopher J. Callaghan',
+        alternateName: ['Christopher J Callaghan', 'Christopher Callaghan'],
+        description: 'Manchester-based full-stack developer, AI builder and business creator building websites, applications, software, integrations and digital products.',
+        jobTitle: 'Full-Stack Developer, AI Builder and Business Creator',
+        url: 'https://christopherjcallaghan.com',
+        sameAs: [
+          'https://www.linkedin.com/in/webdevelopermanchester/'
+        ],
+        address: { '@id': 'https://christopherjcallaghan.com/#address' },
+        worksFor: { '@id': 'https://christopherjcallaghan.com/#organization' },
+        knowsAbout: [
+          'Next.js 16',
+          'React 19',
+          'TypeScript',
+          'Websites and Applications',
+          'Custom Software',
+          'Artificial Intelligence',
+          'Digital Businesses',
+          'Automation'
+        ]
+      },
+      {
+        '@type': 'PostalAddress',
+        '@id': 'https://christopherjcallaghan.com/#address',
+        addressLocality: 'Manchester',
+        addressRegion: 'Greater Manchester',
+        addressCountry: 'GB'
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://christopherjcallaghan.com/#organization',
+        name: 'Christopher J. Callaghan',
+        url: 'https://christopherjcallaghan.com',
+        description: 'Independent full-stack development practice based in Manchester, building websites, applications, software and digital products.',
+        founder: { '@id': 'https://christopherjcallaghan.com/#person' },
+        sameAs: ['https://www.linkedin.com/in/webdevelopermanchester/'],
+        address: { '@id': 'https://christopherjcallaghan.com/#address' }
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://christopherjcallaghan.com/#website',
+        url: 'https://christopherjcallaghan.com',
+        name: 'Christopher J. Callaghan',
+        description: 'Websites, apps, e-commerce and custom software, built and improved by a freelance web developer in Manchester.',
+        inLanguage: 'en-GB',
+        publisher: { '@id': 'https://christopherjcallaghan.com/#organization' }
+      }
     ]
   };
 

@@ -594,6 +594,26 @@ select:focus {
   border-radius: 4px;
 }
 
+/* Website Grader: print-friendly report styling.
+   Hide interactive chrome, and when a report exists print only the report. */
+@media print {
+  .grader-no-print {
+    display: none !important;
+  }
+
+  .grader-page.has-report > section {
+    display: none !important;
+  }
+
+  .grader-page.has-report > section:has(.grader-report) {
+    display: block !important;
+  }
+
+  .grader-report details[open] > summary {
+    display: none;
+  }
+}
+
 .admin-login-input:focus-visible {
   outline-color: #ff003c;
   border-radius: 2px;

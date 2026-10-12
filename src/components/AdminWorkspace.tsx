@@ -185,7 +185,7 @@ export const AdminWorkspace: React.FC = () => {
           <input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="admin-login-input mt-2 min-h-12 w-full border border-white/15 bg-white/[0.03] px-4 font-sans text-sm normal-case tracking-normal text-white outline-none focus:border-[#FFB347]" />
         </label>
         {error && <p role="alert" className="text-sm text-[#FF6F91]">{error}</p>}
-        <button disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-white disabled:opacity-60">{isWorking && <LoaderCircle className="h-4 w-4 animate-spin" />}SIGN IN</button>
+        <button disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-[#171717] disabled:opacity-60">{isWorking && <LoaderCircle className="h-4 w-4 animate-spin" />}SIGN IN</button>
       </form>
     </main>;
   }
@@ -239,7 +239,7 @@ export const AdminWorkspace: React.FC = () => {
         {(error || notice) && <p role={error ? 'alert' : 'status'} className={`mt-5 text-sm ${error ? 'text-[#FF6F91]' : 'text-[#FFB347]'}`}>{error || notice}</p>}
         <div className="mt-6 flex flex-wrap gap-3 border-t border-white/10 pt-5">
           <button onClick={() => savePost('draft')} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 border border-white/20 px-4 font-mono text-xs font-bold tracking-widest text-white disabled:opacity-50"><Save className="h-4 w-4" /> SAVE DRAFT</button>
-          <button onClick={() => savePost('published')} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-white disabled:opacity-50"><Send className="h-4 w-4" /> PUBLISH</button>
+          <button onClick={() => savePost('published')} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-widest text-[#171717] disabled:opacity-50"><Send className="h-4 w-4" /> PUBLISH</button>
           {post.id && <button onClick={removePost} disabled={isWorking} className="inline-flex min-h-11 items-center gap-2 border border-[#FF6F91]/40 px-4 font-mono text-xs font-bold tracking-widest text-[#FF6F91] disabled:opacity-50"><Trash2 className="h-4 w-4" /> DELETE</button>}
         </div>
       </section>

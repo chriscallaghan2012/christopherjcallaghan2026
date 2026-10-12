@@ -129,7 +129,7 @@ export function ClassCheckoutPage() {
               <div className="mt-8 border border-white/20 bg-white/[0.04] p-6">
                 <p className="font-bold text-white">Your cart is empty.</p>
                 <p className="mt-2 text-sm leading-relaxed text-white/75">Choose a one-to-one session or MVP bootcamp to continue.</p>
-                <a href="/classes#website-package" className="mt-5 inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.08em] text-white hover:bg-[#df0035]">CHOOSE A CLASS <ArrowRight className="h-4 w-4" /></a>
+                <a href="/classes#website-package" className="mt-5 inline-flex min-h-11 items-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.08em] text-[#171717] hover:bg-[#FF2A55]">CHOOSE A CLASS <ArrowRight className="h-4 w-4" /></a>
               </div>
             )}
 
@@ -140,7 +140,7 @@ export function ClassCheckoutPage() {
                 <div className="flex h-12 w-12 items-center justify-center border border-emerald-300/40 bg-emerald-300/10 text-emerald-200"><Check className="h-6 w-6" /></div>
                 <h2 className="mt-5 text-2xl font-black text-white">Thanks for your booking.</h2>
                 <p className="mt-3 text-sm leading-relaxed text-white/80">Stripe has returned you to checkout. Your purchase will show in your account once the payment confirmation arrives.</p>
-                <a href="/account" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-white hover:bg-[#df0035]">GO TO YOUR ACCOUNT <ArrowRight className="h-4 w-4" /></a>
+                <a href="/account" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black tracking-[0.1em] text-[#171717] hover:bg-[#FF2A55]">GO TO YOUR ACCOUNT <ArrowRight className="h-4 w-4" /></a>
               </section>
             )}
 
@@ -169,7 +169,7 @@ export function ClassCheckoutPage() {
                 )}
 
                 {!clientSecret && (
-                  <button type="submit" disabled={isSubmitting || (accountMode === 'register' && !customer && (!name.trim() || !email.trim() || password.length < 12)) || (accountMode === 'login' && !customer && (!email.trim() || !password))} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 py-3 text-xs font-black tracking-[0.1em] text-white transition-colors hover:bg-[#df0035] disabled:cursor-not-allowed disabled:opacity-45">
+                  <button type="submit" disabled={isSubmitting || (accountMode === 'register' && !customer && (!name.trim() || !email.trim() || password.length < 12)) || (accountMode === 'login' && !customer && (!email.trim() || !password))} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#FF003C] px-5 py-3 text-xs font-black tracking-[0.1em] text-[#171717] transition-colors hover:bg-[#FF2A55] disabled:cursor-not-allowed disabled:opacity-45">
                     {isSubmitting ? <><LoaderCircle className="h-4 w-4 animate-spin" /> PREPARING SECURE PAYMENT</> : <>{customer ? 'CONTINUE TO PAYMENT' : accountMode === 'register' ? 'CREATE ACCOUNT & CONTINUE' : 'SIGN IN & CONTINUE'} <ArrowRight className="h-4 w-4" /></>}
                   </button>
                 )}

@@ -300,7 +300,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-xl bg-[#FF003C] text-white font-black text-xs uppercase tracking-[0.25em] shadow-[0_0_30px_rgba(255,0,60,0.45)] hover:shadow-[0_0_45px_rgba(255,0,60,0.7)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                    className="w-full py-4 rounded-xl bg-[#FF003C] text-[#171717] font-black text-xs uppercase tracking-[0.25em] shadow-[0_0_30px_rgba(255,0,60,0.45)] hover:shadow-[0_0_45px_rgba(255,0,60,0.7)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>

@@ -26,6 +26,7 @@ export const SimpleFooter: React.FC<SimpleFooterProps> = ({ onNavigate }) => (
             <button onClick={() => onNavigate('projects')} className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">WORK</button>
             <a href="/contact" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">CONTACT</a>
             <a href="/blog" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">BLOG</a>
+            <a href="/tools" className="font-mono text-[10px] font-bold tracking-[0.12em] text-white/65 transition-colors hover:text-[#FF003C]">TOOLS</a>
           </div>
           <div className="mt-4 flex items-center gap-4">
             <a href="https://www.linkedin.com/in/webdevelopermanchester/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-white/65 transition-colors hover:text-[#FF003C]"><Linkedin className="h-4 w-4" /></a>

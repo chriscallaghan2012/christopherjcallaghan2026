@@ -105,7 +105,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               <div className="pt-4 border-t border-white/5 mt-auto">
                 <button
                   onClick={() => onSelectServiceForInquiry(service)}
-                  className="w-full flex items-center justify-between py-2.5 px-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono font-bold uppercase tracking-wider text-white/70 group-hover:bg-[#FF003C] group-hover:text-white group-hover:border-transparent transition-all"
+                  className="w-full flex items-center justify-between py-2.5 px-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono font-bold uppercase tracking-wider text-white/70 group-hover:bg-[#FF003C] group-hover:text-[#171717] group-hover:border-transparent transition-all"
                 >
                   <span>Request Scope</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

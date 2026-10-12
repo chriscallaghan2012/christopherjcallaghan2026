@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </article>
         <div className="border-t border-white/10 pt-8">
           <p className="text-sm text-white/60">Working on something similar?</p>
-          <a href="/build" className="mt-3 inline-flex min-h-11 items-center bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-[0.1em] text-white hover:bg-[#df0035]">START A PROJECT</a>
+          <a href="/build" className="mt-3 inline-flex min-h-11 items-center bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-[0.1em] text-[#171717] hover:bg-[#FF2A55]">START A PROJECT</a>
         </div>
       </main>
       <BlogFooter />

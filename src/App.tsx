@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab, BuildServiceSlug } from './types';
+import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab, BuildServiceSlug, GraderEnquiryContext } from './types';
 import { PUBLIC_PAGES } from './data/sitePages';
 import { SimpleNavbar } from './components/SimpleNavbar';
 import { Hero } from './components/Hero';
 import { AcademySection, HomeClosingSections, HomeSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
 import { SimpleFooter } from './components/SimpleFooter';
+import { ToolsDirectory } from './components/ToolsDirectory';
+import { WebsiteGrader } from './components/WebsiteGrader';
 const FiberNetwork = dynamic(() => import('./components/FiberNetwork').then((module) => module.FiberNetwork), { ssr: false, loading: () => null });
 
 const SpecialtyDomains = dynamic(() => import('./components/SpecialtyDomains').then((module) => module.SpecialtyDomains));
@@ -24,7 +26,7 @@ const PublicPageContent = dynamic(() => import('./components/PublicPageContent')
 const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').then((module) => module.ProjectBriefPage));
 const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -40,6 +42,8 @@ function getTabFromBrowser(): ScreenTab {
   if (path === '/classes') return 'classes';
   if (path === '/projects' || path === '/services' || path === '/expertise') return path.slice(1) as ScreenTab;
   if (path === '/email-sandbox') return 'email-sandbox';
+  if (path === '/tools') return 'tools';
+  if (path === '/tools/website-grader') return 'website-grader';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
   if (page) return page.tab;
   const requested = new URLSearchParams(window.location.search).get('tab');
@@ -53,6 +57,8 @@ function getTabFromBrowser(): ScreenTab {
 function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'home') return '/';
   if (tab === 'build' || tab === 'start' || tab === 'package' || tab === 'classes' || tab === 'email-sandbox') return `/${tab}`;
+  if (tab === 'tools') return '/tools';
+  if (tab === 'website-grader') return '/tools/website-grader';
   if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
@@ -66,6 +72,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<ServiceItem | null>(null);
   const [aiContext, setAiContext] = useState<AIStudioContext | null>(null);
+  const [graderContext, setGraderContext] = useState<GraderEnquiryContext | null>(null);
 
   // Keep the SPA tab state in sync with the URL so direct visits to
   // /package and /email-sandbox (and ?tab=... URLs) land on the right screen.
@@ -91,18 +98,29 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
   const handleSelectServiceForInquiry = (service: ServiceItem) => {
     setPreselectedService(service);
     setAiContext(null);
+    setGraderContext(null);
     setIsConsultationOpen(true);
   };
 
   const handleOpenConsultation = (context?: AIStudioContext) => {
     setPreselectedService(null);
     setAiContext(context ?? null);
+    setGraderContext(null);
+    setIsConsultationOpen(true);
+  };
+
+  /** Opens the enquiry form from the Website Grader, prefilled with audit context. */
+  const handleOpenConsultationFromGrader = (context?: GraderEnquiryContext) => {
+    setPreselectedService(null);
+    setAiContext(null);
+    setGraderContext(context ?? null);
     setIsConsultationOpen(true);
   };
 
   const handleCloseConsultation = () => {
     setIsConsultationOpen(false);
     setAiContext(null);
+    setGraderContext(null);
   };
 
   return (
@@ -231,6 +249,12 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
             <EmailTemplateSandbox />
           </div>
         )}
+
+        {currentTab === 'tools' && <ToolsDirectory />}
+
+        {currentTab === 'website-grader' && (
+          <WebsiteGrader onOpenConsultation={handleOpenConsultationFromGrader} />
+        )}
       </main>
 
       {/* Footer */}
@@ -251,6 +275,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
         onClose={handleCloseConsultation}
         preselectedService={preselectedService}
         aiContext={aiContext}
+        graderContext={graderContext}
       />}
     </div>
   );

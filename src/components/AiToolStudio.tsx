@@ -189,7 +189,7 @@ Architected by Christopher J. Callaghan (christopherjcallaghan.com)
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="px-6 py-3 rounded-xl bg-[#FF003C] text-white font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50"
+                className="px-6 py-3 rounded-xl bg-[#FF003C] text-[#171717] font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(255,0,60,0.4)] hover:shadow-[0_0_35px_rgba(255,0,60,0.6)] transition-all flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50"
               >
                 {isGenerating ? (
                   <>
@@ -274,7 +274,7 @@ Architected by Christopher J. Callaghan (christopherjcallaghan.com)
                       scale: concurrency
                     })
                   }
-                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#FF003C] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
+                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#FF003C] text-[#171717] text-xs font-mono font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
                 >
                   <span>Build This</span>
                   <ArrowRight className="w-3.5 h-3.5" />
