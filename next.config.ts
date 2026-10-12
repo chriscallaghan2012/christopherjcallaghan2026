@@ -18,7 +18,8 @@ const nextConfig: NextConfig = {
       { source: '/google-maps', destination: '/local-seo', permanent: true },
       { source: '/ppc', destination: '/google-ads-management', permanent: true },
       { source: '/social-media', destination: '/social-media-marketing', permanent: true },
-      { source: '/ai-solutions', destination: '/ai-automation', permanent: true }
+      { source: '/ai-solutions', destination: '/ai-automation', permanent: true },
+      { source: '/tools/serp-preview', destination: '/tools', permanent: true }
     ];
   }
 };

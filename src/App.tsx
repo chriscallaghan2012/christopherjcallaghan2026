@@ -13,7 +13,6 @@ import { ToolsDirectory } from './components/ToolsDirectory';
 import { WebsiteGrader } from './components/WebsiteGrader';
 import { LlmsTxtBuilder } from './components/LlmsTxtBuilder';
 import { BusinessLaunchChecklist } from './components/BusinessLaunchChecklist';
-import { SerpPreviewTool } from './components/SerpPreviewTool';
 const FiberNetwork = dynamic(() => import('./components/FiberNetwork').then((module) => module.FiberNetwork), { ssr: false, loading: () => null });
 
 const SpecialtyDomains = dynamic(() => import('./components/SpecialtyDomains').then((module) => module.SpecialtyDomains));
@@ -30,7 +29,7 @@ const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').t
 const GraderFixForm = dynamic(() => import('./components/GraderFixForm').then((module) => module.GraderFixForm));
 const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'website-grader-fix', 'llms-builder', 'business-launch-checklist', 'serp-preview', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'website-grader-fix', 'llms-builder', 'business-launch-checklist', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -51,7 +50,6 @@ function getTabFromBrowser(): ScreenTab {
   if (path === '/tools/website-grader/fix-my-website') return 'website-grader-fix';
   if (path === '/tools/llms-txt') return 'llms-builder';
   if (path === '/tools/business-launch-checklist') return 'business-launch-checklist';
-  if (path === '/tools/serp-preview') return 'serp-preview';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
   if (page) return page.tab;
   const requested = new URLSearchParams(window.location.search).get('tab');
@@ -70,7 +68,6 @@ function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'website-grader-fix') return '/tools/website-grader/fix-my-website';
   if (tab === 'llms-builder') return '/tools/llms-txt';
   if (tab === 'business-launch-checklist') return '/tools/business-launch-checklist';
-  if (tab === 'serp-preview') return '/tools/serp-preview';
   if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
@@ -277,7 +274,6 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
 
         {currentTab === 'llms-builder' && <LlmsTxtBuilder />}
         {currentTab === 'business-launch-checklist' && <BusinessLaunchChecklist />}
-        {currentTab === 'serp-preview' && <SerpPreviewTool />}
       </main>
 
       {/* Footer */}
