@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import App from '@/src/App';
 
-const title = 'Free SERP Preview Tool | Google Search Snippet Preview';
-const description = 'Preview your page title and meta description in Google-style desktop and mobile search results. Check estimated pixel widths and copy your meta tags.';
+const title = 'Free SERP Preview & On-Page SEO Checker';
+const description = 'Scan a public page to read its title and meta description, preview a Google-style search result, and get a prioritised on-page SEO checklist.';
 
 export const metadata: Metadata = {
   title,
