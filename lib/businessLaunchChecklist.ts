@@ -198,3 +198,31 @@ export function formatLaunchPlan(answers: LaunchAnswers, tasks: LaunchTask[], ch
 
   return `${lines.join('\n').trimEnd()}\n`;
 }
+
+export function formatLaunchHelpMessage(
+  answers: LaunchAnswers,
+  tasks: LaunchTask[],
+  selectedTaskIds: string[],
+  checkedIds: string[],
+  note: string
+): string {
+  const selectedTasks = tasks.filter((task) => selectedTaskIds.includes(task.id));
+  const completedTasks = tasks.filter((task) => checkedIds.includes(task.id));
+  const helpScope = selectedTasks.length
+    ? selectedTasks.map((task) => `- ${task.title}`).join('\n')
+    : 'The visitor would like to discuss the full plan.';
+
+  return [
+    'Business launch checklist help request',
+    `Business: ${answers.businessName.trim() || 'Not provided'}`,
+    `Stage: ${answers.stage}`,
+    `Offer: ${answers.offer}`,
+    `Sales route: ${answers.salesMode}`,
+    `Timing: ${answers.timing}`,
+    `Checklist progress: ${completedTasks.length} of ${tasks.length} steps complete`,
+    `Help requested with:\n${helpScope}`,
+    note.trim() ? `Additional note:\n${note.trim()}` : '',
+    'Full checklist:',
+    formatLaunchPlan(answers, tasks, checkedIds)
+  ].filter(Boolean).join('\n\n');
+}

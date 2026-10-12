@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Check, CheckCircle2, Download, Printer, RefreshCw } from 'lucide-react';
+import { Check, CheckCircle2, Download, Loader2, Printer, RefreshCw, Send } from 'lucide-react';
 import {
   createLaunchPlan,
+  formatLaunchHelpMessage,
   formatLaunchPlan,
   type BusinessStage,
   type LaunchAnswers,
@@ -98,6 +99,14 @@ export const BusinessLaunchChecklist: React.FC = () => {
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [hasPlan, setHasPlan] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [helpSubmitted, setHelpSubmitted] = useState(false);
+  const [helpSubmitting, setHelpSubmitting] = useState(false);
+  const [helpName, setHelpName] = useState('');
+  const [helpEmail, setHelpEmail] = useState('');
+  const [helpNote, setHelpNote] = useState('');
+  const [helpTaskIds, setHelpTaskIds] = useState<string[]>([]);
+  const [helpError, setHelpError] = useState('');
 
   useEffect(() => {
     try {
@@ -148,6 +157,13 @@ export const BusinessLaunchChecklist: React.FC = () => {
     setAnswers(initialAnswers);
     setCheckedIds([]);
     setHasPlan(false);
+    setHelpOpen(false);
+    setHelpSubmitted(false);
+    setHelpName('');
+    setHelpEmail('');
+    setHelpNote('');
+    setHelpTaskIds([]);
+    setHelpError('');
   };
 
   const downloadPlan = () => {
@@ -160,6 +176,44 @@ export const BusinessLaunchChecklist: React.FC = () => {
     anchor.click();
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+  };
+
+  const toggleHelpTask = (taskId: string) => {
+    setHelpTaskIds((current) => current.includes(taskId)
+      ? current.filter((id) => id !== taskId)
+      : [...current, taskId]);
+  };
+
+  const submitHelpRequest = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setHelpSubmitting(true);
+    setHelpError('');
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: helpName.trim(),
+          email: helpEmail.trim(),
+          projectType: 'Business launch checklist help',
+          packageScope: helpTaskIds.length ? 'Help with selected launch steps' : 'Help with the full launch plan',
+          timeline: answers.timing === 'soon' ? 'Within a month' : answers.timing === 'few-months' ? '1–3 months' : 'Exploring',
+          message: formatLaunchHelpMessage(answers, plan.tasks, helpTaskIds, checkedIds, helpNote),
+          type: 'consultation'
+        })
+      });
+      const result = await response.json() as { success?: boolean; warning?: string; error?: string };
+      if (response.ok && result.success) {
+        setHelpSubmitted(true);
+      } else {
+        setHelpError(result.error || 'Your request could not be sent. Please try again.');
+      }
+    } catch {
+      setHelpError('Connection problem. Please check your internet and try again.');
+    } finally {
+      setHelpSubmitting(false);
+    }
   };
 
   const groupedTasks = (['Get clear', 'Get ready', 'Open the doors', 'Learn and improve'] as const)
@@ -251,7 +305,78 @@ export const BusinessLaunchChecklist: React.FC = () => {
             <p className="mt-8 border-t border-white/10 pt-5 text-xs leading-relaxed text-white/45">
               This is a general planning checklist, not legal, tax or financial advice. Requirements vary by business and location; confirm important decisions with official sources or a qualified adviser.
             </p>
-            <a href="/start" className="launch-print-hide mt-6 inline-flex min-h-11 items-center border border-white/25 px-5 text-xs font-bold text-white transition-colors hover:border-white/60">Talk through your launch plan</a>
+
+            <section className="launch-print-hide mt-8 border border-white/15 bg-white/[0.025] p-5 sm:p-6" aria-labelledby="launch-help-title">
+              {!helpOpen ? (
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 id="launch-help-title" className="text-lg font-black text-white">Would you like help with any of this?</h2>
+                    <p className="mt-1 text-sm leading-relaxed text-white/60">Tell me which steps you want help with, or ask to talk through the whole plan.</p>
+                  </div>
+                  <button type="button" onClick={() => setHelpOpen(true)} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">
+                    Ask for help <Send className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              ) : helpSubmitted ? (
+                <div role="status" className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
+                  <div>
+                    <h2 id="launch-help-title" className="font-bold text-white">Your request has been sent.</h2>
+                    <p className="mt-1 text-sm leading-relaxed text-white/65">I&apos;ll review your checklist and reply to {helpEmail.trim()}.</p>
+                  </div>
+                </div>
+              ) : (
+                <form className="space-y-5" onSubmit={submitHelpRequest}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 id="launch-help-title" className="text-lg font-black text-white">Tell me what you&apos;d like help with</h2>
+                      <p className="mt-1 text-sm leading-relaxed text-white/60">Your checklist and selected steps will be included with your request.</p>
+                    </div>
+                    <button type="button" onClick={() => { setHelpOpen(false); setHelpError(''); }} className="min-h-9 border border-white/20 px-3 text-xs font-bold text-white/70 hover:border-white/50">Close</button>
+                  </div>
+
+                  <fieldset>
+                    <legend className={labelClass}>Which steps should we talk about? <span className="font-normal text-white/40">(optional)</span></legend>
+                    <p className="mb-2 text-xs text-white/50">Leave these clear to discuss the whole plan.</p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {plan.tasks.map((task) => (
+                        <label key={task.id} className="flex cursor-pointer items-start gap-2.5 border border-white/10 bg-black/20 p-3 text-sm text-white/75 hover:border-white/30">
+                          <input type="checkbox" checked={helpTaskIds.includes(task.id)} onChange={() => toggleHelpTask(task.id)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FF003C]" />
+                          <span>{task.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  {helpError && <p role="alert" className="border border-rose-400/30 bg-rose-400/10 p-3 text-sm text-rose-200">{helpError}</p>}
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="launch-help-name" className={labelClass}>Your name *</label>
+                      <input id="launch-help-name" name="name" autoComplete="name" required maxLength={120} value={helpName} onChange={(event) => setHelpName(event.target.value)} className={fieldClass} placeholder="Your name" />
+                    </div>
+                    <div>
+                      <label htmlFor="launch-help-email" className={labelClass}>Email address *</label>
+                      <input id="launch-help-email" name="email" type="email" autoComplete="email" required maxLength={320} value={helpEmail} onChange={(event) => setHelpEmail(event.target.value)} className={fieldClass} placeholder="you@example.com" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="launch-help-note" className={labelClass}>Anything else I should know? <span className="font-normal text-white/40">(optional)</span></label>
+                    <textarea id="launch-help-note" maxLength={1500} rows={3} value={helpNote} onChange={(event) => setHelpNote(event.target.value)} className={`${fieldClass} resize-y py-3`} placeholder="Your question, concern or where you'd like to begin." />
+                  </div>
+
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs text-white/45">Your contact details are used only to reply to this request.</p>
+                    <button type="submit" disabled={helpSubmitting} className="inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-5 text-xs font-black uppercase tracking-[0.08em] text-white hover:bg-[#ffb347] hover:text-black disabled:cursor-wait disabled:opacity-60">
+                      {helpSubmitting ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Sending…</> : <>Send my request <Send className="h-4 w-4" aria-hidden="true" /></>}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </section>
+
+            <a href="/start" className="launch-print-hide mt-6 inline-flex min-h-11 items-center border border-white/25 px-5 text-xs font-bold text-white transition-colors hover:border-white/60">Prefer a full project brief? Go to Start a Business</a>
           </div>
         )}
       </div>

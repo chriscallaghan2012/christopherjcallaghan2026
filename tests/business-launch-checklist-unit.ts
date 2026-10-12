@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createLaunchPlan, formatLaunchPlan, type LaunchAnswers } from '../lib/businessLaunchChecklist';
+import { createLaunchPlan, formatLaunchHelpMessage, formatLaunchPlan, type LaunchAnswers } from '../lib/businessLaunchChecklist';
 
 const ideaAnswers: LaunchAnswers = {
   stage: 'idea',
@@ -28,5 +28,15 @@ assert.ok(text.startsWith('# Launch checklist: Bright Goods'));
 assert.ok(text.includes('- [x] Describe who you want to help'));
 assert.ok(text.includes('- [ ] Plan stock, delivery and returns'));
 assert.ok(text.includes('https://www.gov.uk/set-up-business'));
+
+const helpMessage = formatLaunchHelpMessage(ideaAnswers, ideaPlan.tasks, ['product-delivery'], ['describe-customer'], 'I need help with delivery options.');
+assert.ok(helpMessage.includes('Business launch checklist help request'));
+assert.ok(helpMessage.includes('Help requested with:\n- Plan stock, delivery and returns'));
+assert.ok(helpMessage.includes('Checklist progress: 1 of'));
+assert.ok(helpMessage.includes('Full checklist:'));
+assert.ok(helpMessage.includes('I need help with delivery options.'));
+
+const fullPlanHelpMessage = formatLaunchHelpMessage(ideaAnswers, ideaPlan.tasks, [], [], '');
+assert.ok(fullPlanHelpMessage.includes('The visitor would like to discuss the full plan.'));
 
 console.log('business launch checklist checks passed');
