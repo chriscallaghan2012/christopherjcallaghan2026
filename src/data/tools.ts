@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, FileText, Gauge, Hammer, Search, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -42,6 +42,19 @@ export const TOOLS: ToolCardData[] = [
     capabilities: ['Live Markdown preview', 'Organised page links', 'Copy and download'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'serp-preview',
+    href: '/tools/serp-preview',
+    tab: 'serp-preview',
+    name: 'SERP Preview Tool',
+    tagline: 'Preview page titles and descriptions in search results',
+    description: 'Preview a Google-style search snippet on desktop and mobile, estimate title and description pixel widths, and copy the finished meta tags.',
+    icon: Search,
+    status: 'live',
+    capabilities: ['Desktop and mobile previews', 'Pixel-width estimates', 'Copyable meta tags'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE SEO TOOL'
   },
   {
     slug: 'business-launch-checklist',
