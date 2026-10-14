@@ -105,6 +105,12 @@ test('AI crawler rules respect user-agent groups', () => { assert.deepEqual(find
 
 test('AI crawler rules detect a specific disallow', () => { assert.deepEqual(findBlockedAiCrawlers('User-agent: GPTBot\nDisallow: /\n\nUser-agent: *\nAllow: /', '/'), ['GPTBot']); });
 
+test('AI crawler path rules respect a more specific allow', () => { const robots = 'User-agent: GPTBot\nDisallow: /\nAllow: /public/\n\nUser-agent: *\nAllow: /'; assert.deepEqual(findBlockedAiCrawlers(robots, '/public/page'), []); assert.ok(findBlockedAiCrawlers(robots, '/private/page').includes('GPTBot')); });
+
+test('missing robots file is not reported as confirmed crawler access', () => { assert.deepEqual(findBlockedAiCrawlers(null, '/'), []); const ctx = buildContext(GOOD_PAGE); ctx.robotsTxt = null; const result = runAiChecks(ctx).find((item) => item.id === 'ai-crawler-permissive'); assert.ok(result); assert.equal(result.status, 'not_measured'); assert.equal(result.points, 0); });
+
+test('AI vocabulary and word count are context only, not quality scores', () => { const checks = runAiChecks(buildContext(GOOD_PAGE)); for (const id of ['ai-topical-focus', 'ai-service-clarity', 'ai-title-meta', 'ai-internal-relations']) { const result = checks.find((item) => item.id === id); assert.ok(result); assert.equal(result.status, 'info'); assert.equal(result.points, 0); } });
+
 // 1. URL validation and normalisation
 // ---------------------------------------------------------------------------
 
