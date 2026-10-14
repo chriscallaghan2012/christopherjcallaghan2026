@@ -18,7 +18,9 @@ assert.equal(typeof release, 'function');
 assert.equal(acquirePublicScanSlot(scope, 1), null, 'rejects concurrency beyond the configured cap');
 release?.();
 release?.();
-assert.equal(typeof acquirePublicScanSlot(scope, 1), 'function', 'released slots can be reused');
+const reusableRelease = acquirePublicScanSlot(scope, 1);
+assert.equal(typeof reusableRelease, 'function', 'released slots can be reused');
+reusableRelease?.();
 const finalRelease = acquirePublicScanSlot(`${scope}-second`, 1);
 finalRelease?.();
 
