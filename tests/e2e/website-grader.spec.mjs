@@ -87,7 +87,7 @@ test('the request form retains the completed scan and back navigation restores i
 test('the desktop Tools mega-menu displays all live tools in three columns', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
-  const toolsLink = page.getByRole('link', { name: 'TOOLS' });
+  const toolsLink = page.getByLabel('Main navigation').getByRole('link', { name: 'TOOLS' });
   await toolsLink.hover();
   await expect(page.getByRole('heading', { name: 'Make your next move clear' })).toBeVisible();
 
