@@ -181,32 +181,15 @@ export function runAiChecks(ctx: ScanContext): Check[] {
     }));
   }
 
-  // ---- Service clarity / value proposition ----
+  // ---- Extractable text volume (informational; volume is not content quality) ----
   const wordCount = facts.wordCount;
-  if (wordCount >= 300) {
-    checks.push(check({
-      id: 'ai-service-clarity', name: 'Value proposition is explained',
-      status: 'pass', measured: 'measured', points: 8,
-      evidence: [`Approx. ${wordCount} words of page text.`],
-      explanation: 'The page has enough descriptive text for an AI system to understand what it offers.'
-    }));
-  } else if (wordCount >= 100) {
-    checks.push(check({
-      id: 'ai-service-clarity', name: 'Value proposition is explained',
-      status: 'warning', severity: 'low', measured: 'measured', points: 8,
-      evidence: [`Approx. ${wordCount} words of page text.`],
-      explanation: `The page has about ${wordCount} words. More descriptive, directly useful copy would help AI systems extract a clear answer.`,
-      fix: 'Expand the copy with a clear description of what you do, who it is for, and the outcome you deliver.'
-    }));
-  } else {
-    checks.push(check({
-      id: 'ai-service-clarity', name: 'Value proposition is explained',
-      status: 'fail', severity: 'medium', measured: 'measured', points: 8,
-      evidence: [`Only approx. ${wordCount} words of page text found.`],
-      explanation: 'There is very little text on the page, so there is not enough substance for an AI system to describe or recommend it.',
-      fix: 'Add clear, descriptive content that directly answers what the business does and for whom.'
-    }));
-  }
+  checks.push(check({
+    id: 'ai-service-clarity', name: 'Extractable text volume (informational)',
+    status: 'info', measured: 'measured', points: 0,
+    evidence: [`Approximately ${wordCount} words of visible text were extracted.`],
+    explanation: 'Word count is only a rough measurement of extractable text. It cannot determine whether the content is useful, accurate, authoritative or sufficiently clear, so it does not affect the AI-readiness score.',
+    ...(wordCount < 30 ? { fix: 'If this page should explain a product or service, make sure its key information is available as readable HTML text.' } : {})
+  }));
 
   // ---- Topical focus ----
   const topics = new Set<string>();
@@ -216,15 +199,10 @@ export function runAiChecks(ctx: ScanContext): Check[] {
     if (!stopwords.has(word)) topics.add(word);
   }
   checks.push(check({
-    id: 'ai-topical-focus', name: 'Content has a clear topical focus',
-    status: topics.size >= 40 ? 'pass' : topics.size >= 12 ? 'warning' : 'fail',
-    severity: topics.size >= 12 ? 'low' : 'medium',
-    measured: 'measured', points: 6,
-    evidence: [`Detected roughly ${topics.size} distinct content words.`],
-    explanation: topics.size >= 40
-      ? 'The page contains a varied vocabulary, suggesting focused, substantial content.'
-      : `The page has a narrow vocabulary (${topics.size} distinct words). It may be too thin for AI systems to extract useful answers.`,
-    fix: 'Write substantive content that explains the topic in depth rather than a few sentences.'
+    id: 'ai-topical-focus', name: 'Content vocabulary sample (informational)',
+    status: 'info', measured: 'measured', points: 0,
+    evidence: [`Detected roughly ${topics.size} distinct content words in the sampled text.`],
+    explanation: 'Distinct-word count is not a reliable measure of topical focus, expertise or content quality. This is shown as context only and does not affect the AI-readiness score.'
   }));
   // ---- Descriptive headings ----
   const headingCount = facts.headingLevels.length;
@@ -243,37 +221,35 @@ export function runAiChecks(ctx: ScanContext): Check[] {
   // ---- Direct answers ----
   const hasFaqSchema = facts.jsonLdTypes.some((t) => /FAQPage|QAPage|HowTo/i.test(t));
   const hasQuestionHeading = /(\?|\bhow\b|\bwhat\b|\bwhy\b|\bwhen\b|\bwhere\b|\bbest\b|\bcost\b|\bprice\b)/i.test(facts.bodyText.slice(0, 4000));
-  const directAnswerStrength = hasFaqSchema || (hasQuestionHeading && wordCount >= 200);
+  const directAnswerStrength = hasQuestionHeading && wordCount >= 200;
   checks.push(check({
-    id: 'ai-direct-answers', name: 'Page answers likely customer questions',
-    status: directAnswerStrength ? 'pass' : hasQuestionHeading ? 'warning' : 'info',
-    severity: hasQuestionHeading && !directAnswerStrength ? 'low' : undefined,
-    measured: 'measured', points: 6,
+    id: 'ai-direct-answers', name: 'Question and answer signals',
+    status: directAnswerStrength ? 'pass' : hasQuestionHeading || hasFaqSchema ? 'warning' : 'info',
+    severity: hasQuestionHeading || hasFaqSchema ? 'low' : undefined,
+    measured: 'inferred', points: 3,
     evidence: [
-      ...(hasFaqSchema ? ['FAQ/Q&A structured data present.'] : []),
-      ...(hasQuestionHeading ? ['Question-style language detected in the content.'] : [])
+      ...(hasFaqSchema ? ['FAQ/Q&A/HowTo structured data detected; this alone does not prove the markup matches visible content.'] : []),
+      ...(hasQuestionHeading ? ['Question-style language detected in the sampled content.'] : [])
     ],
     explanation: directAnswerStrength
-      ? 'The page addresses common questions directly, which makes it more likely to be useful to AI answer engines.'
-      : hasQuestionHeading
-        ? 'The page touches on questions but may not answer them in enough depth.'
-        : 'No obvious question-and-answer structure was detected. AI systems favour pages that directly answer specific questions.',
-    fix: 'Add a clear FAQ or Q&A section that answers the questions your customers actually ask.'
+      ? 'Question-style content and a reasonable amount of extractable text were detected. This is a structural signal only; answer quality and accuracy were not evaluated.'
+      : hasQuestionHeading || hasFaqSchema
+        ? 'Some question or FAQ-schema signals were detected, but the scanner cannot confirm answer quality or that structured data matches the visible content.'
+        : 'No obvious question or FAQ-schema signals were detected. This check cannot judge whether the page is genuinely helpful or accurate.',
+    fix: 'Where useful to visitors, answer real customer questions clearly in visible page content and ensure any structured data matches that content.'
   }));
   // ---- Descriptive title/meta (inferred from SEO checks) ----
   const titleOk = facts.title.length > 0;
   const metaOk = facts.metaDescription.length > 0;
   checks.push(check({
-    id: 'ai-title-meta', name: 'Descriptive title and meta summary',
-    status: titleOk && metaOk ? 'pass' : titleOk || metaOk ? 'warning' : 'fail',
-    severity: titleOk && metaOk ? undefined : 'low',
-    measured: 'inferred', points: 3,
+    id: 'ai-title-meta', name: 'Title and meta signals (scored in SEO)',
+    status: 'info',
+    measured: 'inferred', points: 0,
     evidence: [
       ...(titleOk ? [`Title: ${facts.title}`] : ['No title.']),
       ...(metaOk ? ['Meta description present.'] : ['No meta description.'])
     ],
-    explanation: 'Clear titles and descriptions help both search engines and AI systems summarise what the page is about.',
-    fix: 'Write a descriptive title and meta description that summarise the page accurately.',
+    explanation: 'These title and meta signals are assessed and scored in the SEO category. They are repeated here for AI-search context only and do not add a second scoring penalty.',
     refs: ['seo-title', 'seo-meta-description']
   }));
 
@@ -293,13 +269,11 @@ export function runAiChecks(ctx: ScanContext): Check[] {
 
   // ---- Internal relations ----
   checks.push(check({
-    id: 'ai-internal-relations', name: 'Related pages are linked together',
-    status: facts.internalLinks.length >= 3 ? 'pass' : facts.internalLinks.length > 0 ? 'warning' : 'fail',
-    severity: facts.internalLinks.length >= 3 ? undefined : 'low',
-    measured: 'inferred', points: 3,
+    id: 'ai-internal-relations', name: 'Internal linking context (scored in SEO)',
+    status: 'info',
+    measured: 'inferred', points: 0,
     evidence: [`${facts.internalLinks.length} internal link(s) found.`],
-    explanation: 'Internal links help AI systems connect related content and build a fuller picture of your site.',
-    fix: 'Link related pages together with descriptive anchor text.',
+    explanation: 'The internal-link count is assessed and scored in the SEO category. This contextual duplicate does not add a second scoring penalty.',
     refs: ['seo-internal-links']
   }));
 
