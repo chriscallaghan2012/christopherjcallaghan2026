@@ -1,6 +1,8 @@
+import assert from 'node:assert/strict';
 import http from 'node:http';
 import zlib from 'node:zlib';
 import { runScan } from '../lib/grader/engine';
+import { safeFetch, SafeNetworkError } from '../lib/grader/safeNetwork';
 
 const FIXTURE = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Acme Widgets | Best Widgets in Manchester</title>
@@ -22,6 +24,11 @@ const FIXTURE = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 </main><footer><p>&copy; Acme Widgets Ltd, Manchester.</p></footer></body></html>`;
 
 const server = http.createServer((req, res) => {
+  if (req.url === '/redirect') { res.statusCode = 302; res.setHeader('location', '/'); res.end(); return; }
+  if (req.url === '/redirect-loop') { res.statusCode = 302; res.setHeader('location', '/redirect-loop'); res.end(); return; }
+  if (req.url === '/redirect-unsupported') { res.statusCode = 302; res.setHeader('location', 'file:///etc/passwd'); res.end(); return; }
+  if (req.url === '/large') { res.setHeader('content-type', 'text/plain'); res.end('x'.repeat(4096)); return; }
+  if (req.url === '/slow') { setTimeout(() => { if (!res.destroyed) res.end(FIXTURE); }, 1500); return; }
   if (req.url === '/robots.txt') { res.setHeader('content-type', 'text/plain'); res.end('User-agent: *\nAllow: /\n'); return; }
   if (req.url === '/sitemap.xml') { res.setHeader('content-type', 'text/xml'); res.end('<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://acme.test/</loc></url></urlset>'); return; }
   if (req.url === '/llms.txt') { res.setHeader('content-type', 'text/plain'); res.end('# Acme\n'); return; }
@@ -51,4 +58,26 @@ for (const c of report.categories) {
 console.log('recs:', report.recommendations.length, 'summary:', JSON.stringify(report.summary));
 console.log('exec:', report.executiveSummary.slice(0, 200));
 console.log('meta:', JSON.stringify(report.scanMeta).slice(0, 320));
+
+const baseUrl = `http://127.0.0.1:${port}`;
+const followed = await safeFetch(`${baseUrl}/redirect`, { maxRedirects: 2, maxBytes: 64 * 1024 });
+assert.equal(followed.status, 200);
+assert.equal(followed.redirectChain.length, 2);
+await assert.rejects(
+  () => safeFetch(`${baseUrl}/redirect-loop`, { maxRedirects: 1, maxBytes: 64 * 1024 }),
+  (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_REDIRECTS'
+);
+await assert.rejects(
+  () => safeFetch(`${baseUrl}/redirect-unsupported`, { maxRedirects: 2, maxBytes: 64 * 1024 }),
+  (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_REDIRECT'
+);
+await assert.rejects(
+  () => safeFetch(`${baseUrl}/large`, { maxBytes: 128 }),
+  (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_TOO_LARGE'
+);
+await assert.rejects(
+  () => safeFetch(`${baseUrl}/slow`, { timeoutMs: 250, maxBytes: 64 * 1024 }),
+  (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_TIMEOUT'
+);
+console.log('Safe network redirect, timeout and response-size checks passed.');
 server.close();
