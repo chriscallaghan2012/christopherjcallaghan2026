@@ -344,11 +344,11 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
         <div className="mx-auto max-w-4xl text-center">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.28em] text-[#FF5575]">Free website audit</p>
           <h1 id="grader-hero-title" className="mt-5 text-4xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            Find out what&apos;s holding your website back.
+            Website, SEO & AI search audit — find what to fix first.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
-            Enter any public website and I&apos;ll check its SEO, technical health, performance signals, accessibility,
-            security and AI search readiness — then show you exactly what to fix first.
+            Enter any public website for one joined-up audit of technical SEO, crawlability, structured data, AI search readiness,
+            performance signals, accessibility and security. See the evidence, understand the limitations and prioritise your next fixes.
           </p>
 
           <form onSubmit={startScan} className="mx-auto mt-9 max-w-2xl" noValidate>
