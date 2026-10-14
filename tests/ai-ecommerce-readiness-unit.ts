@@ -12,6 +12,7 @@ assert.equal(report.pageTitle, 'Handmade Mug');
 assert.equal(report.canonicalUrl, 'https://shop.example/products/mug');
 assert.deepEqual(report.productTypes, ['Product']);
 assert.equal(report.price, '18.50');
+assert.equal(report.priceCurrency, 'GBP');
 assert.equal(report.availability, 'InStock');
 assert.equal(report.imageCount, 1);
 assert.ok(report.findings.some((finding) => finding.title === 'Product structured data detected' && finding.status === 'pass'));
