@@ -144,6 +144,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scanId: report.scanId,
+          report,
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim() ? phone.trim() : undefined,
