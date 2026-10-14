@@ -80,4 +80,15 @@ await assert.rejects(
   (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_TIMEOUT'
 );
 console.log('Safe network redirect, timeout and response-size checks passed.');
+
+const previousNodeEnv = process.env.NODE_ENV;
+process.env.NODE_ENV = 'production';
+process.env.ALLOW_PRIVATE_NETWORK_SCANS = 'true';
+await assert.rejects(
+  () => safeFetch(`${baseUrl}/`, { timeoutMs: 1000, maxBytes: 64 * 1024 }),
+  (error: unknown) => error instanceof SafeNetworkError && error.code === 'ERR_BLOCKED'
+);
+if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+else process.env.NODE_ENV = previousNodeEnv;
+console.log('Private-network test bypass is disabled in production mode.');
 server.close();
