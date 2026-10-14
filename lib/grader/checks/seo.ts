@@ -624,7 +624,7 @@ export function runSeoChecks(ctx: ScanContext): Check[] {
     }));
   } else if (jsonLd.length === 0) {
     checks.push(check({
-      id: 'seo-structured-data', name: 'Structured data is valid',
+      id: 'seo-structured-data', name: 'JSON-LD syntax is valid',
       status: 'info', measured: 'measured', points: 4,
       evidence: ['No JSON-LD structured data found.'],
       explanation: 'No JSON-LD structured data was detected. Structured data is optional; this check does not imply that every page needs schema markup.',
@@ -633,7 +633,7 @@ export function runSeoChecks(ctx: ScanContext): Check[] {
     }));
   } else {
     checks.push(check({
-      id: 'seo-structured-data', name: 'Structured data is valid',
+      id: 'seo-structured-data', name: 'JSON-LD syntax is valid',
       status: 'pass', measured: 'measured', points: 4,
       evidence: [`${jsonLd.length} valid JSON-LD block(s) found: ${facts.jsonLdTypes.join(', ') || 'types unknown'}`],
       explanation: 'One or more JSON-LD blocks parse as valid JSON. Schema vocabulary, required properties and rich-result eligibility are not validated by this check.'
