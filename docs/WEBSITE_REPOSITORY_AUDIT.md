@@ -46,13 +46,13 @@ Position the tools as **free, evidence-led website and business utilities** that
 
 | Tool | Route proposal | MVP scope | Important limitation |
 |---|---|---|---|
-| AI SEO & Website Audit | `/tools/ai-seo-audit` | Deterministic technical checks: titles, descriptions, headings, canonical, robots/sitemap availability, structured data detection, Open Graph and crawl access where verifiable | Readiness audit, not a ranking predictor or proof that an AI model recommends a site |
+| Website Grader — SEO & AI Search Audit | Existing `/tools/website-grader` (extend in place) | The current grader already runs staged SEO, AI search readiness, performance, accessibility and security checks. Audit existing coverage, then fill evidenced gaps in titles, descriptions, headings, canonical, robots/sitemap, structured data, Open Graph and crawl access | Extend the current engine/report; do not create a duplicate `/tools/ai-seo-audit` route. Readiness audit, not a ranking predictor or proof that an AI model recommends a site |
 | Structured Data Validator | `/tools/structured-data-validator` | Accept URL and pasted JSON-LD/HTML; parse JSON-LD blocks, show syntax errors, detect schema types and missing common properties; link to official validators | Do not claim Google's rich-result eligibility unless checks are implemented against current documented requirements; Schema.org validity and Google rich-result eligibility are different |
 | AI eCommerce Readiness Report | `/tools/ai-ecommerce-report` | Inspect accessible product-page signals: product identity, title, description, price/availability markup where exposed, canonical, Product schema, image and crawl access; give an evidence-based checklist | Do not claim visibility in ChatGPT Shopping or access to private merchant feeds without actual integration |
 | llms.txt Builder | existing `/tools/llms-txt` | Keep, improve copy/download and explain that llms.txt adoption is not a guaranteed ranking factor | No guaranteed search uplift |
 | Business Launch Checklist | existing `/tools/business-launch-checklist` | Keep as the business-building lead magnet | Clearly state that it is guidance, not legal/accounting advice |
 
-Reuse common primitives and API/service logic where appropriate, but keep each tool's checks, result explanations and metadata specific.
+Reuse common primitives and API/service logic where appropriate, but keep each tool's checks, result explanations and metadata specific. The existing Website Grader already has category scoring, recommendations, scan metadata/limitations, report sharing/PDF support and fix-my-website conversion flows; preserve these while improving it.
 
 ## Google rankings: recommended approach
 
@@ -86,7 +86,7 @@ For any server-side URL fetcher:
 
 ## SEO and content
 
-- Give every tool route a unique title, description, canonical URL, Open Graph metadata and clear H1.
+- Give every tool route a unique title, description, canonical URL, Open Graph metadata and clear H1. For the Website Grader, improve its existing metadata and on-page positioning rather than introducing a second audit URL.
 - Add each canonical tool route to `app/sitemap.ts`.
 - Link tools from relevant service pages and helpful blog content; avoid thin, near-duplicate landing pages.
 - Use structured data only where the page genuinely qualifies; validate it with Schema.org Validator and Google's Rich Results Test where applicable.
