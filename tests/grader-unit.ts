@@ -15,6 +15,7 @@ import { parsePage } from '../lib/grader/html';
 import { scoreCategory, scoreCategories, overallScore, gradeFor, CATEGORY_WEIGHTS } from '../lib/grader/scoring';
 import { buildRecommendations } from '../lib/grader/recommendations';
 import { runSeoChecks } from '../lib/grader/checks/seo';
+import { findBlockedAiCrawlers, runAiChecks } from '../lib/grader/checks/ai';
 import { runScan } from '../lib/grader/engine';
 import { buildReportPdf } from '../lib/grader/pdfReport';
 import type { ScanContext } from '../lib/grader/context';
@@ -100,6 +101,10 @@ function findCheck(checks: Check[], id: string): Check {
 }
 
 // ---------------------------------------------------------------------------
+test('AI crawler rules respect user-agent groups', () => { assert.deepEqual(findBlockedAiCrawlers('User-agent: OtherBot\nDisallow: /\n\nUser-agent: *\nAllow: /', '/'), []); });
+
+test('AI crawler rules detect a specific disallow', () => { assert.deepEqual(findBlockedAiCrawlers('User-agent: GPTBot\nDisallow: /\n\nUser-agent: *\nAllow: /', '/'), ['GPTBot']); });
+
 // 1. URL validation and normalisation
 // ---------------------------------------------------------------------------
 
