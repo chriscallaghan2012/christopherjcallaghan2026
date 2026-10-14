@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { isValidEmail, validateTargetUrl } from '../../lib/grader/validate';
 import type { ScanReport, StageId } from '../../lib/grader/types';
+import { cacheClientScanReport, readClientScanReport } from '../../lib/grader/clientReportCache';
 import { WebsiteGraderReport } from './WebsiteGraderReport';
 import { GraderFixTeaser } from './GraderFixTeaser';
 
@@ -134,16 +135,31 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
     (async () => {
       try {
         const res = await fetch(`/api/tools/website-grader/scan/${encodeURIComponent(scanId)}`);
-        if (!res.ok) return;
-        const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
-        if (!cancelled && payload.success && payload.report) {
-          setStorageConfigured(true);
-          setScannedUrl(payload.report.targetUrl);
-          setReport(payload.report);
+        if (res.ok) {
+          const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
+          if (!cancelled && payload.success && payload.report) {
+            cacheClientScanReport(payload.report);
+            setStorageConfigured(true);
+            setScannedUrl(payload.report.targetUrl);
+            setReport(payload.report);
+            setPhase('done');
+            return;
+          }
+        }
+        // A report may be available in this tab even when database persistence is not configured.
+        const cachedReport = readClientScanReport(scanId);
+        if (!cancelled && cachedReport) {
+          setScannedUrl(cachedReport.targetUrl);
+          setReport(cachedReport);
           setPhase('done');
         }
       } catch {
-        // Expired or unavailable report — fall back to the idle form.
+        const cachedReport = readClientScanReport(scanId);
+        if (!cancelled && cachedReport) {
+          setScannedUrl(cachedReport.targetUrl);
+          setReport(cachedReport);
+          setPhase('done');
+        }
       }
     })();
     return () => {
@@ -222,11 +238,14 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
           }
           break;
         }
-        case 'result':
-          setReport(evt.report as ScanReport);
+        case 'result': {
+          const completedReport = evt.report as ScanReport;
+          cacheClientScanReport(completedReport);
+          setReport(completedReport);
           setPhase('done');
           settled = true;
           break;
+        }
         case 'error':
           setErrorMessage(typeof evt.message === 'string' ? evt.message : 'The audit could not be completed. Please try again.');
           setPhase('error');
@@ -317,6 +336,8 @@ export const WebsiteGrader: React.FC<WebsiteGraderProps> = ({ onOpenConsultation
   const openFixForm = (issues: string[] | 'all' | 'high-priority') => {
     if (!report) return;
     const value = Array.isArray(issues) ? issues.join(',') : issues;
+    // Cache before full-page navigation so the exact report is available even without server persistence.
+    cacheClientScanReport(report);
     const params = new URLSearchParams({ scan: report.scanId, issues: value });
     window.location.assign(`/tools/website-grader/fix-my-website?${params.toString()}`);
   };
