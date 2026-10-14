@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start --port 3000",
     "lint": "tsc --noEmit",
-    "test": "tsx tests/grader-unit.ts && tsx tests/llms-unit.ts && tsx tests/business-launch-checklist-unit.ts && tsx tests/smoke.ts"
+    "test": "tsx tests/grader-unit.ts && tsx tests/llms-unit.ts && tsx tests/business-launch-checklist-unit.ts && tsx tests/smoke.ts && tsx tests/structured-data-validator-unit.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
