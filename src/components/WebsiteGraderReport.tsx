@@ -605,7 +605,7 @@ export const WebsiteGraderReport: React.FC<ReportProps> = ({
 
       {/* Tabs */}
       <div>
-        <div className="scrollbar-none grader-no-print sticky top-[68px] z-40 flex gap-1 overflow-x-auto border-b border-white/10 bg-[#08080a]/95 pb-px shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl" role="tablist" aria-label="Report sections">
+        <div className="scrollbar-none grader-no-print sticky top-[72px] z-40 flex gap-1 overflow-x-auto border-b border-white/10 bg-[#08080a]/95 pb-px shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl" role="tablist" aria-label="Report sections">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
