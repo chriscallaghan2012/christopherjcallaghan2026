@@ -10,6 +10,10 @@ export const maxDuration = 20;
 
 const RequestSchema = z.object({ url: z.string().trim().min(1).max(2048) });
 const MAX_BODY_BYTES = 8 * 1024;
+function getClientIp(request: NextRequest): string {
+  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+}
+
 export async function POST(request: NextRequest) {
   if (isPublicScanRateLimited('ai-ecommerce-report', getClientIp(request), 5, 60_000)) {
     return Response.json({ success: false, error: 'Too many scans in a short time. Please wait and try again.' }, { status: 429 });
@@ -27,6 +31,8 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) return Response.json({ success: false, error: 'Enter a valid public website URL.' }, { status: 400 });
 
   const normalized = normalizeTargetUrl(parsed.data.url);
+  if (!normalized) return Response.json({ success: false, error: 'Enter a valid http(s) website URL without credentials.' }, { status: 400 });
+
   const cached = getPublicScanCache<unknown>('ai-ecommerce-report', normalized.url);
   if (cached) return Response.json(cached);
 
@@ -34,8 +40,6 @@ export async function POST(request: NextRequest) {
   if (!releaseSlot) {
     return Response.json({ success: false, error: 'Too many scans are running at once. Please retry shortly.' }, { status: 429 });
   }
-
-  if (!normalized) return Response.json({ success: false, error: 'Enter a valid http(s) website URL without credentials.' }, { status: 400 });
 
   try {
     const response = await safeFetch(normalized.url, {
