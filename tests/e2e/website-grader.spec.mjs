@@ -68,11 +68,12 @@ test('the request form retains the completed scan and back navigation restores i
 
   const tabs = page.getByRole('tablist', { name: 'Report sections' });
   await expect(tabs).toBeVisible();
-  await tabs.evaluate((element) => element.scrollIntoView({ block: 'start' }));
-  await page.evaluate(() => window.scrollBy(0, 150));
-  await expect.poll(async () => tabs.evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBeGreaterThanOrEqual(60);
-  const stickyTop = await tabs.evaluate((element) => Math.round(element.getBoundingClientRect().top));
-  expect(stickyTop).toBeLessThan(100);
+  await tabs.evaluate((element) => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 72);
+  });
+  await page.evaluate(() => window.scrollBy({ top: 150, behavior: 'instant' }));
+  await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
 });
 
 test('the mobile navigation closes with Escape and restores focus', async ({ page }) => {
