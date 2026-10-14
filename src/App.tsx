@@ -14,6 +14,7 @@ import { WebsiteGrader } from './components/WebsiteGrader';
 import { LlmsTxtBuilder } from './components/LlmsTxtBuilder';
 import { BusinessLaunchChecklist } from './components/BusinessLaunchChecklist';
 import { StructuredDataValidator } from './components/StructuredDataValidator';
+import { AiEcommerceReadinessReport } from './components/AiEcommerceReadinessReport';
 const FiberNetwork = dynamic(() => import('./components/FiberNetwork').then((module) => module.FiberNetwork), { ssr: false, loading: () => null });
 
 const SpecialtyDomains = dynamic(() => import('./components/SpecialtyDomains').then((module) => module.SpecialtyDomains));
@@ -30,7 +31,7 @@ const ProjectBriefPage = dynamic(() => import('./components/ProjectBriefPage').t
 const GraderFixForm = dynamic(() => import('./components/GraderFixForm').then((module) => module.GraderFixForm));
 const OnlineClassesPage = dynamic(() => import('./components/OnlineClassesPage').then((module) => module.OnlineClassesPage));
 
-const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'website-grader-fix', 'llms-builder', 'business-launch-checklist', 'structured-data-validator', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
+const VALID_TABS: ScreenTab[] = ['home', 'build', 'start', 'package', 'classes', 'projects', 'services', 'expertise', 'ai-tool', 'contact', 'email-sandbox', 'tools', 'website-grader', 'website-grader-fix', 'llms-builder', 'business-launch-checklist', 'structured-data-validator', 'ai-ecommerce-report', 'about', 'seo-services', 'local-seo', 'google-ads-management', 'social-media-marketing', 'web-design-development', 'agency-development-partner', 'app-development', 'ai-automation'];
 
 interface AppProps {
   initialTab?: ScreenTab;
@@ -52,6 +53,7 @@ function getTabFromBrowser(): ScreenTab {
   if (path === '/tools/llms-txt') return 'llms-builder';
   if (path === '/tools/business-launch-checklist') return 'business-launch-checklist';
   if (path === '/tools/structured-data-validator') return 'structured-data-validator';
+  if (path === '/tools/ai-ecommerce-report') return 'ai-ecommerce-report';
   const page = Object.values(PUBLIC_PAGES).find((candidate) => path === `/${candidate.slug}`);
   if (page) return page.tab;
   const requested = new URLSearchParams(window.location.search).get('tab');
@@ -71,6 +73,7 @@ function getUrlForTab(tab: ScreenTab): string {
   if (tab === 'llms-builder') return '/tools/llms-txt';
   if (tab === 'business-launch-checklist') return '/tools/business-launch-checklist';
   if (tab === 'structured-data-validator') return '/tools/structured-data-validator';
+  if (tab === 'ai-ecommerce-report') return '/tools/ai-ecommerce-report';
   if (tab === 'projects' || tab === 'services' || tab === 'expertise') return `/${tab}`;
   const page = Object.values(PUBLIC_PAGES).find((candidate) => candidate.tab === tab);
   if (page) return `/${page.slug}`;
@@ -278,6 +281,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
         {currentTab === 'llms-builder' && <LlmsTxtBuilder />}
         {currentTab === 'business-launch-checklist' && <BusinessLaunchChecklist />}
         {currentTab === 'structured-data-validator' && <StructuredDataValidator />}
+        {currentTab === 'ai-ecommerce-report' && <AiEcommerceReadinessReport />}
       </main>
 
       {/* Footer */}
