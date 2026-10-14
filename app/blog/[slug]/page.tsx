@@ -11,6 +11,31 @@ type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+type RelatedTool = { title: string; href: string; description: string };
+
+function getRelatedTools(category: string, title: string, excerpt: string): RelatedTool[] {
+  const topic = `${category} ${title} ${excerpt}`.toLowerCase();
+  const tools: RelatedTool[] = [];
+  if (/e-?commerce|product page|online shop|shopify|product schema/.test(topic)) {
+    tools.push(
+      { title: 'AI eCommerce Readiness', href: '/tools/ai-ecommerce-report', description: 'Review observable product-page information and commerce signals.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Inspect JSON-LD and product structured data.' }
+    );
+  } else if (/seo|search|website|crawl|schema|structured data|robots|metadata|technical/.test(topic)) {
+    tools.push(
+      { title: 'Website Grader', href: '/tools/website-grader', description: 'Review technical SEO, accessibility and AI-search signals.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Check JSON-LD syntax and common structured-data issues.' }
+    );
+  }
+  if (/ai|llm|chatgpt|assistant|automation/.test(topic)) {
+    tools.push({ title: 'llms.txt Builder', href: '/tools/llms-txt', description: 'Prepare a draft guide to your website for AI crawlers and assistants.' });
+  }
+  if (/business|startup|start-up|launch/.test(topic)) {
+    tools.push({ title: 'Business Launch Checklist', href: '/tools/business-launch-checklist', description: 'Turn a business idea into a practical next-step checklist.' });
+  }
+  return tools.filter((tool, index, list) => list.findIndex((item) => item.href === tool.href) === index).slice(0, 3);
+}
+
 function formatDate(value: string | null): string {
   if (!value) return '';
   return new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -46,6 +71,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getPublishedBlogPost(slug);
   if (!post) notFound();
+
+  const relatedTools = getRelatedTools(post.category, post.title, post.excerpt);
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -97,6 +124,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             >{post.contentMarkdown}</ReactMarkdown>
           </div>
         </article>
+        {relatedTools.length > 0 && (
+          <aside className="mb-10 border-t border-white/10 pt-8" aria-labelledby="article-related-tools">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF003C]">RELATED FREE TOOLS</p>
+            <h2 id="article-related-tools" className="mt-2 text-2xl font-black text-white">Put the ideas into practice.</h2>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {relatedTools.map((tool) => (
+                <a key={tool.href} href={tool.href} className="group border border-white/10 bg-white/[0.02] p-4 transition-colors hover:border-[#FF003C]/50">
+                  <span className="flex items-center justify-between gap-3 font-bold text-white">
+                    {tool.title}
+                    <span aria-hidden="true" className="text-[#FF003C] transition-transform group-hover:translate-x-1">→</span>
+                  </span>
+                  <span className="mt-2 block text-sm leading-relaxed text-white/55">{tool.description}</span>
+                </a>
+              ))}
+            </div>
+          </aside>
+        )}
         <div className="border-t border-white/10 pt-8">
           <p className="text-sm text-white/60">Working on something similar?</p>
           <a href="/build" className="mt-3 inline-flex min-h-11 items-center bg-[#FF003C] px-5 font-mono text-xs font-bold tracking-[0.1em] text-white hover:bg-[#ffb347] hover:text-black">START A PROJECT</a>
