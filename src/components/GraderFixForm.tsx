@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, CheckCircle2, RefreshCw, ShieldCheck, Wrench, ArrowRight } from 'lucide-react';
 import type { ScanReport } from '../../lib/grader/types';
 import { CATEGORY_LABELS } from '../../lib/grader/types';
+import { cacheClientScanReport, readClientScanReport } from '../../lib/grader/clientReportCache';
 
 interface GraderFixFormProps {
   onNavigateHome: () => void;
@@ -38,6 +39,15 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
 
   const requestedIssues = useMemo(readIssuesParam, []);
 
+  const returnToResults = () => {
+    const scanId = report?.scanId || new URLSearchParams(window.location.search).get('scan');
+    if (scanId) {
+      window.location.assign(`/tools/website-grader?scan=${encodeURIComponent(scanId)}`);
+      return;
+    }
+    onNavigateToGrader();
+  };
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -48,26 +58,33 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
           if (!cancelled) setLoadState('missing');
           return;
         }
-        const res = await fetch(`/api/tools/website-grader/scan/${encodeURIComponent(scanId)}`);
-        if (!res.ok) {
-          if (!cancelled) setLoadState('missing');
+        let loadedReport: ScanReport | null = null;
+        try {
+          const res = await fetch(`/api/tools/website-grader/scan/${encodeURIComponent(scanId)}`);
+          if (res.ok) {
+            const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
+            if (payload.success && payload.report) loadedReport = payload.report;
+          }
+        } catch {
+          // Try the same-tab cache below when server persistence is unavailable.
+        }
+        loadedReport = loadedReport ?? readClientScanReport(scanId);
+        if (cancelled) return;
+        if (!loadedReport) {
+          setLoadState('missing');
           return;
         }
-        const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
-        if (!cancelled && payload.success && payload.report) {
-          setReport(payload.report);
-          if (requestedIssues.includes('all')) {
-            setSelected(payload.report.recommendations.slice(0, 12).map((r) => r.checkId));
-          } else if (requestedIssues.includes('high-priority')) {
-            setSelected(payload.report.recommendations.filter((r) => r.priority === 'critical' || r.priority === 'high').map((r) => r.checkId));
-          } else {
-            const valid = new Set(payload.report.recommendations.map((r) => r.checkId));
-            setSelected(requestedIssues.filter((id) => valid.has(id)));
-          }
-          setLoadState('ready');
-        } else if (!cancelled) {
-          setLoadState('missing');
+        cacheClientScanReport(loadedReport);
+        setReport(loadedReport);
+        if (requestedIssues.includes('all')) {
+          setSelected(loadedReport.recommendations.slice(0, 12).map((r) => r.checkId));
+        } else if (requestedIssues.includes('high-priority')) {
+          setSelected(loadedReport.recommendations.filter((r) => r.priority === 'critical' || r.priority === 'high').map((r) => r.checkId));
+        } else {
+          const valid = new Set(loadedReport.recommendations.map((r) => r.checkId));
+          setSelected(requestedIssues.filter((id) => valid.has(id)));
         }
+        setLoadState('ready');
       } catch {
         if (!cancelled) setLoadState('missing');
       }
@@ -95,7 +112,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         </p>
         <button
           type="button"
-          onClick={onNavigateToGrader}
+          onClick={returnToResults}
           className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-[#ffb347] hover:text-black"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to the scanner
@@ -164,7 +181,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         </p>
         <button
           type="button"
-          onClick={onNavigateHome}
+          onClick={returnToResults}
           className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-white/10 px-6 font-mono text-xs uppercase tracking-wider text-white hover:bg-white/20"
         >
           Done
