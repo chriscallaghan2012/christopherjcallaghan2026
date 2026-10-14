@@ -364,7 +364,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
           </div>
           <button
             type="button"
-            onClick={onNavigateHome}
+            onClick={returnToResults}
             className="mt-5 inline-flex min-h-11 items-center justify-center border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-white/60"
           >
             Back to full results
