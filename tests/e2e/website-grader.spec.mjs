@@ -84,6 +84,19 @@ test('the request form retains the completed scan and back navigation restores i
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
 });
 
+test('the desktop Tools mega-menu displays all live tools in three columns', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const toolsLink = page.getByRole('link', { name: 'TOOLS' });
+  await toolsLink.hover();
+  await expect(page.getByRole('heading', { name: 'Make your next move clear' })).toBeVisible();
+
+  const toolsGrid = page.getByLabel('Available tools');
+  await expect(toolsGrid).toBeVisible();
+  await expect(toolsGrid.getByRole('link')).toHaveCount(5);
+  await expect.poll(async () => toolsGrid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(3);
+});
+
 test('the mobile navigation closes with Escape and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
