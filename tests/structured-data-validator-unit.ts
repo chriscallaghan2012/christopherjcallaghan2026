@@ -9,8 +9,8 @@ const valid = validateStructuredData(JSON.stringify({
   ]
 }));
 assert.equal(valid.parseErrors.length, 0);
-assert.equal(valid.entityCount, 2);
-assert.deepEqual(valid.types, ['Organization', 'Product']);
+assert.equal(valid.entityCount, 3);
+assert.deepEqual(valid.types, ['Offer', 'Organization', 'Product']);
 assert.ok(valid.findings.some((finding) => finding.title === 'JSON syntax is valid'));
 
 const html = validateStructuredData(`<!doctype html><html><head><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Ada"}</script><script type='application/ld+json'>{"@type":"WebSite","name":"Example"}</script></head></html>`);
