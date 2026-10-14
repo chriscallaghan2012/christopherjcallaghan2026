@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { analyzeProductPage } from '../lib/aiEcommerceReadiness';
 
-const html = `<!doctype html><html><head>
+const html = `<!doctype html><html lang="en"><head>
 <title>Handmade Mug</title><meta name="description" content="Ceramic handmade mug">
 <link rel="canonical" href="/products/mug">
 <meta property="og:title" content="Handmade Mug">
@@ -15,6 +15,8 @@ assert.equal(report.price, '18.50');
 assert.equal(report.priceCurrency, 'GBP');
 assert.equal(report.availability, 'InStock');
 assert.equal(report.imageCount, 1);
+assert.equal(report.imagesMissingAlt, 0);
+assert.equal(report.documentLanguage, 'en');
 assert.ok(report.findings.some((finding) => finding.title === 'Product structured data detected' && finding.status === 'pass'));
 assert.ok(report.limitations.some((limitation) => limitation.includes('not a measure')));
 
@@ -22,4 +24,10 @@ const unknown = analyzeProductPage('<html><head><title>Item</title></head><body>
 assert.equal(unknown.price, null);
 assert.equal(unknown.availability, null);
 assert.ok(unknown.findings.some((finding) => finding.status === 'unknown' && finding.title === 'Price not assessed'));
+
+const inaccessible = analyzeProductPage('<html><body><img src="/product.jpg"></body></html>', 'https://shop.example/item');
+assert.equal(inaccessible.imagesMissingAlt, 1);
+assert.equal(inaccessible.documentLanguage, null);
+assert.ok(inaccessible.findings.some((finding) => finding.title === 'Image alt attributes missing' && finding.status === 'warning'));
+assert.ok(inaccessible.findings.some((finding) => finding.title === 'Document language not detected' && finding.status === 'warning'));
 console.log('AI eCommerce readiness tests passed.');
