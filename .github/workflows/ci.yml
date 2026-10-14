@@ -48,7 +48,7 @@ jobs:
         run: npm run build
       - name: Install browser smoke-test runner
         run: |
-          npm install --no-save --package-lock=false @playwright/test@1.56.1
+          npm install --no-save @playwright/test@1.56.1
           npx playwright install --with-deps chromium
       - name: Browser smoke tests
         run: npx playwright test
