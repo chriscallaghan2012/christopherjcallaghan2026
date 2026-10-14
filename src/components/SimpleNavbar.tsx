@@ -223,28 +223,18 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
                         <Link href="/tools" className="font-mono text-[9px] font-bold tracking-[0.12em] text-white/55 transition-colors hover:text-white">VIEW ALL TOOLS <ArrowRight className="ml-1 inline h-3 w-3" aria-hidden="true" /></Link>
                       </div>
 
-                      <div className="space-y-5">
-                        {(['Website & SEO', 'Structured Data', 'AI & eCommerce', 'Business Tools'] as const).map((category) => {
-                          const categoryTools = TOOLS.filter((tool) => tool.status === 'live' && tool.category === category);
-                          if (categoryTools.length === 0) return null;
-                          return (
-                            <section key={category} aria-label={`${category} tools`}>
-                              <h3 className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">{category}</h3>
-                              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                                {categoryTools.map(({ href, name, tagline, icon: Icon }) => (
-                                  <Link key={href} href={href} aria-current={isCurrentHref(href) ? 'page' : undefined} className={`group relative flex min-h-[132px] flex-col border border-white/10 bg-white/[0.02] p-4 transition-colors hover:border-[#FF003C]/50 hover:bg-[#FF003C]/[0.05] ${isCurrentHref(href) ? 'border-[#FF003C]/60 bg-[#FF003C]/[0.05]' : ''}`}>
-                                    <span className="flex h-8 w-8 items-center justify-center border border-white/10 bg-white/5 text-[#FF5575] transition-colors group-hover:border-[#FF003C]/40 group-hover:bg-[#FF003C]/10">
-                                      <Icon className="h-4 w-4" aria-hidden="true" />
-                                    </span>
-                                    <span className="mt-3 pr-5 text-sm font-bold text-white group-hover:text-[#FF5575]">{name}</span>
-                                    <span className="mt-1 text-xs leading-relaxed text-white/55">{tagline}</span>
-                                    <ArrowRight className="absolute right-3 top-3 h-3.5 w-3.5 text-white/30 transition-colors group-hover:text-[#FF5575]" aria-hidden="true" />
-                                  </Link>
-                                ))}
-                              </div>
-                            </section>
-                          );
-                        })}
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-label="Available tools">
+                        {TOOLS.filter((tool) => tool.status === 'live').map(({ href, name, tagline, category, icon: Icon }) => (
+                          <Link key={href} href={href} aria-current={isCurrentHref(href) ? 'page' : undefined} className={`group relative flex min-h-[148px] flex-col border border-white/10 bg-white/[0.02] p-4 transition-colors hover:border-[#FF003C]/50 hover:bg-[#FF003C]/[0.05] ${isCurrentHref(href) ? 'border-[#FF003C]/60 bg-[#FF003C]/[0.05]' : ''}`}>
+                            <span className="flex h-8 w-8 items-center justify-center border border-white/10 bg-white/5 text-[#FF5575] transition-colors group-hover:border-[#FF003C]/40 group-hover:bg-[#FF003C]/10">
+                              <Icon className="h-4 w-4" aria-hidden="true" />
+                            </span>
+                            <span className="mt-3 pr-5 text-sm font-bold text-white group-hover:text-[#FF5575]">{name}</span>
+                            <span className="mt-1 text-xs leading-relaxed text-white/55">{tagline}</span>
+                            <span className="mt-auto pt-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white/35">{category}</span>
+                            <ArrowRight className="absolute right-3 top-3 h-3.5 w-3.5 text-white/30 transition-colors group-hover:text-[#FF5575]" aria-hidden="true" />
+                          </Link>
+                        ))}
                       </div>
                     </div>
 
