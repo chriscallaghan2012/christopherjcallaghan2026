@@ -17,6 +17,7 @@ export interface ProductReadinessReport {
   canonicalUrl: string | null;
   productTypes: string[];
   price: string | null;
+  priceCurrency: string | null;
   availability: string | null;
   imageCount: number;
   findings: ProductReadinessFinding[];
@@ -79,6 +80,7 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
   const offerValues = firstProduct ? (Array.isArray(firstProduct.offers) ? firstProduct.offers : [firstProduct.offers]) : [];
   const offerObjects = offerValues.filter(isObject);
   const price = offerObjects.map((offer) => textValue(offer.price ?? offer.lowPrice)).find(Boolean) ?? null;
+  const priceCurrency = offerObjects.map((offer) => textValue(offer.priceCurrency)).find(Boolean) ?? null;
   const availabilityRaw = offerObjects.map((offer) => textValue(offer.availability)).find(Boolean) ?? null;
   const availability = availabilityRaw?.split(/[\/#]/).filter(Boolean).pop() ?? null;
   const findings: ProductReadinessFinding[] = [];
@@ -99,10 +101,10 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
     ? { status: 'pass', title: 'Product/page images detected', detail: 'Images were found in JSON-LD or HTML.', evidence: [...productImages.slice(0, 3), ...(imageEvidence ? [imageEvidence] : [])].join('; ') }
     : { status: 'warning', title: 'No images detected', detail: 'No image URL in Product JSON-LD and no HTML img[src] element were detected.' });
   findings.push(price
-    ? { status: 'pass', title: 'Price observable in Product offers', detail: 'A price value was found in the first detected Product offer.', evidence: price }
+    ? { status: 'pass', title: 'Price observable in Product offers', detail: 'A price value was found in the first detected Product offer.', evidence: `Product JSON-LD offers.price: ${price}${priceCurrency ? ` ${priceCurrency}` : ''}` }
     : { status: products.length > 0 ? 'info' : 'unknown', title: products.length > 0 ? 'Price not detected in Product offers' : 'Price not assessed', detail: products.length > 0 ? 'No price/lowPrice was found in the detected Product offer. Price may be displayed elsewhere or loaded dynamically.' : 'Without a detected Product entity, this scanner cannot reliably attribute a price to a product.' });
   findings.push(availability
-    ? { status: 'pass', title: 'Availability observable in Product offers', detail: 'An availability value was found in the first detected Product offer.', evidence: availability }
+    ? { status: 'pass', title: 'Availability observable in Product offers', detail: 'An availability value was found in the first detected Product offer.', evidence: `Product JSON-LD offers.availability: ${availability}` }
     : { status: products.length > 0 ? 'info' : 'unknown', title: products.length > 0 ? 'Availability not detected' : 'Availability not assessed', detail: 'No availability value was detected in Product offers. This does not prove the item is unavailable.' });
   if (malformedJsonLd > 0) findings.push({ status: 'warning', title: 'Malformed JSON-LD block(s)', detail: `${malformedJsonLd} JSON-LD script block(s) could not be parsed. Product entities in those blocks may have been missed.` });
   findings.push({ status: 'info', title: 'Open Graph product signals', detail: $('meta[property="og:title"]').attr('content') ? 'og:title is present.' : 'og:title was not detected.', evidence: $('meta[property="og:title"]').attr('content')?.trim() || undefined });
@@ -118,6 +120,7 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
     canonicalUrl,
     productTypes,
     price,
+    priceCurrency,
     availability,
     imageCount,
     findings,
