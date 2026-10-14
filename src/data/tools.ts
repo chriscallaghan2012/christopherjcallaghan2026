@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -44,6 +44,20 @@ export const TOOLS: ToolCardData[] = [
     status: 'live',
     category: 'Website & SEO',
     capabilities: ['Live Markdown preview', 'Organised page links', 'Copy and download'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'structured-data-validator',
+    href: '/tools/structured-data-validator',
+    tab: 'structured-data-validator',
+    name: 'Structured Data Validator',
+    tagline: 'Check JSON-LD syntax and common property gaps',
+    description: 'Paste JSON-LD or HTML to inspect syntax, detect entity types and review practical property hints. Includes clear limitations and links to official validators.',
+    icon: Braces,
+    status: 'live',
+    category: 'Structured Data',
+    capabilities: ['JSON syntax', 'Nested @graph', 'Common property hints'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
   },
