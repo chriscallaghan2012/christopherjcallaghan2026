@@ -62,7 +62,7 @@ test('the request form retains the completed scan and back navigation restores i
   await expect(page.getByText('Fixture title finding').first()).toBeVisible();
   await expect(page.getByText(targetUrl).first()).toBeVisible();
 
-  await page.getByRole('button', { name: 'Back to the scanner' }).click();
+  await page.getByRole('button', { name: 'Back to full results' }).click();
   await expect(page).toHaveURL(new RegExp(`/tools/website-grader\\?scan=${scanId}`));
   await expect(page.getByText('Fixture report executive summary').first()).toBeVisible();
 
@@ -81,6 +81,8 @@ test('the mobile navigation closes with Escape and restores focus', async ({ pag
   const openButton = page.getByRole('button', { name: 'Open navigation' });
   await openButton.click();
   await expect(page.getByRole('button', { name: 'Close navigation' }).first()).toBeVisible();
+  const mobileDialog = page.getByRole('dialog', { name: 'Mobile navigation' });
+  await expect.poll(async () => mobileDialog.evaluate((element) => Math.round(element.getBoundingClientRect().left))).toBe(0);
   const viewportWidths = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
   if (viewportWidths.content > viewportWidths.viewport + 1) {
     const offenders = await page.evaluate(() => Array.from(document.querySelectorAll('body *')).map((element) => {
