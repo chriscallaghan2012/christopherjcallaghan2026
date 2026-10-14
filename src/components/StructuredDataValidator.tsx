@@ -111,7 +111,7 @@ export const StructuredDataValidator: React.FC = () => {
                     <button type="button" onClick={copyFindings} disabled={!hasInput || result.findings.length === 0} className="inline-flex min-h-9 items-center gap-2 border border-white/15 px-3 text-xs text-white/65 transition-colors hover:border-white/35 hover:text-white disabled:opacity-40"><ClipboardCopy className="h-3.5 w-3.5" aria-hidden="true" /> Copy findings</button>
                   </div>
                   <p className="mt-1 text-xs text-white/45">{urlResult ? `Fetched: ${urlResult.url}` : hasInput ? `${result.scriptCount} block(s) parsed · ${result.entityCount} typed entity/entities` : 'Results appear as you paste input'}</p>
-                  {copyStatus && <p className="mt-1 text-xs text-white/55" role="status">{copyStatus}</p>
+                  {copyStatus && <p className="mt-1 text-xs text-white/55" role="status">{copyStatus}</p>}
                 </div>
               </div>
 
