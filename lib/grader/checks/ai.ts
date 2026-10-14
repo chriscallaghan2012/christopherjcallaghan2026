@@ -45,6 +45,7 @@ export function findBlockedAiCrawlers(robotsTxt: string | null, pathname: string
     const key = line.slice(0, separator).trim().toLowerCase();
     const value = line.slice(separator + 1).trim();
     if (key === 'user-agent') {
+      if (!value) continue;
       if (!current || sawDirective) {
         current = { agents: [], rules: [] };
         groups.push(current);
@@ -53,8 +54,8 @@ export function findBlockedAiCrawlers(robotsTxt: string | null, pathname: string
       current.agents.push(value.toLowerCase());
       continue;
     }
+    if (current) sawDirective = true;
     if (!current || (key !== 'allow' && key !== 'disallow')) continue;
-    sawDirective = true;
     if (value) current.rules.push({ allow: key === 'allow', path: value });
   }
 
