@@ -239,6 +239,20 @@ test('parsePage reports invalid JSON-LD without throwing', () => {
   assert.equal(facts.jsonLdTypes.length, 0);
 });
 
+test('parsePage extracts nested JSON-LD types from @graph and arrays', () => {
+  const html = `<html><head><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Acme"},{"@type":["WebSite","CreativeWork"],"name":"Acme site"},{"@type":"Service","name":"SEO"}]}</script></head><body><h1>Acme</h1></body></html>`;
+  const facts = parsePage(html, 'https://acme.test');
+  assert.deepEqual(facts.jsonLdTypes.sort(), ['CreativeWork', 'Organization', 'Service', 'WebSite']);
+  assert.equal(facts.structuredData[0].validJson, true);
+});
+
+test('AI identity check does not infer a named business from generic words', () => {
+  const html = '<html><head><title>Business Services</title></head><body><h1>Business services</h1><p>We help your business grow.</p></body></html>';
+  const result = findCheck(runAiChecks(buildContext(html)), 'ai-business-identity');
+  assert.equal(result.status, 'info');
+  assert.equal(result.points, 0);
+});
+
 test('parsePage handles malformed HTML without throwing', () => {
   const facts = parsePage('<html><body><p>unclosed<div>nest<section><span>deep', 'https://acme.test');
   assert.ok(facts.bodyText.includes('unclosed'));
