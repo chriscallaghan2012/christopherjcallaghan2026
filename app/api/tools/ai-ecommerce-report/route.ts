@@ -10,6 +10,31 @@ export const maxDuration = 20;
 
 const RequestSchema = z.object({ url: z.string().trim().min(1).max(2048) });
 const MAX_BODY_BYTES = 8 * 1024;
+async function readBody(request: Request): Promise<string | null> {
+  try {
+    const reader = request.body?.getReader();
+    if (!reader) {
+      const text = await request.text();
+      return text.length <= MAX_BODY_BYTES ? text : null;
+    }
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_BODY_BYTES) {
+        await reader.cancel();
+        return null;
+      }
+      chunks.push(value);
+    }
+    return Buffer.concat(chunks).toString('utf8');
+  } catch {
+    return null;
+  }
+}
+
 function getClientIp(request: NextRequest): string {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 }
