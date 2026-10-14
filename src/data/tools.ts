@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Braces, FileText, Gauge, Hammer, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, FileText, Gauge, Hammer, PackageSearch, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -58,6 +58,20 @@ export const TOOLS: ToolCardData[] = [
     status: 'live',
     category: 'Structured Data',
     capabilities: ['JSON syntax', 'Nested @graph', 'Common property hints'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'ai-ecommerce-report',
+    href: '/tools/ai-ecommerce-report',
+    tab: 'ai-ecommerce-report',
+    name: 'AI eCommerce Readiness Report',
+    tagline: 'Check observable product-page signals',
+    description: 'Review product-page metadata, canonical URL, images and Product structured data using evidence available in public HTML. No AI visibility claims.',
+    icon: PackageSearch,
+    status: 'live',
+    category: 'AI & eCommerce',
+    capabilities: ['Product structured data', 'Price/availability evidence', 'Metadata and images'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
   },
