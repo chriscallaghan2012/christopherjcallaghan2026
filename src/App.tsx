@@ -152,7 +152,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
       />
 
       {/* Main Content Areas */}
-      <main key={currentTab} className={`relative z-10 flex-grow ${currentTab === 'home' ? '' : 'page-enter'}`}>
+      <main key={currentTab} className={`relative z-10 flex-grow ${currentTab === 'home' ? '' : currentTab === 'website-grader' ? 'page-enter-sticky-safe' : 'page-enter'}`}>
         {currentTab === 'home' && (
           <>
             <Hero

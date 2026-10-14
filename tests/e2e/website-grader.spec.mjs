@@ -70,10 +70,40 @@ test('the request form retains the completed scan and back navigation restores i
   await expect(tabs).toBeVisible();
   await tabs.evaluate((element) => {
     document.documentElement.style.scrollBehavior = 'auto';
-    window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 72);
+    document.body.style.minHeight = '3000px';
+    // The fixture report is intentionally short. Add space inside the report
+    // container so the sticky tab bar has a sufficiently tall containing block.
+    const spacer = document.createElement('div');
+    spacer.setAttribute('data-testid', 'sticky-test-spacer');
+    spacer.style.height = '1600px';
+    element.parentElement?.appendChild(spacer);
   });
-  await page.evaluate(() => window.scrollBy({ top: 150, behavior: 'instant' }));
+  await tabs.evaluate((element) => {
+    const scroller = document.scrollingElement;
+    if (scroller) {
+      const targetTop = element.getBoundingClientRect().top + scroller.scrollTop - 72;
+      scroller.scrollTop = Math.max(0, targetTop);
+    }
+  });
+  await expect.poll(async () => page.evaluate(() => document.scrollingElement?.scrollTop ?? 0)).toBeGreaterThan(0);
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
+  await page.evaluate(() => {
+    if (document.scrollingElement) document.scrollingElement.scrollTop += 150;
+  });
+  await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
+});
+
+test('the desktop Tools mega-menu displays all live tools in three columns', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const toolsLink = page.getByLabel('Main navigation').getByRole('link', { name: 'TOOLS' });
+  await toolsLink.hover();
+  await expect(page.getByRole('heading', { name: 'Make your next move clear' })).toBeVisible();
+
+  const toolsGrid = page.getByLabel('Available tools');
+  await expect(toolsGrid).toBeVisible();
+  await expect(toolsGrid.getByRole('link')).toHaveCount(5);
+  await expect.poll(async () => toolsGrid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(3);
 });
 
 test('the mobile navigation closes with Escape and restores focus', async ({ page }) => {
