@@ -9,9 +9,9 @@ This document is specific to this repository. Do not copy credentials or configu
 ## Where to configure values
 
 - **Local:** copy `.env.example` to `.env.local` and replace placeholders with real values.
-- **Vercel Preview:** use test credentials and a Preview-specific database where practical.
+- **Vercel Preview:** Preview deployments are currently disabled for this Vercel project while the website work is being completed. If previews are deliberately re-enabled later, use test credentials and a Preview-specific database where practical.
 - **Vercel Production:** use production credentials and the production Neon database.
-- **GitHub Actions:** add repository Actions secrets/variables only when a workflow actually needs them. The repository currently has no recent workflow runs visible through the GitHub Actions API, so CI requirements still need to be verified.
+- **GitHub Actions:** the repository CI workflow runs TypeScript, unit/smoke tests, the production build, a dependency audit and local Playwright browser smoke tests. Those checks do not require application secrets; future deployment or live integration tests may.
 
 Never commit `.env.local`, real API keys, passwords, session secrets, database URLs, or webhook signing secrets. If a secret was exposed, rotate it at its provider.
 
