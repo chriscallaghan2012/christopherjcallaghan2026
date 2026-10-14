@@ -37,13 +37,21 @@ Turn the website into a credible developer/business-builder hub that demonstrate
 
 ## Phase 2 — Ship the three requested tools (P1)
 
-### 2.1 AI SEO & Website Audit — `/tools/ai-seo-audit`
+### 2.1 Extend the existing Website Grader — `/tools/website-grader`
 
-- [ ] Implement deterministic checks for title, meta description, heading structure, canonical, robots.txt, sitemap.xml, Open Graph and detectable structured data.
-- [ ] Record evidence and explain the impact and recommended fix for each check.
-- [ ] Preserve the existing evidence-led pass / warning / fail / not-measured states rather than implying precision where a check cannot be verified.
-- [ ] Show the scan timestamp and limitations.
-- [ ] Do not label a readiness score as a Google ranking or AI visibility score.
+The existing grader already has a staged scan engine and report UI. Extend it in place; do not create a competing `/tools/ai-seo-audit` route or duplicate the scan engine.
+
+- [x] Inspect the existing SEO and AI checks and record initial false-positive/scoring gaps; continue the wider coverage audit as part of follow-up work.
+- [x] Replace broad robots.txt text matching with user-agent-group-aware checks for known AI crawlers.
+- [x] Treat missing robots.txt as not measured for AI crawler-specific access, rather than assuming crawlers are allowed.
+- [x] Remove score penalties based only on word count or unique vocabulary; these are context, not content-quality measurements.
+- [x] Avoid scoring title/meta and internal-link signals twice across SEO and AI categories.
+- [x] Tighten structured-data wording so JSON syntax validation is not presented as full Schema.org/rich-result validation.
+- [x] Detect JSON-LD types nested inside arrays and `@graph` blocks.
+- [x] Replace generic-word identity guesses with a named-entity schema/visible-text consistency signal.
+- [x] Reword question/answer signals to disclose that answer quality is not evaluated.
+- [ ] Continue the broader review for remaining false positives and category-weighting issues.
+- [ ] Preserve evidence, explanations, recommended fixes, scan metadata and limitations.
 - [ ] Preserve existing report persistence, share links, PDF, email and fix-my-website flows while testing blocked URLs, redirects, timeouts, large responses and malformed HTML.
 - [ ] Keep `/tools/website-grader` as the canonical route and sitemap entry; do not add `/tools/ai-seo-audit`.
 

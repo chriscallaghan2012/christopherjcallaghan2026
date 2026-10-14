@@ -15,6 +15,7 @@ import { parsePage } from '../lib/grader/html';
 import { scoreCategory, scoreCategories, overallScore, gradeFor, CATEGORY_WEIGHTS } from '../lib/grader/scoring';
 import { buildRecommendations } from '../lib/grader/recommendations';
 import { runSeoChecks } from '../lib/grader/checks/seo';
+import { findBlockedAiCrawlers, runAiChecks } from '../lib/grader/checks/ai';
 import { runScan } from '../lib/grader/engine';
 import { buildReportPdf } from '../lib/grader/pdfReport';
 import type { ScanContext } from '../lib/grader/context';
@@ -100,6 +101,16 @@ function findCheck(checks: Check[], id: string): Check {
 }
 
 // ---------------------------------------------------------------------------
+test('AI crawler rules respect user-agent groups', () => { assert.deepEqual(findBlockedAiCrawlers('User-agent: OtherBot\nDisallow: /\n\nUser-agent: *\nAllow: /', '/'), []); });
+
+test('AI crawler rules detect a specific disallow', () => { assert.deepEqual(findBlockedAiCrawlers('User-agent: GPTBot\nDisallow: /\n\nUser-agent: *\nAllow: /', '/'), ['GPTBot']); });
+
+test('AI crawler path rules respect a more specific allow', () => { const robots = 'User-agent: GPTBot\nDisallow: /\nAllow: /public/\n\nUser-agent: *\nAllow: /'; assert.deepEqual(findBlockedAiCrawlers(robots, '/public/page'), []); assert.ok(findBlockedAiCrawlers(robots, '/private/page').includes('GPTBot')); });
+
+test('missing robots file is not reported as confirmed crawler access', () => { assert.deepEqual(findBlockedAiCrawlers(null, '/'), []); const ctx = buildContext(GOOD_PAGE); ctx.robotsTxt = null; const result = runAiChecks(ctx).find((item) => item.id === 'ai-crawler-permissive'); assert.ok(result); assert.equal(result.status, 'not_measured'); assert.equal(result.points, 0); });
+
+test('AI vocabulary and word count are context only, not quality scores', () => { const checks = runAiChecks(buildContext(GOOD_PAGE)); for (const id of ['ai-topical-focus', 'ai-service-clarity', 'ai-title-meta', 'ai-internal-relations']) { const result = checks.find((item) => item.id === id); assert.ok(result); assert.equal(result.status, 'info'); assert.equal(result.points, 0); } });
+
 // 1. URL validation and normalisation
 // ---------------------------------------------------------------------------
 
@@ -226,6 +237,20 @@ test('parsePage reports invalid JSON-LD without throwing', () => {
   assert.equal(facts.structuredData[0].validJson, false);
   assert.ok(facts.structuredData[0].error);
   assert.equal(facts.jsonLdTypes.length, 0);
+});
+
+test('parsePage extracts nested JSON-LD types from @graph and arrays', () => {
+  const html = `<html><head><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Acme"},{"@type":["WebSite","CreativeWork"],"name":"Acme site"},{"@type":"Service","name":"SEO"}]}</script></head><body><h1>Acme</h1></body></html>`;
+  const facts = parsePage(html, 'https://acme.test');
+  assert.deepEqual(facts.jsonLdTypes.sort(), ['CreativeWork', 'Organization', 'Service', 'WebSite']);
+  assert.equal(facts.structuredData[0].validJson, true);
+});
+
+test('AI identity check does not infer a named business from generic words', () => {
+  const html = '<html><head><title>Business Services</title></head><body><h1>Business services</h1><p>We help your business grow.</p></body></html>';
+  const result = findCheck(runAiChecks(buildContext(html)), 'ai-business-identity');
+  assert.equal(result.status, 'info');
+  assert.equal(result.points, 0);
 });
 
 test('parsePage handles malformed HTML without throwing', () => {

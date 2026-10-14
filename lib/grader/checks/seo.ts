@@ -615,28 +615,28 @@ export function runSeoChecks(ctx: ScanContext): Check[] {
   const invalidJsonLd = facts.structuredData.filter((s) => !s.validJson);
   if (invalidJsonLd.length > 0) {
     checks.push(check({
-      id: 'seo-structured-data', name: 'Structured data is valid',
+      id: 'seo-structured-data', name: 'JSON-LD syntax is valid',
       status: 'fail', severity: 'high', measured: 'measured', points: 4,
       evidence: invalidJsonLd.map((s) => `Invalid JSON-LD: ${s.error ?? 'parse error'}`),
-      explanation: 'One or more JSON-LD blocks could not be parsed as valid JSON, which means search engines cannot read them.',
+      explanation: 'One or more JSON-LD blocks could not be parsed as JSON. This check validates syntax only; it does not validate Schema.org properties or Google rich-result eligibility.',
       fix: 'Correct the JSON syntax in the invalid JSON-LD blocks using the evidence above.',
       docs: [DOCS.structuredData]
     }));
   } else if (jsonLd.length === 0) {
     checks.push(check({
-      id: 'seo-structured-data', name: 'Structured data is valid',
+      id: 'seo-structured-data', name: 'JSON-LD syntax is valid',
       status: 'info', measured: 'measured', points: 4,
       evidence: ['No JSON-LD structured data found.'],
-      explanation: 'No JSON-LD structured data was detected. Structured data is optional but can enable richer search results.',
+      explanation: 'No JSON-LD structured data was detected. Structured data is optional; this check does not imply that every page needs schema markup.',
       fix: 'Consider adding JSON-LD such as Organization, Service or FAQ schema where relevant.',
       docs: [DOCS.structuredData]
     }));
   } else {
     checks.push(check({
-      id: 'seo-structured-data', name: 'Structured data is valid',
+      id: 'seo-structured-data', name: 'JSON-LD syntax is valid',
       status: 'pass', measured: 'measured', points: 4,
       evidence: [`${jsonLd.length} valid JSON-LD block(s) found: ${facts.jsonLdTypes.join(', ') || 'types unknown'}`],
-      explanation: 'Valid JSON-LD structured data is present.'
+      explanation: 'One or more JSON-LD blocks parse as valid JSON. Schema vocabulary, required properties and rich-result eligibility are not validated by this check.'
     }));
   }
 
