@@ -78,9 +78,14 @@ test('the request form retains the completed scan and back navigation restores i
     spacer.style.height = '1600px';
     element.parentElement?.appendChild(spacer);
   });
-  await page.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' }));
+  await page.evaluate(() => {
+    if (document.scrollingElement) document.scrollingElement.scrollTop = 600;
+  });
+  await expect.poll(async () => page.evaluate(() => document.scrollingElement?.scrollTop ?? 0)).toBeGreaterThan(0);
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
-  await page.evaluate(() => window.scrollBy({ top: 150, behavior: 'instant' }));
+  await page.evaluate(() => {
+    if (document.scrollingElement) document.scrollingElement.scrollTop += 150;
+  });
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
 });
 
