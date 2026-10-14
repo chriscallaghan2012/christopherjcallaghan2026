@@ -178,6 +178,15 @@ test('blocks private, loopback, link-local and metadata IPs', () => {
   assert.equal(isIpBlocked('169.254.169.254'), true);
   assert.equal(isIpBlocked('0.0.0.0'), true);
   assert.equal(isIpBlocked('::1'), true);
+  assert.equal(isIpBlocked('fe90::1'), true);
+  assert.equal(isIpBlocked('feb0::1'), true);
+  assert.equal(isIpBlocked('fec1::1'), true);
+  assert.equal(isIpBlocked('::ffff:127.0.0.1'), true);
+  assert.equal(isIpBlocked('::ffff:7f00:1'), true);
+  assert.equal(isIpBlocked('::ffff:8.8.8.8'), false);
+  assert.equal(isIpBlocked('64:ff9b::7f00:1'), true);
+  assert.equal(isIpBlocked('2002:7f00:1::'), true);
+  assert.equal(isIpBlocked('2606:4700:4700::1111'), false);
   assert.equal(isIpBlocked('93.184.216.34'), false);
 });
 

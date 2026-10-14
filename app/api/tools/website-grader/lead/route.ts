@@ -15,6 +15,7 @@ export const dynamic = 'force-dynamic';
  */
 const LeadRequestSchema = z.object({
   scanId: z.string().trim().min(1).max(128),
+  report: z.unknown().optional(),
   name: z.string().trim().min(1, 'Enter your name.').max(120),
   email: z.string().trim().min(1, 'Enter your email.').max(320),
   phone: z.string().trim().max(40).optional().nullable(),
@@ -22,7 +23,7 @@ const LeadRequestSchema = z.object({
   issues: z.array(z.string().trim().min(1).max(128)).max(30).optional().nullable()
 });
 
-const MAX_BODY_BYTES = 8 * 1024;
+const MAX_BODY_BYTES = 256 * 1024;
 
 async function readBody(request: Request): Promise<string | null> {
   try {
@@ -47,6 +48,24 @@ async function readBody(request: Request): Promise<string | null> {
   }
 }
 
+function isUsableClientReport(value: unknown, scanId: string): value is ScanReport {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<ScanReport>;
+  if (candidate.scanId !== scanId || candidate.status !== 'completed') return false;
+  if (typeof candidate.targetUrl !== 'string' || typeof candidate.finalUrl !== 'string') return false;
+  if (!candidate.overall || typeof candidate.overall !== 'object') return false;
+  if (!Array.isArray(candidate.categories) || !Array.isArray(candidate.recommendations)) return false;
+  if (!candidate.summary || typeof candidate.summary !== 'object') return false;
+  if (!candidate.scanMeta || typeof candidate.scanMeta !== 'object') return false;
+  try {
+    const url = new URL(candidate.targetUrl);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+  } catch {
+    return false;
+  }
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   const bodyText = await readBody(request);
   if (bodyText === null) {
@@ -66,7 +85,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ success: false, error: firstError }, { status: 400 });
   }
 
-  const { scanId, name, email, phone, message, issues } = result.data;
+  const { scanId, report: clientReport, name, email, phone, message, issues } = result.data;
   if (!isValidEmail(email)) {
     return Response.json({ success: false, error: 'Enter a valid email address.' }, { status: 400 });
   }
@@ -79,9 +98,15 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error('Failed to load scan for lead:', err);
   }
+  // Server-side persistence is preferred. If it is unavailable, accept the report
+  // captured by the same-tab UI after checking its shape and matching scan ID.
+  // This fallback is for continuity, not a cryptographic proof of report authenticity.
+  if (!report && isUsableClientReport(clientReport, scanId)) {
+    report = clientReport;
+  }
   if (!report) {
     return Response.json(
-      { success: false, error: 'We could not find that scan. Please run the audit again and resend.' },
+      { success: false, error: 'We could not find that scan. Please return to the report and try again.' },
       { status: 404 }
     );
   }

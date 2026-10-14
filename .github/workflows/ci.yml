@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Typecheck, tests and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Summarize dependency audit
+        run: |
+          npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
+          node - "$RUNNER_TEMP/npm-audit.json" <<'NODE'
+          const fs = require('node:fs');
+          const audit = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          console.log('npm audit counts:', JSON.stringify(audit.metadata?.vulnerabilities ?? {}));
+          for (const [name, vulnerability] of Object.entries(audit.vulnerabilities ?? {})) {
+            const advisories = (vulnerability.via ?? []).filter((item) => typeof item === 'object').map((item) => item.title).join('; ');
+            console.log(`${name}: severity=${vulnerability.severity}; direct=${vulnerability.isDirect}; range=${vulnerability.range}; fixAvailable=${JSON.stringify(vulnerability.fixAvailable)}; advisories=${advisories || 'see npm audit JSON'}`);
+          }
+          NODE
+      - name: TypeScript typecheck
+        run: npm run lint
+      - name: Unit and smoke tests
+        run: npm test
+      - name: Production build
+        run: npm run build
+      - name: Install browser smoke-test runner
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.56.1
+          npx playwright install chromium
+      - name: Browser smoke tests
+        run: npx playwright test

@@ -41,7 +41,9 @@ export class SafeNetworkError extends Error {
 
 /** Test/local development escape hatch. Defaults OFF everywhere. */
 function allowPrivateNetworks(): boolean {
-  return process.env.ALLOW_PRIVATE_NETWORK_SCANS === 'true';
+  // Never allow the local-test bypass in production, even if a deployment
+  // variable is accidentally set. Production URL scans must always enforce SSRF checks.
+  return process.env.NODE_ENV !== 'production' && process.env.ALLOW_PRIVATE_NETWORK_SCANS === 'true';
 }
 
 const BLOCKED_HOSTNAMES = new Set([
@@ -97,34 +99,86 @@ function ipv4Blocked(a: number, b: number, c: number, d: number): boolean {
   return false;
 }
 
+function parseIpv6Words(ip: string): number[] | null {
+  let address = ip.toLowerCase().split('%')[0];
+  if (!address) return null;
+
+  // Expand a dotted IPv4 tail (for example ::ffff:192.0.2.1) into two words.
+  if (address.includes('.')) {
+    const lastColon = address.lastIndexOf(':');
+    const ipv4Tail = address.slice(lastColon + 1);
+    if (!net.isIPv4(ipv4Tail)) return null;
+    const [a, b, c, d] = ipv4Tail.split('.').map(Number);
+    const high = ((a << 8) | b).toString(16);
+    const low = ((c << 8) | d).toString(16);
+    address = `${address.slice(0, lastColon)}:${high}:${low}`;
+  }
+
+  const compression = address.indexOf('::');
+  let parts: string[];
+  if (compression >= 0) {
+    const left = address.slice(0, compression).split(':').filter(Boolean);
+    const right = address.slice(compression + 2).split(':').filter(Boolean);
+    const missing = 8 - left.length - right.length;
+    if (missing < 1) return null;
+    parts = [...left, ...Array(missing).fill('0'), ...right];
+  } else {
+    parts = address.split(':');
+    if (parts.length !== 8) return null;
+  }
+
+  if (parts.length !== 8 || parts.some((part) => !/^[0-9a-f]{1,4}$/i.test(part))) return null;
+  return parts.map((part) => Number.parseInt(part, 16));
+}
+
 export function isIpBlocked(ip: string): boolean {
   if (net.isIPv4(ip)) {
     const parts = ip.split('.').map(Number);
     return ipv4Blocked(parts[0], parts[1], parts[2], parts[3]);
   }
-  if (net.isIPv6(ip)) {
-    const lower = ip.toLowerCase();
-    // Unspecified and loopback
-    if (lower === '::' || lower === '::1') return true;
-    // IPv4-mapped IPv6 (::ffff:a.b.c.d) — check embedded IPv4
-    const v4mapped = lower.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-    if (v4mapped) {
-      const parts = v4mapped[1].split('.').map(Number);
-      return ipv4Blocked(parts[0], parts[1], parts[2], parts[3]);
-    }
-    // link-local fe80::/10
-    if (lower.startsWith('fe80:')) return true;
-    // unique local fc00::/7
-    if (lower.startsWith('fc') || lower.startsWith('fd')) return true;
-    // multicast ff00::/8
-    if (lower.startsWith('ff')) return true;
-    // site-local fec0::/10 (deprecated)
-    if (lower.startsWith('fec0:')) return true;
-    // documentation 2001:db8::/32
-    if (lower.startsWith('2001:db8:')) return true;
-    return false;
+  if (!net.isIPv6(ip)) return true;
+
+  const words = parseIpv6Words(ip);
+  if (!words || words.length !== 8) return true;
+  const allZeroPrefix = (length: number) => words.slice(0, length).every((word) => word === 0);
+
+  // Unspecified, loopback and deprecated IPv4-compatible addresses.
+  if (allZeroPrefix(8) || (allZeroPrefix(7) && words[7] === 1)) return true;
+  if (allZeroPrefix(6)) return true;
+
+  // IPv4-mapped IPv6: check the embedded IPv4 address in both dotted and
+  // hexadecimal forms, e.g. ::ffff:127.0.0.1 and ::ffff:7f00:1.
+  if (allZeroPrefix(5) && words[5] === 0xffff) {
+    const embeddedV4 = [
+      (words[6] >> 8) & 0xff,
+      words[6] & 0xff,
+      (words[7] >> 8) & 0xff,
+      words[7] & 0xff
+    ];
+    return ipv4Blocked(embeddedV4[0], embeddedV4[1], embeddedV4[2], embeddedV4[3]);
   }
-  return true; // unparseable → treat as blocked
+
+  const first = words[0];
+  // Unique-local fc00::/7, link-local fe80::/10, deprecated site-local fec0::/10.
+  if ((first & 0xfe00) === 0xfc00) return true;
+  if ((first & 0xffc0) === 0xfe80) return true;
+  if ((first & 0xffc0) === 0xfec0) return true;
+  // Multicast ff00::/8.
+  if ((first & 0xff00) === 0xff00) return true;
+
+  // Special-purpose / translation ranges that should not be probed as public
+  // website destinations (IANA IPv6 special-purpose address space).
+  if (first === 0x0064 && words[1] === 0xff9b && words[2] === 0 && words[3] === 0 && words[4] === 0 && words[5] === 0) return true; // 64:ff9b::/96 NAT64
+  if (first === 0x0064 && words[1] === 0xff9b && words[2] === 1) return true; // 64:ff9b:1::/48 local-use NAT64
+  if (first === 0x0100 && words[1] === 0 && words[2] === 0 && words[3] === 0) return true; // 100::/64 discard-only
+  if (first === 0x2001 && words[1] <= 0x01ff) return true; // 2001::/23 protocol assignments
+  if (first === 0x2001 && words[1] === 0x0db8) return true; // 2001:db8::/32 documentation
+  if (first === 0x2002) return true; // 2002::/16 6to4
+  // Only global-unicast 2000::/3 is accepted; other unicast ranges are
+  // reserved, unspecified for public routing, or special-purpose.
+  if ((first & 0xe000) !== 0x2000) return true;
+
+  return false;
 }
 
 async function resolveAndValidate(hostname: string): Promise<string> {

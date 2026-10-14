@@ -119,6 +119,34 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
   const isAbout = page === 'about';
   const buildHref = page === 'about' ? '/build' : `/build?service=${page}`;
 
+  const relatedToolsByPage: Record<string, { title: string; href: string; description: string }[]> = {
+    'seo-services': [
+      { title: 'Website Grader', href: '/tools/website-grader', description: 'Review observable technical SEO, accessibility, performance and AI-search signals.' },
+      { title: 'llms.txt Builder', href: '/tools/llms-txt', description: 'Prepare a draft guide to your website for AI crawlers and assistants.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Inspect JSON-LD and common structured-data issues.' }
+    ],
+    'local-seo': [
+      { title: 'Website Grader', href: '/tools/website-grader', description: 'Check technical signals that can affect how your local website is understood.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Review business and website structured data before publishing.' }
+    ],
+    'web-design-development': [
+      { title: 'Website Grader', href: '/tools/website-grader', description: 'Find technical, accessibility and content signals worth reviewing.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Validate JSON-LD markup used by your website.' },
+      { title: 'AI eCommerce Readiness', href: '/tools/ai-ecommerce-report', description: 'Review product-page information and observable commerce signals.' }
+    ],
+    'google-ads-management': [
+      { title: 'Website Grader', href: '/tools/website-grader', description: 'Review technical and usability signals on your landing pages.' }
+    ],
+    'app-development': [
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Inspect structured data on the public website that supports your product.' }
+    ],
+    'ai-automation': [
+      { title: 'llms.txt Builder', href: '/tools/llms-txt', description: 'Create a draft website guide for AI discovery.' },
+      { title: 'Structured Data Validator', href: '/tools/structured-data-validator', description: 'Inspect structured data used to describe your organisation and content.' }
+    ]
+  };
+  const relatedTools = relatedToolsByPage[content.slug] ?? [];
+
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
@@ -274,6 +302,25 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             <button onClick={onNavigateToProjects} className="inline-flex min-h-12 items-center justify-center border border-white/20 px-6 text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:border-white/50 hover:text-white">VIEW MY WORK</button>
           ) : <a href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/20 px-6 text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:border-white/50 hover:text-white">SEND AN ENQUIRY</a>}
         </div>
+
+        {relatedTools.length > 0 && (
+          <section className="mt-20 border-t border-white/10 pt-8" aria-labelledby="related-tools-title">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF003C]">FREE TOOLS</p>
+            <h2 id="related-tools-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">Start with a practical check.</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">Use these tools to gather evidence and identify useful next steps before deciding what needs work.</p>
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {relatedTools.map((tool) => (
+                <a key={tool.href} href={tool.href} className="group border border-white/10 bg-white/[0.02] p-5 transition-colors hover:border-[#FF003C]/50 hover:bg-white/[0.04]">
+                  <span className="flex items-center justify-between gap-4 text-base font-bold text-white">
+                    {tool.title}
+                    <ArrowRight className="h-4 w-4 shrink-0 text-[#FF003C] transition-transform group-hover:translate-x-1" />
+                  </span>
+                  <span className="mt-2 block text-sm leading-relaxed text-white/55">{tool.description}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {!isAbout && <nav className="mt-20 border-t border-white/10 pt-8" aria-label="More growth services">
           <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">MORE WAYS TO GROW</p>

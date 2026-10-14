@@ -95,9 +95,6 @@ export default function RootLayout({
         description: 'Manchester-based full-stack developer, AI builder and business creator building websites, applications, software, integrations and digital products.',
         jobTitle: 'Full-Stack Developer, AI Builder and Business Creator',
         url: 'https://christopherjcallaghan.com',
-        sameAs: [
-          'https://www.linkedin.com/in/webdevelopermanchester/'
-        ],
         address: { '@id': 'https://christopherjcallaghan.com/#address' },
         worksFor: { '@id': 'https://christopherjcallaghan.com/#organization' },
         knowsAbout: [
@@ -125,7 +122,6 @@ export default function RootLayout({
         url: 'https://christopherjcallaghan.com',
         description: 'Independent full-stack development practice based in Manchester, building websites, applications, software and digital products.',
         founder: { '@id': 'https://christopherjcallaghan.com/#person' },
-        sameAs: ['https://www.linkedin.com/in/webdevelopermanchester/'],
         address: { '@id': 'https://christopherjcallaghan.com/#address' }
       },
       {

@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, CheckCircle2, RefreshCw, ShieldCheck, Wrench, ArrowRight } from 'lucide-react';
 import type { ScanReport } from '../../lib/grader/types';
 import { CATEGORY_LABELS } from '../../lib/grader/types';
+import { cacheClientScanReport, readClientScanReport } from '../../lib/grader/clientReportCache';
 
 interface GraderFixFormProps {
   onNavigateHome: () => void;
@@ -38,6 +39,15 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
 
   const requestedIssues = useMemo(readIssuesParam, []);
 
+  const returnToResults = () => {
+    const scanId = report?.scanId || new URLSearchParams(window.location.search).get('scan');
+    if (scanId) {
+      window.location.assign(`/tools/website-grader?scan=${encodeURIComponent(scanId)}`);
+      return;
+    }
+    onNavigateToGrader();
+  };
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -48,26 +58,33 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
           if (!cancelled) setLoadState('missing');
           return;
         }
-        const res = await fetch(`/api/tools/website-grader/scan/${encodeURIComponent(scanId)}`);
-        if (!res.ok) {
-          if (!cancelled) setLoadState('missing');
+        let loadedReport: ScanReport | null = null;
+        try {
+          const res = await fetch(`/api/tools/website-grader/scan/${encodeURIComponent(scanId)}`);
+          if (res.ok) {
+            const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
+            if (payload.success && payload.report) loadedReport = payload.report;
+          }
+        } catch {
+          // Try the same-tab cache below when server persistence is unavailable.
+        }
+        loadedReport = loadedReport ?? readClientScanReport(scanId);
+        if (cancelled) return;
+        if (!loadedReport) {
+          setLoadState('missing');
           return;
         }
-        const payload = (await res.json()) as { success?: boolean; report?: ScanReport };
-        if (!cancelled && payload.success && payload.report) {
-          setReport(payload.report);
-          if (requestedIssues.includes('all')) {
-            setSelected(payload.report.recommendations.slice(0, 12).map((r) => r.checkId));
-          } else if (requestedIssues.includes('high-priority')) {
-            setSelected(payload.report.recommendations.filter((r) => r.priority === 'critical' || r.priority === 'high').map((r) => r.checkId));
-          } else {
-            const valid = new Set(payload.report.recommendations.map((r) => r.checkId));
-            setSelected(requestedIssues.filter((id) => valid.has(id)));
-          }
-          setLoadState('ready');
-        } else if (!cancelled) {
-          setLoadState('missing');
+        cacheClientScanReport(loadedReport);
+        setReport(loadedReport);
+        if (requestedIssues.includes('all')) {
+          setSelected(loadedReport.recommendations.slice(0, 12).map((r) => r.checkId));
+        } else if (requestedIssues.includes('high-priority')) {
+          setSelected(loadedReport.recommendations.filter((r) => r.priority === 'critical' || r.priority === 'high').map((r) => r.checkId));
+        } else {
+          const valid = new Set(loadedReport.recommendations.map((r) => r.checkId));
+          setSelected(requestedIssues.filter((id) => valid.has(id)));
         }
+        setLoadState('ready');
       } catch {
         if (!cancelled) setLoadState('missing');
       }
@@ -95,7 +112,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         </p>
         <button
           type="button"
-          onClick={onNavigateToGrader}
+          onClick={returnToResults}
           className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 bg-[#FF003C] px-7 text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-[#ffb347] hover:text-black"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to the scanner
@@ -127,6 +144,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scanId: report.scanId,
+          report,
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim() ? phone.trim() : undefined,
@@ -164,7 +182,7 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
         </p>
         <button
           type="button"
-          onClick={onNavigateHome}
+          onClick={returnToResults}
           className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-white/10 px-6 font-mono text-xs uppercase tracking-wider text-white hover:bg-white/20"
         >
           Done
@@ -317,9 +335,36 @@ export const GraderFixForm: React.FC<GraderFixFormProps> = ({ onNavigateHome, on
             {report.summary.pass} passed · {report.summary.warning} warnings · {report.summary.fail} failed · {report.summary.notMeasured} not measured
           </p>
           <p className="mt-3 text-xs leading-relaxed text-white/65">{report.executiveSummary}</p>
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Category scores</p>
+            <div className="mt-3 space-y-2">
+              {report.categories.map((category) => (
+                <div key={category.id} className="flex items-center justify-between gap-3 text-xs">
+                  <span className="text-white/65">{category.label}</span>
+                  <span className="shrink-0 font-mono font-bold text-white">{category.score === null ? 'Not measured' : `${category.score}/100`}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Key findings</p>
+            {report.recommendations.length > 0 ? (
+              <ul className="mt-3 space-y-3">
+                {report.recommendations.slice(0, 6).map((recommendation) => (
+                  <li key={recommendation.checkId} className="border-l-2 border-[#FF003C]/70 pl-3">
+                    <p className="text-xs font-bold leading-relaxed text-white">{recommendation.title}</p>
+                    <p className="mt-1 text-[10px] uppercase tracking-wider text-white/45">{recommendation.priority} priority · {CATEGORY_LABELS[recommendation.category]}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">{recommendation.whatDetected}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-xs leading-relaxed text-white/60">No actionable recommendations were generated by this scan.</p>
+            )}
+          </div>
           <button
             type="button"
-            onClick={onNavigateHome}
+            onClick={returnToResults}
             className="mt-5 inline-flex min-h-11 items-center justify-center border border-white/25 px-5 text-xs font-bold tracking-[0.1em] text-white transition-colors hover:border-white/60"
           >
             Back to full results

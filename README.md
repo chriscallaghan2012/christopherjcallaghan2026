@@ -45,7 +45,7 @@ npm run build
 
 ## Features
 
-- **Next.js 15 (App Router)**: Sub-second edge rendering and 100/100 Lighthouse SEO with JSON-LD Schema markup.
+- **Next.js 16 (App Router)**: React 19 and TypeScript, with route metadata and JSON-LD structured data where implemented. Lighthouse scores depend on the page, environment and measurement; no fixed score is guaranteed.
 - **Neon**: Server-side PostgreSQL persistence for contact submissions, consultations, AI blueprints, blog posts, social drafts, research monitors, and ranking observations. Apply `neon_setup.sql` and migrations `001_admin_control_center.sql` and `002_admin_inbox_rankings.sql` to the configured project.
 - **Blog and admin**: Public Markdown articles are published from a password-protected admin. AI creates editable drafts only; publishing always requires a manual action.
 - **Admin control center**: Authenticated draft editing, planned-post queue, platform readiness, submission inbox, research monitors, and timestamped ranking observations. Gemini generates channel-specific copy and an image prompt. Image-file generation, platform OAuth/publishing, scheduled execution, and automatic ranking providers are not connected yet.

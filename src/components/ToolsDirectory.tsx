@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight, Rocket } from 'lucide-react';
-import { TOOLS, FUTURE_TOOLS, type ToolCardData } from '../data/tools';
+import { TOOLS, type ToolCardData } from '../data/tools';
 
 /** Reusable card for a single tool in the directory (home, /tools, future listings). */
 export const ToolCard: React.FC<{ tool: ToolCardData }> = ({ tool }) => {
@@ -57,19 +57,22 @@ export const ToolsDirectory: React.FC = () => (
         engineering I use for client projects.
       </p>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {TOOLS.map((tool) => (
-          <ToolCard key={tool.slug} tool={tool} />
-        ))}
-        {FUTURE_TOOLS.map((future) => (
-          <article key={future.name} className="flex flex-col border border-white/10 bg-white/[0.02] p-6">
-            <span className="flex h-11 w-11 items-center justify-center border border-white/10 text-white/40">
-              <future.icon className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <h3 className="mt-4 text-lg font-black text-white">{future.name}</h3>
-            <p className="mt-2 flex-1 text-sm leading-relaxed text-white/55">{future.description}</p>
-          </article>
-        ))}
+      <div className="mt-10 space-y-10">
+        {(['Website & SEO', 'Structured Data', 'AI & eCommerce', 'Business Tools'] as const).map((category) => {
+          const categoryTools = TOOLS.filter((tool) => tool.category === category);
+          if (categoryTools.length === 0) return null;
+          return (
+            <section key={category} aria-labelledby={`tools-category-${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+              <div className="mb-4 flex items-center gap-3 border-b border-white/10 pb-3">
+                <h2 id={`tools-category-${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/65">{category}</h2>
+                <span className="font-mono text-[10px] text-white/30">{categoryTools.length} tool{categoryTools.length === 1 ? '' : 's'}</span>
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {categoryTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)}
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       <div className="mt-12 flex flex-wrap items-center gap-4 border-t border-white/10 pt-8">

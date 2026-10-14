@@ -9,9 +9,9 @@ This document is specific to this repository. Do not copy credentials or configu
 ## Where to configure values
 
 - **Local:** copy `.env.example` to `.env.local` and replace placeholders with real values.
-- **Vercel Preview:** use test credentials and a Preview-specific database where practical.
+- **Vercel Preview:** Preview deployments are currently disabled for this Vercel project while the website work is being completed. If previews are deliberately re-enabled later, use test credentials and a Preview-specific database where practical.
 - **Vercel Production:** use production credentials and the production Neon database.
-- **GitHub Actions:** add repository Actions secrets/variables only when a workflow actually needs them. The repository currently has no recent workflow runs visible through the GitHub Actions API, so CI requirements still need to be verified.
+- **GitHub Actions:** the repository CI workflow runs TypeScript, unit/smoke tests, the production build, a dependency audit and local Playwright browser smoke tests. Those checks do not require application secrets; future deployment or live integration tests may.
 
 Never commit `.env.local`, real API keys, passwords, session secrets, database URLs, or webhook signing secrets. If a secret was exposed, rotate it at its provider.
 
@@ -31,7 +31,8 @@ Never commit `.env.local`, real API keys, passwords, session secrets, database U
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe client-side checkout | Public key; must match the secret key's test/live mode. |
 | `STRIPE_WEBHOOK_SECRET` | Verifying Stripe webhook signatures | Endpoint signing secret beginning `whsec_...`; use the secret for the matching Preview/Production webhook endpoint. |
 | `GOOGLE_CLIENT_ID` | Google OAuth connector | Configure only when enabling the admin Google connector. |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |\n| `GOOGLE_REDIRECT_URI` | Google OAuth connector | Optional override; otherwise the callback URL is derived from the request URL. Must exactly match the redirect URI registered with Google. |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |
+| `GOOGLE_REDIRECT_URI` | Google OAuth connector | Optional override; otherwise the callback URL is derived from the request URL. Must exactly match the redirect URI registered with Google. |
 | `GOOGLE_TOKEN_ENCRYPTION_KEY` | Encrypting stored Google OAuth tokens | Must be a valid key in the format expected by `lib/googleConnectorAuth.ts`; inspect that implementation before generating/configuring it. Treat as a high-value secret. |
 | `NEXT_PUBLIC_GTM_ID` | Optional Google Tag Manager integration | Public GTM container ID; leave unset if GTM is not being used. The current analytics component also has a hard-coded measurement ID, so this variable does not by itself configure every analytics integration. |
 | `ALLOW_PRIVATE_NETWORK_SCANS` | Local security tests only | Must remain unset or `false` in deployed environments. Setting it to `true` weakens the grader's private-network scan guard and is used by local smoke tests. |
