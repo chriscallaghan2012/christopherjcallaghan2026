@@ -31,7 +31,8 @@ Never commit `.env.local`, real API keys, passwords, session secrets, database U
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe client-side checkout | Public key; must match the secret key's test/live mode. |
 | `STRIPE_WEBHOOK_SECRET` | Verifying Stripe webhook signatures | Endpoint signing secret beginning `whsec_...`; use the secret for the matching Preview/Production webhook endpoint. |
 | `GOOGLE_CLIENT_ID` | Google OAuth connector | Configure only when enabling the admin Google connector. |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |\n| `GOOGLE_REDIRECT_URI` | Google OAuth connector | Optional override; otherwise the callback URL is derived from the request URL. Must exactly match the redirect URI registered with Google. |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |
+| `GOOGLE_REDIRECT_URI` | Google OAuth connector | Optional override; otherwise the callback URL is derived from the request URL. Must exactly match the redirect URI registered with Google. |
 | `GOOGLE_TOKEN_ENCRYPTION_KEY` | Encrypting stored Google OAuth tokens | Must be a valid key in the format expected by `lib/googleConnectorAuth.ts`; inspect that implementation before generating/configuring it. Treat as a high-value secret. |
 | `NEXT_PUBLIC_GTM_ID` | Optional Google Tag Manager integration | Public GTM container ID; leave unset if GTM is not being used. The current analytics component also has a hard-coded measurement ID, so this variable does not by itself configure every analytics integration. |
 | `ALLOW_PRIVATE_NETWORK_SCANS` | Local security tests only | Must remain unset or `false` in deployed environments. Setting it to `true` weakens the grader's private-network scan guard and is used by local smoke tests. |
