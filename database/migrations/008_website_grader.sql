@@ -1,7 +1,8 @@
 -- Website Grader: persisted scan reports.
 -- Stores only report metadata + JSON (never raw page content or user emails).
--- Applied to Neon when DATABASE_URL is configured. The tool also works without
--- this table (reports fall back to an in-memory store).
+-- Apply this migration to the website's Neon database during deployment;
+-- setting DATABASE_URL does not run migrations automatically. The tool also
+-- works without this table (reports fall back to an in-memory store).
 
 CREATE TABLE IF NOT EXISTS website_grader_scans (
   id TEXT PRIMARY KEY,
