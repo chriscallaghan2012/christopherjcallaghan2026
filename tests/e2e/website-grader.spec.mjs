@@ -80,7 +80,9 @@ test('the mobile navigation closes with Escape and restores focus', async ({ pag
   await page.goto('/');
   const openButton = page.getByRole('button', { name: 'Open navigation' });
   await openButton.click();
-  await expect(page.getByRole('button', { name: 'Close navigation' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Close navigation' }).first()).toBeVisible();
+  const viewportWidths = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
+  expect(viewportWidths.content).toBeLessThanOrEqual(viewportWidths.viewport + 1);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Open navigation' })).toBeVisible();
   await expect(openButton).toBeFocused();
