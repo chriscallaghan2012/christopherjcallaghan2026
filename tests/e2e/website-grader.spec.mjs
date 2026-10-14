@@ -59,7 +59,7 @@ test('the request form retains the completed scan and back navigation restores i
   await page.goto(`/tools/website-grader/fix-my-website?scan=${scanId}&issues=high-priority`);
   await expect(page.getByRole('heading', { name: 'Send this scan to me.' })).toBeVisible();
   await expect(page.getByText('Key findings')).toBeVisible();
-  await expect(page.getByText('Fixture title finding')).toBeVisible();
+  await expect(page.getByText('Fixture title finding').first()).toBeVisible();
   await expect(page.getByText(targetUrl).first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Back to the scanner' }).click();
@@ -82,6 +82,13 @@ test('the mobile navigation closes with Escape and restores focus', async ({ pag
   await openButton.click();
   await expect(page.getByRole('button', { name: 'Close navigation' }).first()).toBeVisible();
   const viewportWidths = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
+  if (viewportWidths.content > viewportWidths.viewport + 1) {
+    const offenders = await page.evaluate(() => Array.from(document.querySelectorAll('body *')).map((element) => {
+      const rect = element.getBoundingClientRect();
+      return { tag: element.tagName, className: typeof element.className === 'string' ? element.className.slice(0, 120) : '', text: (element.textContent || '').trim().slice(0, 45), left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width) };
+    }).filter((item) => item.right > window.innerWidth + 1 || item.left < -1).sort((a, b) => b.right - a.right).slice(0, 20));
+    console.log('Mobile horizontal overflow offenders:', JSON.stringify(offenders));
+  }
   expect(viewportWidths.content).toBeLessThanOrEqual(viewportWidths.viewport + 1);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Open navigation' })).toBeVisible();
