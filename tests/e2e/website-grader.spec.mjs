@@ -68,7 +68,8 @@ test('the request form retains the completed scan and back navigation restores i
 
   const tabs = page.getByRole('tablist', { name: 'Report sections' });
   await expect(tabs).toBeVisible();
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await tabs.evaluate((element) => element.scrollIntoView({ block: 'start' }));
+  await page.evaluate(() => window.scrollBy(0, 150));
   await expect.poll(async () => tabs.evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBeGreaterThanOrEqual(60);
   const stickyTop = await tabs.evaluate((element) => Math.round(element.getBoundingClientRect().top));
   expect(stickyTop).toBeLessThan(100);
