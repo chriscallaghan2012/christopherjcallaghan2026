@@ -20,6 +20,8 @@ export interface ProductReadinessReport {
   priceCurrency: string | null;
   availability: string | null;
   imageCount: number;
+  imagesMissingAlt: number;
+  documentLanguage: string | null;
   findings: ProductReadinessFinding[];
   limitations: string[];
 }
@@ -65,6 +67,8 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
     try { canonicalUrl = new URL(canonicalRaw, finalUrl).toString(); } catch { canonicalUrl = null; }
   }
   const imageCount = $('img[src]').length;
+  const imagesMissingAlt = $('img').filter((_, element) => $(element).attr('alt') === undefined).length;
+  const documentLanguage = $('html').attr('lang')?.trim() || null;
   const jsonObjects: JsonObject[] = [];
   let malformedJsonLd = 0;
   $('script[type="application/ld+json"]').each((_, element) => {
@@ -100,6 +104,12 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
   findings.push((productImages.length > 0 || imageCount > 0)
     ? { status: 'pass', title: 'Product/page images detected', detail: 'Images were found in JSON-LD or HTML.', evidence: [...productImages.slice(0, 3), ...(imageEvidence ? [imageEvidence] : [])].join('; ') }
     : { status: 'warning', title: 'No images detected', detail: 'No image URL in Product JSON-LD and no HTML img[src] element were detected.' });
+  findings.push(imagesMissingAlt > 0
+    ? { status: 'warning', title: 'Image alt attributes missing', detail: `${imagesMissingAlt} HTML image(s) have no alt attribute. Add useful alternative text to informative images; use an empty alt only for decorative images.`, evidence: `${imagesMissingAlt} image(s) missing alt out of ${$('img').length} detected` }
+    : { status: 'pass', title: 'Image alt attributes present', detail: 'Every detected HTML image has an alt attribute. Automated checks cannot judge whether the text is meaningful.' });
+  findings.push(documentLanguage
+    ? { status: 'pass', title: 'Document language declared', detail: 'The HTML root declares a language.', evidence: documentLanguage }
+    : { status: 'warning', title: 'Document language not detected', detail: 'The html element has no lang attribute. Declare the page language so assistive technology can pronounce content appropriately.' });
   findings.push(price
     ? { status: 'pass', title: 'Price observable in Product offers', detail: 'A price value was found in the first detected Product offer.', evidence: `Product JSON-LD offers.price: ${price}${priceCurrency ? ` ${priceCurrency}` : ''}` }
     : { status: products.length > 0 ? 'info' : 'unknown', title: products.length > 0 ? 'Price not detected in Product offers' : 'Price not assessed', detail: products.length > 0 ? 'No price/lowPrice was found in the detected Product offer. Price may be displayed elsewhere or loaded dynamically.' : 'Without a detected Product entity, this scanner cannot reliably attribute a price to a product.' });
@@ -123,6 +133,8 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
     priceCurrency,
     availability,
     imageCount,
+    imagesMissingAlt,
+    documentLanguage,
     findings,
     limitations: [
       'This is an evidence-led technical readiness checklist, not a measure of whether ChatGPT, Google AI Overviews or another AI system recommends the product.',
