@@ -78,20 +78,14 @@ test('the request form retains the completed scan and back navigation restores i
     spacer.style.height = '1600px';
     element.parentElement?.appendChild(spacer);
   });
-  await page.evaluate(() => {
-    if (document.scrollingElement) document.scrollingElement.scrollTop = 600;
+  await tabs.evaluate((element) => {
+    const scroller = document.scrollingElement;
+    if (scroller) {
+      const targetTop = element.getBoundingClientRect().top + scroller.scrollTop - 72;
+      scroller.scrollTop = Math.max(0, targetTop);
+    }
   });
   await expect.poll(async () => page.evaluate(() => document.scrollingElement?.scrollTop ?? 0)).toBeGreaterThan(0);
-  console.log('Sticky tab debug:', JSON.stringify(await page.evaluate(() => {
-    const tabs = document.querySelector('[role="tablist"][aria-label="Report sections"]');
-    const ancestors = [];
-    for (let element = tabs; element instanceof HTMLElement; element = element.parentElement) {
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      ancestors.push({ tag: element.tagName, className: String(element.className).slice(0, 100), position: style.position, top: style.top, overflowX: style.overflowX, overflowY: style.overflowY, transform: style.transform, filter: style.filter, rectTop: Math.round(rect.top), height: Math.round(rect.height) });
-    }
-    return { scrollTop: document.scrollingElement?.scrollTop, scrollHeight: document.scrollingElement?.scrollHeight, clientHeight: document.scrollingElement?.clientHeight, ancestors };
-  })));
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
   await page.evaluate(() => {
     if (document.scrollingElement) document.scrollingElement.scrollTop += 150;
