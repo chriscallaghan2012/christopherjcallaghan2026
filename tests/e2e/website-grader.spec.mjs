@@ -70,8 +70,16 @@ test('the request form retains the completed scan and back navigation restores i
   await expect(tabs).toBeVisible();
   await tabs.evaluate((element) => {
     document.documentElement.style.scrollBehavior = 'auto';
+    // The fixture report is intentionally short. Add space inside the report
+    // container so the browser has room to scroll while the sticky tab bar
+    // remains within its containing block.
+    const spacer = document.createElement('div');
+    spacer.setAttribute('data-testid', 'sticky-test-spacer');
+    spacer.style.height = '1200px';
+    element.parentElement?.appendChild(spacer);
     window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 72);
   });
+  await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
   await page.evaluate(() => window.scrollBy({ top: 150, behavior: 'instant' }));
   await expect.poll(async () => Math.round(await tabs.evaluate((element) => element.getBoundingClientRect().top))).toBe(72);
 });
