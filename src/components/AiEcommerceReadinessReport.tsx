@@ -78,11 +78,12 @@ export const AiEcommerceReadinessReport: React.FC = () => {
               <h2 className="mt-2 break-words text-xl font-black text-white">{report.pageTitle || report.finalUrl}</h2>
               <p className="mt-2 break-all text-xs text-white/45">Scanned: {report.finalUrl}</p>
               {report.description && <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65">{report.description}</p>}
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
                 <div className="border border-white/10 p-3"><p className="text-xs text-white/45">Product schema</p><p className="mt-1 text-sm font-bold text-white">{report.productTypes.length ? report.productTypes.join(', ') : 'Not detected'}</p></div>
                 <div className="border border-white/10 p-3"><p className="text-xs text-white/45">Price</p><p className="mt-1 text-sm font-bold text-white">{report.price ? `${report.price}${report.priceCurrency ? ` ${report.priceCurrency}` : ''}` : 'Not observed'}</p></div>
                 <div className="border border-white/10 p-3"><p className="text-xs text-white/45">Availability</p><p className="mt-1 text-sm font-bold text-white">{report.availability ?? 'Not observed'}</p></div>
                 <div className="border border-white/10 p-3"><p className="text-xs text-white/45">HTML images</p><p className="mt-1 text-sm font-bold text-white">{report.imageCount}</p></div>
+                <div className="border border-white/10 p-3"><p className="text-xs text-white/45">Images missing alt</p><p className="mt-1 text-sm font-bold text-white">{report.imagesMissingAlt}</p></div>
               </div>
             </div>
             <div className="mt-5 grid gap-3 md:grid-cols-2">{report.findings.map((finding, index) => <FindingCard key={`${finding.title}-${index}`} finding={finding} />)}</div>
