@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Braces, FileText, Gauge, Hammer, PackageSearch, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -91,11 +91,3 @@ export const TOOLS: ToolCardData[] = [
   }
 ];
 
-export const FUTURE_TOOLS: { name: string; description: string; icon: LucideIcon; accent: string }[] = [
-  {
-    name: 'More free tools in development',
-    description: 'New free tools are being built — SEO, AI search and website improvement utilities. This directory grows over time.',
-    icon: Hammer,
-    accent: 'text-white/40 border-white/10 bg-white/[0.03]'
-  }
-];
