@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Braces, CircleAlert, CircleCheck, Info, RotateCcw } from 'lucide-react';
+import { Braces, CircleAlert, CircleCheck, ClipboardCopy, Info, RotateCcw } from 'lucide-react';
 import { validateStructuredData, type StructuredDataResult, type StructuredFindingSeverity } from '../../lib/structuredDataValidator';
 
 const example = `{
@@ -23,9 +23,20 @@ export const StructuredDataValidator: React.FC = () => {
   const [urlResult, setUrlResult] = useState<{ url: string; result: StructuredDataResult } | null>(null);
   const [urlError, setUrlError] = useState('');
   const [urlLoading, setUrlLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
   const localResult = useMemo(() => validateStructuredData(input), [input]);
   const result = urlResult?.result ?? localResult;
   const hasInput = input.trim().length > 0 || Boolean(urlResult);
+
+  const copyFindings = async () => {
+    const text = result.findings.map((finding) => `[${finding.severity.toUpperCase()}] ${finding.title}\n${finding.detail}`).join('\n\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyStatus('Findings copied.');
+    } catch {
+      setCopyStatus('Clipboard access is unavailable; select the findings and copy them manually.');
+    }
+  };
 
   const scanUrl = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -95,8 +106,12 @@ export const StructuredDataValidator: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center border border-[#FF003C]/35 bg-[#FF003C]/10 text-[#FF5575]"><Braces className="h-5 w-5" aria-hidden="true" /></span>
                 <div>
-                  <h2 id="structured-results-title" className="text-lg font-black text-white">Findings</h2>
-                  <p className="text-xs text-white/45">{urlResult ? `Fetched: ${urlResult.url}` : hasInput ? `${result.scriptCount} block(s) parsed · ${result.entityCount} typed entity/entities` : 'Results appear as you paste input'}</p>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h2 id="structured-results-title" className="text-lg font-black text-white">Findings</h2>
+                    <button type="button" onClick={copyFindings} disabled={!hasInput || result.findings.length === 0} className="inline-flex min-h-9 items-center gap-2 border border-white/15 px-3 text-xs text-white/65 transition-colors hover:border-white/35 hover:text-white disabled:opacity-40"><ClipboardCopy className="h-3.5 w-3.5" aria-hidden="true" /> Copy findings</button>
+                  </div>
+                  <p className="mt-1 text-xs text-white/45">{urlResult ? `Fetched: ${urlResult.url}` : hasInput ? `${result.scriptCount} block(s) parsed · ${result.entityCount} typed entity/entities` : 'Results appear as you paste input'}</p>
+                  {copyStatus && <p className="mt-1 text-xs text-white/55" role="status">{copyStatus}</p>
                 </div>
               </div>
 
