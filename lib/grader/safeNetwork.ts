@@ -41,7 +41,9 @@ export class SafeNetworkError extends Error {
 
 /** Test/local development escape hatch. Defaults OFF everywhere. */
 function allowPrivateNetworks(): boolean {
-  return process.env.ALLOW_PRIVATE_NETWORK_SCANS === 'true';
+  // Never allow the local-test bypass in production, even if a deployment
+  // variable is accidentally set. Production URL scans must always enforce SSRF checks.
+  return process.env.NODE_ENV !== 'production' && process.env.ALLOW_PRIVATE_NETWORK_SCANS === 'true';
 }
 
 const BLOCKED_HOSTNAMES = new Set([
