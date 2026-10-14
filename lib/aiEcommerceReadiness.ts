@@ -107,6 +107,9 @@ export function analyzeProductPage(html: string, requestedUrl: string, finalUrl 
   if (malformedJsonLd > 0) findings.push({ status: 'warning', title: 'Malformed JSON-LD block(s)', detail: `${malformedJsonLd} JSON-LD script block(s) could not be parsed. Product entities in those blocks may have been missed.` });
   findings.push({ status: 'info', title: 'Open Graph product signals', detail: $('meta[property="og:title"]').attr('content') ? 'og:title is present.' : 'og:title was not detected.', evidence: $('meta[property="og:title"]').attr('content')?.trim() || undefined });
 
+  const priority: Record<ProductFindingStatus, number> = { warning: 0, unknown: 1, info: 2, pass: 3 };
+  findings.sort((left, right) => priority[left.status] - priority[right.status]);
+
   return {
     requestedUrl,
     finalUrl,
