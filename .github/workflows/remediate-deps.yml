@@ -1,3 +1,4 @@
+# Triggered only when this remediation workflow itself changes on the isolated website work branch.
 name: Remediate compatible npm vulnerabilities
 
 on:
