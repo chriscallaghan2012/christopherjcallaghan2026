@@ -1,4 +1,5 @@
 # Triggered only when this remediation workflow itself changes on the isolated website work branch.
+# The previous run verified zero remaining advisories but raced with a branch update; rerun against the latest head.
 name: Remediate compatible npm vulnerabilities
 
 on:
