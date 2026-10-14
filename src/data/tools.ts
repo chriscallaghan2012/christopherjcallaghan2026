@@ -10,6 +10,8 @@ export interface ToolCardData {
   description: string;
   icon: LucideIcon;
   status: 'live' | 'soon';
+  /** Category used to group the tool consistently across directory and navigation. */
+  category: 'Website & SEO' | 'Structured Data' | 'AI & eCommerce' | 'Business Tools';
   /** What the tool actually checks/does (accurate only). */
   capabilities?: string[];
   accent: string;
@@ -26,6 +28,7 @@ export const TOOLS: ToolCardData[] = [
     description: 'Enter any public website and get a scored report covering technical SEO, AI search readiness, performance signals, accessibility and security — with prioritised fixes you can actually act on.',
     icon: Gauge,
     status: 'live',
+    category: 'Website & SEO',
     capabilities: ['Technical & on-page SEO', 'AI search readiness', 'Performance signals', 'Accessibility', 'Security headers'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
@@ -39,6 +42,7 @@ export const TOOLS: ToolCardData[] = [
     description: 'Organise your important pages, add accurate descriptions and guidance, then copy or download a ready-to-review llms.txt file.',
     icon: FileText,
     status: 'live',
+    category: 'Website & SEO',
     capabilities: ['Live Markdown preview', 'Organised page links', 'Copy and download'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
@@ -52,6 +56,7 @@ export const TOOLS: ToolCardData[] = [
     description: 'Answer a few simple questions to get a checklist tailored to your stage, offer and how customers will buy. Save progress on your device and download the plan.',
     icon: BriefcaseBusiness,
     status: 'live',
+    category: 'Business Tools',
     capabilities: ['Starting or relaunching', 'Personalised next steps', 'Saved progress'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
