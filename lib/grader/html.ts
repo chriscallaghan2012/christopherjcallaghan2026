@@ -70,6 +70,29 @@ export interface PageFacts {
 
 const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
 
+/** Collect JSON-LD types recursively, including @graph, arrays and nested entities. */
+function collectJsonLdTypes(value: unknown): string[] {
+  const found = new Set<string>();
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      for (const item of node) visit(item);
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    const record = node as Record<string, unknown>;
+    const type = record['@type'];
+    if (typeof type === 'string' && type.trim()) found.add(type.trim());
+    else if (Array.isArray(type)) {
+      for (const item of type) if (typeof item === 'string' && item.trim()) found.add(item.trim());
+    }
+    for (const child of Object.values(record)) {
+      if (child && typeof child === 'object') visit(child);
+    }
+  };
+  visit(value);
+  return [...found];
+}
+
 function cleanText(value: string | undefined | null): string {
   return (value ?? '').replace(/\s+/g, ' ').trim();
 }
@@ -214,11 +237,10 @@ export function parsePage(html: string, origin: string): PageFacts {
   $('script[type="application/ld+json"]').each((_i, el) => {
     const raw = $(el).contents().text() || $(el).text();
     try {
-      const parsed = JSON.parse(raw);
-      const types = (Array.isArray(parsed) ? parsed : [parsed])
-        .map((item) => (item && typeof item === 'object' && '@type' in item ? String((item as Record<string, unknown>)['@type']) : null));
+      const parsed: unknown = JSON.parse(raw);
+      const types = collectJsonLdTypes(parsed);
       structuredData.push({ type: types.join(', ') || null, raw, validJson: true, data: parsed });
-      for (const t of types) if (t) jsonLdTypes.push(t);
+      for (const type of types) if (!jsonLdTypes.includes(type)) jsonLdTypes.push(type);
     } catch (err) {
       structuredData.push({ type: null, raw, validJson: false, data: null, error: err instanceof Error ? err.message : 'Invalid JSON' });
     }
