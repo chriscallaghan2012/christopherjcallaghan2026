@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import App from '@/src/App';
 
-const title = 'Free Website Grader | SEO, AI Search & Performance Audit | Christopher J. Callaghan';
-const description = 'Grade any public website in seconds: scored checks across technical SEO, AI search readiness, performance, accessibility and security — with prioritised fixes you can act on. Free, no account required.';
+const title = 'Website Grader & AI SEO Audit | Free Website SEO Checker | Christopher J. Callaghan';
+const description = 'Run a free website, SEO and AI search readiness audit. Check technical SEO, crawlability, structured data, performance signals, accessibility and security, with evidence-led scores and prioritised fixes. No account required.';
 
 export const metadata: Metadata = {
   title,
@@ -29,7 +29,7 @@ const websiteGraderSchema = {
     {
       '@type': 'WebApplication',
       '@id': 'https://christopherjcallaghan.com/tools/website-grader#application',
-      name: 'Website Grader',
+      name: 'Website Grader — SEO & AI Search Audit',
       description,
       url: 'https://christopherjcallaghan.com/tools/website-grader',
       applicationCategory: 'BusinessApplication',
