@@ -31,7 +31,7 @@ Never commit `.env.local`, real API keys, passwords, session secrets, database U
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe client-side checkout | Public key; must match the secret key's test/live mode. |
 | `STRIPE_WEBHOOK_SECRET` | Verifying Stripe webhook signatures | Endpoint signing secret beginning `whsec_...`; use the secret for the matching Preview/Production webhook endpoint. |
 | `GOOGLE_CLIENT_ID` | Google OAuth connector | Configure only when enabling the admin Google connector. |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth connector | Server-side OAuth client secret. |\n| `GOOGLE_REDIRECT_URI` | Google OAuth connector | Optional override; otherwise the callback URL is derived from the request URL. Must exactly match the redirect URI registered with Google. |
 | `GOOGLE_TOKEN_ENCRYPTION_KEY` | Encrypting stored Google OAuth tokens | Must be a valid key in the format expected by `lib/googleConnectorAuth.ts`; inspect that implementation before generating/configuring it. Treat as a high-value secret. |
 | `NEXT_PUBLIC_GTM_ID` | Optional Google Tag Manager integration | Public GTM container ID; leave unset if GTM is not being used. The current analytics component also has a hard-coded measurement ID, so this variable does not by itself configure every analytics integration. |
 | `ALLOW_PRIVATE_NETWORK_SCANS` | Local security tests only | Must remain unset or `false` in deployed environments. Setting it to `true` weakens the grader's private-network scan guard and is used by local smoke tests. |
@@ -70,13 +70,13 @@ Never commit `.env.local`, real API keys, passwords, session secrets, database U
 ### Google OAuth connector (optional)
 1. Configure OAuth client credentials in Google Cloud.
 2. Register the exact callback URL used by this application's Google connector.
-3. Set `GOOGLE_TOKEN_ENCRYPTION_KEY` to the format required by the current implementation.
+3. Generate a 32-byte key and base64-encode it (for example, `openssl rand -base64 32`) for `GOOGLE_TOKEN_ENCRYPTION_KEY`. Set `GOOGLE_REDIRECT_URI` to the exact callback URL registered in Google Cloud.
 4. Keep the connector disabled until the redirect URI, token encryption and consent/scopes have been verified.
 
 ## Current verification gaps
 
 - Run `npm run lint`, `npm test` and `npm run build`; record actual output rather than assuming success.
-- Verify the complete environment-variable list against all server routes and integrations, including whether the legacy `VITE_GEMINI_API_KEY`, `APP_URL`, and `NEXT_PUBLIC_APP_URL` can be removed.
+- Verify the complete environment-variable list against all server routes and integrations, including whether the legacy `VITE_GEMINI_API_KEY`, `APP_URL`, and `NEXT_PUBLIC_APP_URL` can be removed. `GOOGLE_REDIRECT_URI` is an optional connector override and should be set when the derived callback URL differs from the registered URI.
 - Check that CI workflows exist and run; GitHub currently reports no recent workflow runs for this repository.
 - Verify Vercel Preview and Production variable scopes without exposing values.
 - Smoke-test grader persistence/share/PDF/email, enquiry email, admin auth, Google OAuth (if enabled), customer registration/login, Stripe checkout and signed webhook handling.
