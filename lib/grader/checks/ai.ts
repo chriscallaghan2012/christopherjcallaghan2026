@@ -74,6 +74,26 @@ export function findBlockedAiCrawlers(robotsTxt: string | null, pathname: string
   return blocked;
 }
 
+function collectNamedIdentityEntities(value: unknown): string[] {
+  const names = new Set<string>();
+  const identityType = /^(Organization|Person|LocalBusiness|ProfessionalService)$/i;
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      for (const item of node) visit(item);
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    const record = node as Record<string, unknown>;
+    const rawType = record['@type'];
+    const types = Array.isArray(rawType) ? rawType : [rawType];
+    const isIdentity = types.some((type) => typeof type === 'string' && identityType.test(type.split('/').pop() ?? type));
+    if (isIdentity && typeof record.name === 'string' && record.name.trim()) names.add(record.name.trim());
+    for (const child of Object.values(record)) if (child && typeof child === 'object') visit(child);
+  };
+  visit(value);
+  return [...names];
+}
+
 const DOCS = {
   llms: { label: 'llms.txt', url: 'https://llmstxt.org/' },
   structured: { label: 'Google: structured data', url: 'https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data' },
@@ -150,34 +170,35 @@ export function runAiChecks(ctx: ScanContext): Check[] {
     return makeCategory('ai', checks);
   }
   // ---- Business / person identity ----
-  const hasIdentitySchema = facts.jsonLdTypes.some((t) => /Organization|Person|LocalBusiness|ProfessionalService/i.test(t));
-  const hasVisibleName = /christopher|company|business|agency|studio|limited|ltd|& co/i.test(facts.bodyText.slice(0, 2000));
-  const identityStrength = hasIdentitySchema && hasVisibleName;
-  if (identityStrength) {
+  const identityNames = facts.structuredData
+    .filter((block) => block.validJson)
+    .flatMap((block) => collectNamedIdentityEntities(block.data));
+  const visiblePageText = `${facts.title} ${facts.h1Texts.join(' ')} ${facts.bodyText}`.toLowerCase();
+  const visibleIdentityName = identityNames.find((name) => visiblePageText.includes(name.toLowerCase()));
+  if (visibleIdentityName) {
     checks.push(check({
-      id: 'ai-business-identity', name: 'Business identity is clear',
-      status: 'pass', measured: 'measured', points: 10,
-      evidence: ['Organization/Person schema present and a business name appears in the page text.'],
-      explanation: 'AI systems can clearly identify who owns this content, which supports accurate attribution.'
+      id: 'ai-business-identity', name: 'Named entity schema matches visible page text',
+      status: 'pass', measured: 'measured', points: 8,
+      evidence: [`Named identity entity found in JSON-LD and visible title/headings/text: ${visibleIdentityName}`],
+      explanation: 'A named Organization/Person/LocalBusiness entity in JSON-LD also appears in the extracted page text. This is a consistency signal, not proof of business legitimacy or authority.',
+      docs: [DOCS.structured]
     }));
-  } else if (hasIdentitySchema || hasVisibleName) {
+  } else if (identityNames.length > 0) {
     checks.push(check({
-      id: 'ai-business-identity', name: 'Business identity is clear',
-      status: 'warning', severity: 'low', measured: 'measured', points: 10,
-      evidence: [
-        ...(hasIdentitySchema ? ['Identity schema present.'] : []),
-        ...(hasVisibleName ? ['Business name appears in page text.'] : [])
-      ],
-      explanation: 'Some identity signals exist but the picture is incomplete. Adding both a clear name in the content and identity schema strengthens it.',
-      fix: 'Make sure your business name and a short description appear on the page, and add Organization or Person JSON-LD.'
+      id: 'ai-business-identity', name: 'Named entity schema matches visible page text',
+      status: 'warning', severity: 'low', measured: 'inferred', points: 8,
+      evidence: [`Named identity entity in JSON-LD not found verbatim in the extracted title, headings or body text: ${identityNames.slice(0, 3).join(', ')}`],
+      explanation: 'The structured-data name did not match the extracted visible text verbatim. This may be a genuine mismatch or a formatting difference; review it manually.',
+      fix: 'Confirm the Organization/Person name in JSON-LD accurately reflects the identity shown to visitors.',
+      docs: [DOCS.structured]
     }));
   } else {
     checks.push(check({
-      id: 'ai-business-identity', name: 'Business identity is clear',
-      status: 'fail', severity: 'medium', measured: 'measured', points: 10,
-      evidence: ['No organisation schema and no obvious business name found in the page text.'],
-      explanation: 'It is unclear who provides this content. AI systems may struggle to attribute it correctly.',
-      fix: 'State who you are and what you do on the page, and add an Organization/Person schema block.',
+      id: 'ai-business-identity', name: 'Named entity schema consistency',
+      status: 'info', measured: 'inferred', points: 0,
+      evidence: ['No named Organization/Person/LocalBusiness entity could be extracted from the detected JSON-LD.'],
+      explanation: 'The scanner cannot reliably infer a business name from generic page words. Entity schema is optional, and absence alone is not treated as a failure.',
+      fix: 'If relevant for this page, consider adding accurate Organization, Person or LocalBusiness JSON-LD with a name that matches visible content.',
       docs: [DOCS.structured]
     }));
   }
