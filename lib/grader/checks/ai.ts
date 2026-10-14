@@ -9,6 +9,70 @@ import type { Check } from '../types';
 import type { ScanContext } from '../context';
 import { makeCategory } from '../context';
 
+const AI_CRAWLER_AGENTS = [
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'anthropic-ai',
+  'PerplexityBot',
+  'CCBot'
+] as const;
+
+interface RobotsRuleGroup {
+  agents: string[];
+  rules: Array<{ allow: boolean; path: string }>;
+}
+
+/**
+ * Returns known AI crawler user agents whose matching robots.txt group
+ * disallows the requested path. Robots rules are grouped by consecutive
+ * User-agent lines; the most specific matching path wins, with Allow winning
+ * ties. This is intentionally a bounded diagnostic, not a full RFC parser.
+ */
+export function findBlockedAiCrawlers(robotsTxt: string | null, pathname: string): string[] {
+  if (robotsTxt === null) return [];
+
+  const groups: RobotsRuleGroup[] = [];
+  let current: RobotsRuleGroup | null = null;
+  let sawDirective = false;
+
+  for (const rawLine of robotsTxt.split(/\r?\n/)) {
+    const line = rawLine.split('#', 1)[0]?.trim();
+    if (!line) continue;
+    const separator = line.indexOf(':');
+    if (separator < 0) continue;
+    const key = line.slice(0, separator).trim().toLowerCase();
+    const value = line.slice(separator + 1).trim();
+    if (key === 'user-agent') {
+      if (!current || sawDirective) {
+        current = { agents: [], rules: [] };
+        groups.push(current);
+        sawDirective = false;
+      }
+      current.agents.push(value.toLowerCase());
+      continue;
+    }
+    if (!current || (key !== 'allow' && key !== 'disallow')) continue;
+    sawDirective = true;
+    if (value) current.rules.push({ allow: key === 'allow', path: value });
+  }
+
+  const blocked: string[] = [];
+  for (const crawler of AI_CRAWLER_AGENTS) {
+    const token = crawler.toLowerCase();
+    const specific = groups.filter((group) => group.agents.some((agent) => agent !== '*' && token.includes(agent)));
+    const applicable = specific.length > 0
+      ? specific
+      : groups.filter((group) => group.agents.includes('*'));
+    const rules = applicable.flatMap((group) => group.rules)
+      .filter((rule) => pathname.startsWith(rule.path))
+      .sort((a, b) => b.path.length - a.path.length || Number(b.allow) - Number(a.allow));
+    if (rules[0] && !rules[0].allow) blocked.push(crawler);
+  }
+  return blocked;
+}
+
 const DOCS = {
   llms: { label: 'llms.txt', url: 'https://llmstxt.org/' },
   structured: { label: 'Google: structured data', url: 'https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data' },
@@ -43,32 +107,35 @@ export function runAiChecks(ctx: ScanContext): Check[] {
     }));
   }
 
-  // ---- Crawler permissiveness (references SEO signals) ----
-  const robotsBlocking = facts
-    ? facts.metaRobotsValues.some((v) => /noindex|nofollow/i.test(v)) || (ctx.xRobotsTag !== null && /noindex|nofollow/i.test(ctx.xRobotsTag))
-    : false;
-  const robotsTxtBlocksAi = ctx.robotsTxt !== null && /^(user-agent|disallow)/im.test(ctx.robotsTxt) && /(gptbot|claude|perplexity|google-extended|ccbot)/i.test(ctx.robotsTxt) && /^disallow:\s*\/\s*$/im.test(ctx.robotsTxt);
-  if (robotsBlocking || robotsTxtBlocksAi) {
+  // ---- AI crawler rules (parse user-agent groups rather than matching unrelated lines) ----
+  const blockedAiCrawlers = findBlockedAiCrawlers(ctx.robotsTxt, new URL(ctx.finalUrl).pathname);
+  if (blockedAiCrawlers.length > 0) {
     checks.push(check({
-      id: 'ai-crawler-permissive', name: 'Crawlers can read the page',
+      id: 'ai-crawler-permissive', name: 'Known AI crawlers are allowed by robots.txt',
       status: 'warning', severity: 'medium', measured: 'measured', points: 5,
-      evidence: [
-        ...(robotsBlocking ? ['Robots directives include noindex/nofollow on the page.'] : []),
-        ...(robotsTxtBlocksAi ? ['robots.txt appears to block AI crawlers from the whole site.'] : [])
-      ],
-      explanation: 'Some robots directives may prevent AI crawlers from reading the page. Blocking AI crawlers is a legitimate choice for many sites, so this is a warning, not a failure.',
-      fix: 'If you want AI systems to reference your content, allow the relevant crawlers and remove noindex from important pages.',
+      evidence: blockedAiCrawlers.map((crawler) => `robots.txt blocks ${crawler} from ${new URL(ctx.finalUrl).pathname}.`),
+      explanation: 'robots.txt appears to disallow one or more known AI crawlers for this page. This is a choice, not automatically an SEO error; the impact depends on which services you want to access your content.',
+      fix: 'If you want the listed services to crawl this content, review the matching User-agent group in robots.txt and adjust its Disallow/Allow rules deliberately.',
       docs: [DOCS.robotsAi],
-      refs: ['seo-robots-directives', 'seo-robots-txt']
+      refs: ['seo-robots-txt']
+    }));
+  } else if (ctx.robotsTxt === null) {
+    checks.push(check({
+      id: 'ai-crawler-permissive', name: 'Known AI crawler rules',
+      status: 'not_measured', measured: 'not_applicable', points: 0,
+      evidence: ['robots.txt could not be fetched, so crawler-specific rules could not be checked.'],
+      explanation: 'The scanner cannot determine crawler-specific access rules when robots.txt is unavailable.',
+      docs: [DOCS.robotsAi],
+      refs: ['seo-robots-txt']
     }));
   } else {
     checks.push(check({
-      id: 'ai-crawler-permissive', name: 'Crawlers can read the page',
+      id: 'ai-crawler-permissive', name: 'Known AI crawlers are allowed by robots.txt',
       status: 'pass', measured: 'measured', points: 5,
-      evidence: ['No blocking robots directives detected for the page or site.'],
-      explanation: 'No obvious robots-level barriers to content extraction were detected.',
+      evidence: ['No disallow rule was found for the checked AI crawler user agents and this page path.'],
+      explanation: 'No matching robots.txt rule was found that disallows the checked AI crawlers from this page. This does not prove that every AI service can fetch or use the content.',
       docs: [DOCS.robotsAi],
-      refs: ['seo-robots-directives', 'seo-robots-txt']
+      refs: ['seo-robots-txt']
     }));
   }
 
