@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Braces, CircleAlert, CircleCheck, Info, RotateCcw } from 'lucide-react';
-import { validateStructuredData, type StructuredFindingSeverity } from '../../lib/structuredDataValidator';
+import { validateStructuredData, type StructuredDataResult, type StructuredFindingSeverity } from '../../lib/structuredDataValidator';
 
 const example = `{
   "@context": "https://schema.org",
@@ -19,8 +19,34 @@ const severityStyles: Record<StructuredFindingSeverity, string> = {
 
 export const StructuredDataValidator: React.FC = () => {
   const [input, setInput] = useState('');
-  const result = useMemo(() => validateStructuredData(input), [input]);
-  const hasInput = input.trim().length > 0;
+  const [urlInput, setUrlInput] = useState('');
+  const [urlResult, setUrlResult] = useState<{ url: string; result: StructuredDataResult } | null>(null);
+  const [urlError, setUrlError] = useState('');
+  const [urlLoading, setUrlLoading] = useState(false);
+  const localResult = useMemo(() => validateStructuredData(input), [input]);
+  const result = urlResult?.result ?? localResult;
+  const hasInput = input.trim().length > 0 || Boolean(urlResult);
+
+  const scanUrl = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setUrlError('');
+    setUrlResult(null);
+    setUrlLoading(true);
+    try {
+      const response = await fetch('/api/tools/structured-data-validator', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: urlInput })
+      });
+      const payload = await response.json() as { success?: boolean; url?: string; result?: StructuredDataResult; error?: string };
+      if (!response.ok || !payload.success || !payload.result || !payload.url) throw new Error(payload.error || 'The page could not be analysed.');
+      setUrlResult({ url: payload.url, result: payload.result });
+    } catch (cause) {
+      setUrlError(cause instanceof Error ? cause.message : 'The page could not be analysed.');
+    } finally {
+      setUrlLoading(false);
+    }
+  };
 
   return (
     <div className="px-5 py-12 md:px-8 md:py-16">
@@ -43,7 +69,7 @@ export const StructuredDataValidator: React.FC = () => {
             </div>
             <textarea
               value={input}
-              onChange={(event) => setInput(event.target.value)}
+              onChange={(event) => { setInput(event.target.value); setUrlResult(null); setUrlError(''); }}
               spellCheck={false}
               rows={18}
               maxLength={250000}
@@ -52,7 +78,16 @@ export const StructuredDataValidator: React.FC = () => {
               className="mt-4 min-h-[320px] w-full resize-y border border-white/15 bg-black/50 p-4 font-mono text-xs leading-relaxed text-white placeholder:text-white/25 focus:border-[#FF5575] focus:outline-none"
             />
             <p className="mt-2 text-xs text-white/40">Up to 250,000 characters. Paste JSON-LD directly or the HTML containing its script blocks.</p>
-            <button type="button" onClick={() => setInput(example)} className="mt-4 min-h-10 border border-white/20 px-4 text-xs font-bold text-white/75 transition-colors hover:border-[#FF5575]/60 hover:text-white">Load example</button>
+            <button type="button" onClick={() => { setInput(example); setUrlResult(null); setUrlError(''); }} className="mt-4 min-h-10 border border-white/20 px-4 text-xs font-bold text-white/75 transition-colors hover:border-[#FF5575]/60 hover:text-white">Load example</button>
+            <form onSubmit={scanUrl} className="mt-6 border-t border-white/10 pt-5">
+              <label htmlFor="structured-page-url" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-white/60">Or inspect a public page URL</label>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input id="structured-page-url" type="url" inputMode="url" required maxLength={2048} value={urlInput} onChange={(event) => setUrlInput(event.target.value)} placeholder="https://example.com/product" className="min-h-11 min-w-0 flex-1 border border-white/20 bg-black/50 px-3 text-sm text-white placeholder:text-white/30 focus:border-[#FF5575] focus:outline-none" />
+                <button type="submit" disabled={urlLoading} className="min-h-11 border border-[#FF003C]/60 bg-[#FF003C]/10 px-4 text-xs font-bold text-white transition-colors hover:bg-[#FF003C]/20 disabled:opacity-50">{urlLoading ? 'Scanning…' : 'Scan URL'}</button>
+              </div>
+              <p className="mt-2 text-xs text-white/40">The server fetch is rate-limited, size-capped and protected against private-network destinations and unsafe redirects.</p>
+              {urlError && <p role="alert" className="mt-2 text-xs text-red-200">{urlError}</p>}
+            </form>
           </section>
 
           <section aria-labelledby="structured-results-title" aria-live="polite">
@@ -61,7 +96,7 @@ export const StructuredDataValidator: React.FC = () => {
                 <span className="flex h-10 w-10 items-center justify-center border border-[#FF003C]/35 bg-[#FF003C]/10 text-[#FF5575]"><Braces className="h-5 w-5" aria-hidden="true" /></span>
                 <div>
                   <h2 id="structured-results-title" className="text-lg font-black text-white">Findings</h2>
-                  <p className="text-xs text-white/45">{hasInput ? `${result.scriptCount} block(s) parsed · ${result.entityCount} typed entity/entities` : 'Results appear as you paste input'}</p>
+                  <p className="text-xs text-white/45">{urlResult ? `Fetched: ${urlResult.url}` : hasInput ? `${result.scriptCount} block(s) parsed · ${result.entityCount} typed entity/entities` : 'Results appear as you paste input'}</p>
                 </div>
               </div>
 
