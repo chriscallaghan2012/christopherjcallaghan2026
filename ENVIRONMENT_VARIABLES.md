@@ -76,11 +76,12 @@ Never commit `.env.local`, real API keys, passwords, session secrets, database U
 
 ## Current verification gaps
 
-- Run `npm run lint`, `npm test` and `npm run build`; record actual output rather than assuming success.
+- [x] Run `npm run lint`, `npm test` and `npm run build`: GitHub Actions passed TypeScript, unit/smoke tests, production build, dependency audit and Playwright browser tests on merged `main` (https://github.com/chriscallaghan2012/christopherjcallaghan2026/actions/runs/38619897704).
 - Verify the complete environment-variable list against all server routes and integrations, including whether the legacy `VITE_GEMINI_API_KEY`, `APP_URL`, and `NEXT_PUBLIC_APP_URL` can be removed. `GOOGLE_REDIRECT_URI` is an optional connector override and should be set when the derived callback URL differs from the registered URI.
-- Check that CI workflows exist and run; GitHub currently reports no recent workflow runs for this repository.
-- Verify Vercel Preview and Production variable scopes without exposing values.
-- Smoke-test grader persistence/share/PDF/email, enquiry email, admin auth, Google OAuth (if enabled), customer registration/login, Stripe checkout and signed webhook handling.
+- [x] CI workflow is active; the merged `main` run above passed. Preview deployments are disabled project-wide; the production deployment is `dpl_HJhgoMTSb8hBo2YtxywjR1kNKUgi`.
+- [x] Verify Vercel variable names/targets without exposing secret values. `FORM_SUBMISSION_EMAIL` is not configured in Production; `lib/grader/emailReport.ts` currently falls back to `instantonlinesuccess@gmail.com`. Confirm the intended inbox before sending a live lead test.
+- [x] Apply `database/migrations/008_website_grader.sql` to the website's Neon database after testing it on an isolated Neon branch; `website_grader_scans` and its index now exist in Production.
+- [ ] Smoke-test live grader persistence/share/PDF/email, enquiry email, admin auth, Google OAuth (if enabled), customer registration/login, Stripe checkout and signed webhook handling. No live email enquiry or real payment has been sent.
 - Keep `ALLOW_PRIVATE_NETWORK_SCANS` disabled outside local tests and re-check SSRF protections before production release.
 
 ## Safe local setup
