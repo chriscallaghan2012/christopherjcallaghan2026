@@ -41,10 +41,11 @@ Turn the website into a credible developer/business-builder hub that demonstrate
 
 - [ ] Implement deterministic checks for title, meta description, heading structure, canonical, robots.txt, sitemap.xml, Open Graph and detectable structured data.
 - [ ] Record evidence and explain the impact and recommended fix for each check.
-- [ ] Use pass / warning / fail / unknown rather than implying precision where a check cannot be verified.
+- [ ] Preserve the existing evidence-led pass / warning / fail / not-measured states rather than implying precision where a check cannot be verified.
 - [ ] Show the scan timestamp and limitations.
 - [ ] Do not label a readiness score as a Google ranking or AI visibility score.
-- [ ] Test blocked URLs, redirects, timeouts, large responses and malformed HTML.
+- [ ] Preserve existing report persistence, share links, PDF, email and fix-my-website flows while testing blocked URLs, redirects, timeouts, large responses and malformed HTML.
+- [ ] Keep `/tools/website-grader` as the canonical route and sitemap entry; do not add `/tools/ai-seo-audit`.
 
 ### 2.2 Structured Data Validator — `/tools/structured-data-validator`
 
