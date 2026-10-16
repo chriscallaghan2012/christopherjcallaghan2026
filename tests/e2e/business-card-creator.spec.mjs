@@ -36,7 +36,7 @@ test('business card studio offers premium templates, correct sizes and print exp
   await page.getByRole('button', { name: 'Monogram Luxe' }).click();
   await expect(page.getByRole('heading', { name: 'Monogram Luxe' })).toBeVisible();
   await page.getByRole('button', { name: 'Back', exact: true }).click();
-  await expect(page.locator('.business-card-preview svg')).toContainText('TECHNOLOGY  /  STRATEGY  /  GROWTH');
+  await expect(page.locator('.business-card-preview svg')).toContainText('STRATEGY  /  TECHNOLOGY  /  GROWTH');
 
   await expect(page.getByRole('button', { name: 'Print / Save PDF' })).toBeVisible();
   await page.emulateMedia({ media: 'print' });
