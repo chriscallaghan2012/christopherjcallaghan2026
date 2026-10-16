@@ -5,6 +5,8 @@ test('business card studio offers premium templates, correct sizes and print exp
   await page.goto('/tools/business-card-creator');
   await expect(page.getByRole('heading', { name: 'Business Card Studio.' })).toBeVisible();
   await expect(page.getByText('Business Advisor & Full-Stack Developer')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Tell me what you want your card to say.' })).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Ask the AI design assistant' })).toBeVisible();
 
   for (const template of ['Crimson Executive', 'Swiss Minimal', 'Ember Studio', 'Monogram Luxe', 'Split Consultant', 'Signal Grid']) {
     await expect(page.getByRole('button', { name: new RegExp(template) })).toBeVisible();
@@ -35,7 +37,7 @@ test('business card studio offers premium templates, correct sizes and print exp
 
   await page.getByRole('button', { name: 'Monogram Luxe' }).click();
   await expect(page.getByRole('heading', { name: 'Monogram Luxe' })).toBeVisible();
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: /^back$/i }).click();
   await expect(page.locator('.business-card-preview svg')).toContainText('STRATEGY  /  TECHNOLOGY  /  GROWTH');
 
   await expect(page.getByRole('button', { name: 'Print / Save PDF' })).toBeVisible();
@@ -57,6 +59,6 @@ test('business card studio remains within a mobile viewport', async ({ page }) =
   }));
   expect(widths.content).toBeLessThanOrEqual(widths.viewport + 1);
 
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: /^back$/i }).click();
   await expect(page.locator('.business-card-preview svg')).toContainText('TECHNOLOGY. STRATEGY. GROWTH.');
 });
