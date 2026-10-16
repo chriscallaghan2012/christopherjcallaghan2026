@@ -170,9 +170,10 @@ function makeCardSvg(input: {
       rect(inset, inset, w - inset * 2, h - inset * 2, 'none', 'stroke="' + accent + '" stroke-width="1"');
       circle(w / 2, Math.round(h * 0.33), Math.round(h * 0.15), 'none', 'stroke="' + accent + '" stroke-width="2"');
       text(initials(displayName), w / 2, Math.round(h * 0.36), Math.round(h * 0.09), accent, 'text-anchor="middle" font-family="Georgia, serif"');
-      text(companyLabel || displayName, w / 2, Math.round(h * 0.65), Math.round(w * 0.034), fg, 'text-anchor="middle" font-family="Georgia, serif"');
-      line(Math.round(w * 0.39), Math.round(h * 0.73), Math.round(w * 0.61), Math.round(h * 0.73), accent, 1);
-      text(displayWebsite, w / 2, Math.round(h * 0.84), Math.round(w * 0.018), accent, 'text-anchor="middle"');
+      text(companyLabel || displayName, w / 2, Math.round(h * 0.62), Math.round(w * 0.034), fg, 'text-anchor="middle" font-family="Georgia, serif"');
+      line(Math.round(w * 0.39), Math.round(h * 0.7), Math.round(w * 0.61), Math.round(h * 0.7), accent, 1);
+      text(sideTitle, w / 2, Math.round(h * 0.79), Math.round(w * 0.012), muted, 'text-anchor="middle" letter-spacing="1"');
+      text(displayWebsite, w / 2, Math.round(h * 0.89), Math.round(w * 0.018), accent, 'text-anchor="middle"');
     } else if (template === 'split-consultant') {
       rect(0, 0, w, Math.round(h * 0.17), accent);
       text(companyLabel || displayName, w / 2, Math.round(h * 0.115), Math.round(w * 0.034), '#FFFFFF', 'text-anchor="middle" font-weight="700"');
