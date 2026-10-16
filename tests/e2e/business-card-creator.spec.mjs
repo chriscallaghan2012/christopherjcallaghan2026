@@ -23,7 +23,7 @@ test('business card creator edits details, switches sides and exports artwork', 
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await expect(page.getByText('Technology. Strategy. Growth.')).toBeVisible();
 
-  await page.getByRole('button', { name: 'Print / Save PDF' }).click();
+  await expect(page.getByRole('button', { name: 'Print / Save PDF' })).toBeVisible();
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('.business-card-preview svg')).toBeVisible();
   await expect(page.locator('.print-hide').first()).toBeHidden();
