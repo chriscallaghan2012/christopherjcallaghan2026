@@ -102,7 +102,7 @@ test('the desktop Tools mega-menu displays all live tools in three columns', asy
 
   const toolsGrid = page.getByLabel('Available tools');
   await expect(toolsGrid).toBeVisible();
-  await expect(toolsGrid.getByRole('link')).toHaveCount(5);
+  await expect(toolsGrid.getByRole('link')).toHaveCount(6);
   await expect.poll(async () => toolsGrid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(3);
 });
 
