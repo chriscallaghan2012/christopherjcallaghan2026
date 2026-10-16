@@ -50,7 +50,7 @@ export const ToolsDirectory: React.FC = () => (
     <div className="mx-auto max-w-5xl">
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.24em] text-[#FF5575]">Free tools</p>
       <h1 className="mt-4 max-w-3xl text-4xl font-black leading-[0.95] text-white sm:text-6xl">
-        Free tools for your website.
+        Free tools to build and grow your business.
       </h1>
       <p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base">
         Practical, no-account tools that analyse your site and tell you what to improve next — built with the same

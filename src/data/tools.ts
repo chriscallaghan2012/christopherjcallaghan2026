@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Braces, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, CreditCard, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -88,6 +88,19 @@ export const TOOLS: ToolCardData[] = [
     capabilities: ['Starting or relaunching', 'Personalised next steps', 'Saved progress'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
+  },
+  {
+    slug: 'business-card-creator',
+    href: '/tools/business-card-creator',
+    tab: 'tools',
+    name: 'Business Card Creator',
+    tagline: 'Design and download a professional business card',
+    description: 'Create a branded business card with editable contact details, front and back layouts, dark-tech colour themes and high-resolution PNG or SVG exports.',
+    icon: CreditCard,
+    status: 'live',
+    category: 'Business Tools',
+    capabilities: ['Editable details and branding', 'Front and back designs', 'PNG, SVG and print export'],
+    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
+    eyebrow: 'FREE TOOL'
   }
 ];
-
