@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, Download, Printer, RotateCcw, Sparkles } from 'lucide-react';
+import { Check, Download, Printer, RotateCcw, Sparkles, Bot, Send, LoaderCircle, WandSparkles } from 'lucide-react';
 
 type TemplateId = 'crimson-executive' | 'swiss-minimal' | 'ember-studio' | 'monogram-luxe' | 'split-consultant' | 'signal-grid';
 type Side = 'front' | 'back';
@@ -217,6 +217,12 @@ export default function BusinessCardCreator() {
   const [side, setSide] = useState<Side>('front');
   const [sizeId, setSizeId] = useState<CardSizeId>('uk');
   const [bleed, setBleed] = useState(true);
+  const [assistantPrompt, setAssistantPrompt] = useState('');
+  const [assistantReply, setAssistantReply] = useState('');
+  const [assistantSuggestion, setAssistantSuggestion] = useState<Record<string, string> | null>(null);
+  const [assistantLoading, setAssistantLoading] = useState(false);
+  const [assistantError, setAssistantError] = useState('');
+  const [assistantNeedsKey, setAssistantNeedsKey] = useState(false);
   const size = CARD_SIZES.find((item) => item.id === sizeId) || CARD_SIZES[0];
   const selectedTemplate = TEMPLATES.find((item) => item.id === template) || TEMPLATES[0];
   const artwork = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed: false }), [name, title, specialism, email, phone, website, company, template, side, size]);
@@ -268,6 +274,54 @@ export default function BusinessCardCreator() {
     setBleed(true);
   };
 
+  const askAssistant = async (promptOverride?: string) => {
+    const prompt = (promptOverride ?? assistantPrompt).trim();
+    if (!prompt || assistantLoading) return;
+    setAssistantPrompt(prompt);
+    setAssistantLoading(true);
+    setAssistantError('');
+    setAssistantReply('');
+    setAssistantSuggestion(null);
+    setAssistantNeedsKey(false);
+    try {
+      const response = await fetch('/api/tools/business-card-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: prompt,
+          current: { name, title, specialism, email, phone, website, company, template },
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setAssistantNeedsKey(Boolean(data.needsApiKey));
+        throw new Error(data.error || 'The assistant could not complete that request.');
+      }
+      setAssistantReply(typeof data.reply === 'string' ? data.reply : 'I have prepared some improvements for your card.');
+      setAssistantSuggestion(data.suggested && typeof data.suggested === 'object' ? data.suggested : null);
+    } catch (error) {
+      setAssistantError(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
+    } finally {
+      setAssistantLoading(false);
+    }
+  };
+
+  const applyAssistantSuggestion = () => {
+    if (!assistantSuggestion) return;
+    if (assistantSuggestion.name) setName(assistantSuggestion.name);
+    if (assistantSuggestion.title) setTitle(assistantSuggestion.title);
+    if (assistantSuggestion.specialism) setSpecialism(assistantSuggestion.specialism);
+    if (assistantSuggestion.email) setEmail(assistantSuggestion.email);
+    if (assistantSuggestion.phone) setPhone(assistantSuggestion.phone);
+    if (assistantSuggestion.website) setWebsite(assistantSuggestion.website);
+    if (assistantSuggestion.company) setCompany(assistantSuggestion.company);
+    if (assistantSuggestion.template && TEMPLATES.some((item) => item.id === assistantSuggestion.template)) {
+      setTemplate(assistantSuggestion.template as TemplateId);
+    }
+    setAssistantReply('Applied. Check the live preview and edit anything you want before exporting.');
+    setAssistantSuggestion(null);
+  };
+
   const field = (label: string, value: string, setter: (v: string) => void, placeholder?: string) => (
     <label className="block space-y-1.5">
       <span className="text-xs font-semibold uppercase tracking-[.12em] text-white/55">{label}</span>
@@ -309,6 +363,38 @@ export default function BusinessCardCreator() {
             </button>
           ))}
         </div>
+
+        <section className="print-hide mb-7 overflow-hidden rounded-2xl border border-[#F04444]/25 bg-[radial-gradient(ellipse_at_top_left,rgba(240,68,68,.12),transparent_55%),#111114]">
+          <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-[#FF7777]"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#F04444]/25 bg-[#F04444]/10"><Bot size={18} /></span><div><p className="font-mono text-[10px] uppercase tracking-[.2em]">AI design assistant</p><h2 className="text-lg font-bold text-white">Tell me what you want your card to say.</h2></div></div>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-white/55">Get help with your positioning, wording, template choice and visual hierarchy. The assistant proposes changes first — nothing is applied until you choose.</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {[
+                  'Make this feel more premium and high-end',
+                  'Position me as an AI business advisor',
+                  'Make the card cleaner and easier to read',
+                ].map((prompt) => <button key={prompt} type="button" onClick={() => setAssistantPrompt(prompt)} className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-left text-xs text-white/65 transition hover:border-[#F04444]/50 hover:text-white">{prompt}</button>)}
+              </div>
+              <form className="mt-4 flex flex-col gap-2 sm:flex-row" onSubmit={(event) => { event.preventDefault(); void askAssistant(); }}>
+                <input aria-label="Ask the AI design assistant" value={assistantPrompt} onChange={(event) => setAssistantPrompt(event.target.value)} maxLength={900} placeholder="e.g. Make the wording clearer for business owners…" className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-[#09090B] px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#F04444]/70 focus:ring-2 focus:ring-[#F04444]/10" />
+                <button type="submit" disabled={assistantLoading || !assistantPrompt.trim()} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#F04444] px-5 text-sm font-bold text-white transition hover:bg-[#D93636] disabled:cursor-not-allowed disabled:opacity-50">{assistantLoading ? <LoaderCircle size={16} className="animate-spin" /> : <Send size={15} />}{assistantLoading ? 'Thinking…' : 'Ask assistant'}</button>
+              </form>
+              {assistantError && <div role="alert" className="mt-3 rounded-xl border border-amber-400/20 bg-amber-300/[.06] p-3 text-sm leading-6 text-amber-100/90">{assistantError}{assistantNeedsKey && <p className="mt-2 text-xs text-amber-100/70">Use the existing Gemini setup: add <code className="rounded bg-black/30 px-1.5 py-0.5">GEMINI_API_KEY</code> to <code className="rounded bg-black/30 px-1.5 py-0.5">.env.local</code> locally and the Vercel project’s environment variables. Keep it server-side; don’t put it in client code.</p>}</div>}
+              {(assistantReply || assistantSuggestion) && <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#FF7777]"><WandSparkles size={14} /> Suggested direction</p>
+                {assistantReply && <p className="mt-2 text-sm leading-6 text-white/75">{assistantReply}</p>}
+                {assistantSuggestion && <div className="mt-3 flex flex-wrap items-center gap-2">
+                  {assistantSuggestion.template && <span className="rounded-full border border-[#F04444]/25 bg-[#F04444]/10 px-3 py-1.5 text-xs text-white/80">Template: {TEMPLATES.find((item) => item.id === assistantSuggestion.template)?.name || assistantSuggestion.template}</span>}
+                  {assistantSuggestion.title && <span className="rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/65">Title: {assistantSuggestion.title}</span>}
+                  {assistantSuggestion.specialism && <span className="rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/65">Focus: {assistantSuggestion.specialism}</span>}
+                  <button type="button" onClick={applyAssistantSuggestion} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-white px-4 text-xs font-bold text-black transition hover:bg-white/85"><Check size={14} /> Apply suggestions</button>
+                </div>}
+              </div>}
+            </div>
+            <div className="hidden min-w-[150px] flex-col items-end gap-2 pt-1 text-right lg:flex"><span className="inline-flex items-center gap-1.5 rounded-full border border-[#F04444]/20 bg-[#F04444]/[.07] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.12em] text-[#FF7777]"><Sparkles size={12} /> Brand co-pilot</span><span className="max-w-[150px] text-xs leading-5 text-white/35">You stay in control of every edit and export.</span></div>
+          </div>
+        </section>
 
         <div className="grid items-start gap-6 xl:grid-cols-[370px_minmax(0,1fr)]">
           <section className="print-hide rounded-2xl border border-white/10 bg-[#111114] p-5 sm:p-6">
