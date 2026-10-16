@@ -6,7 +6,7 @@ test('business card creator edits details, switches sides and exports artwork', 
   await expect(page.getByRole('heading', { name: 'Business Card Creator' })).toBeVisible();
   await expect(page.getByText('Business Advisor & Full-Stack Developer')).toBeVisible();
 
-  const name = page.getByLabel('Name');
+  const name = page.getByRole('textbox', { name: 'Name', exact: true });
   await name.fill('Alex Example');
   await expect(page.getByText('Alex Example', { exact: true })).toBeVisible();
 
