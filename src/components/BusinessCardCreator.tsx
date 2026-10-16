@@ -284,11 +284,12 @@ export default function BusinessCardCreator() {
     setAssistantSuggestion(null);
     setAssistantNeedsKey(false);
     try {
-      const response = await fetch('/api/tools/business-card-assistant', {
+      const response = await fetch('/api/generate-architecture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: prompt,
+          mode: 'business-card-assistant',
+          prompt,
           current: { name, title, specialism, email, phone, website, company, template },
         }),
       });
