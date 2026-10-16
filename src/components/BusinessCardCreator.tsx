@@ -77,6 +77,7 @@ function makeCardSvg(input: {
     add('<g transform="translate(' + bleedPx + ' ' + bleedPx + ')">');
     rect(0, 0, w, h, bg);
   };
+  add('<svg xmlns="http://www.w3.org/2000/svg" width="' + (size.widthMm + (bleed ? 6 : 0)) + 'mm" height="' + (size.heightMm + (bleed ? 6 : 0)) + 'mm" viewBox="0 0 ' + canvasW + ' ' + canvasH + '">');
   background();
 
   if (side === 'front') {
@@ -201,9 +202,7 @@ function makeCardSvg(input: {
 
   add('</g>');
   add('</svg>');
-  const inner = parts.join('');
-  const opening = '<svg xmlns="http://www.w3.org/2000/svg" width="' + (bleed ? (size.widthMm + 6) + 'mm' : size.widthMm + 'mm') + '" height="' + (bleed ? (size.heightMm + 6) + 'mm' : size.heightMm + 'mm') + '" viewBox="0 0 ' + canvasW + ' ' + canvasH + '" role="img" aria-label="' + esc(selected.name + ' business card ' + side) + '">';
-  return inner.replace('<svg xmlns="http://www.w3.org/2000/svg" width="' + canvasW + '" height="' + canvasH + '" viewBox="0 0 ' + canvasW + ' ' + canvasH + '">', opening);
+  return parts.join('');
 }
 
 export default function BusinessCardCreator() {
