@@ -700,59 +700,57 @@ select:focus {
 }
 
 
-/* Site-wide animated neon perimeter for cards.
-   The shared classes allow deliberate accents; common rounded, bordered card surfaces
-   also receive the effect so it carries across pages without changing each component. */
+/* Thin electric trace: a short neon arc chases around deliberately marked cards.
+   Keep the effect opt-in so it never draws a full perimeter around unrelated UI. */
+.electric-border,
 .card-glow,
 [data-card-glow],
-.site-card,
-div[class*="rounded-"][class*="border"][class*="bg-"] {
+.site-card {
   --card-glow: #00d5ff;
   --card-glow-secondary: #8b5cf6;
   position: relative;
   isolation: isolate;
-  border-color: color-mix(in srgb, var(--card-glow) 34%, rgba(255,255,255,.12));
+  border-radius: 0 !important;
   transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
 }
+.electric-border::before,
 .card-glow::before,
 [data-card-glow]::before,
-.site-card::before,
-div[class*="rounded-"][class*="border"][class*="bg-"]::before {
+.site-card::before {
   content: "";
   position: absolute;
   inset: -1px;
-  z-index: -1;
-  border-radius: inherit;
+  z-index: 2;
   padding: 1px;
+  border-radius: 0;
   background: conic-gradient(
     from var(--card-glow-angle, 0deg),
-    transparent 0deg,
-    transparent 245deg,
-    var(--card-glow) 285deg,
-    var(--card-glow-secondary) 315deg,
-    transparent 350deg,
-    transparent 360deg
+    transparent 0deg 292deg,
+    var(--card-glow) 307deg,
+    #ffffff 313deg,
+    var(--card-glow-secondary) 322deg,
+    transparent 338deg 360deg
   );
-  opacity: .72;
-  animation: card-glow-orbit 5.5s linear infinite;
+  opacity: .9;
+  animation: electricTraceOrbit 3.2s linear infinite;
   pointer-events: none;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
-.card-glow:hover,
-[data-card-glow]:hover,
-.site-card:hover,
-div[class*="rounded-"][class*="border"][class*="bg-"]:hover {
-  border-color: color-mix(in srgb, var(--card-glow) 68%, white 8%);
-  box-shadow: 0 0 22px color-mix(in srgb, var(--card-glow) 17%, transparent);
+.electric-border > *,
+.card-glow > *,
+[data-card-glow] > *,
+.site-card > * {
+  position: relative;
+  z-index: 1;
 }
+.electric-border:hover::before,
 .card-glow:hover::before,
 [data-card-glow]:hover::before,
-.site-card:hover::before,
-div[class*="rounded-"][class*="border"][class*="bg-"]:hover::before {
+.site-card:hover::before {
   opacity: 1;
-  animation-duration: 2.8s;
+  animation-duration: 1.8s;
 }
 .card-glow--blue { --card-glow: #18a8ff; --card-glow-secondary: #4f46e5; }
 .card-glow--purple { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
@@ -761,23 +759,22 @@ div[class*="rounded-"][class*="border"][class*="bg-"]:hover::before {
 .card-glow--red { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
 .card-glow--cyan { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
 
-/* Varied accents for cards grouped in the same grid/list. */
-div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 2) { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
-div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 3) { --card-glow: #31e6a2; --card-glow-secondary: #00a878; }
-div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 4) { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
-div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 5) { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
-div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n) { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
-
 @property --card-glow-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
-@keyframes card-glow-orbit {
+@keyframes electricTraceOrbit {
   to { --card-glow-angle: 360deg; }
 }
+
 @media (prefers-reduced-motion: reduce) {
+  .electric-border::before,
   .card-glow::before,
   [data-card-glow]::before,
-  .site-card::before { animation: none; }
+  .site-card::before {
+    animation: none;
+    background: linear-gradient(90deg, var(--card-glow), var(--card-glow-secondary));
+    opacity: .6;
+  }
 }

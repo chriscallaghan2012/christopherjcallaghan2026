@@ -574,6 +574,14 @@ export const SERVICES_DATA: ServiceItem[] = [
     description: "Leveraging AI to enhance search rankings, optimize content structure, and perform intelligent semantic keyword analysis.",
     deliverables: ["Automated SERP Scraping & Analysis", "Semantic Keyword Clustering", "Automated Meta & Schema Generation", "Programmatic SEO Architectures"],
     idealFor: "Brands wanting sustainable organic traffic growth through smart software."
+  },
+  {
+    id: 10,
+    icon: "ShieldCheck",
+    title: "Website, Software & App Security",
+    description: "Investigating malware and suspicious activity, reviewing vulnerabilities and strengthening websites, custom software, APIs and mobile applications.",
+    deliverables: ["Malware investigation and cleanup support", "Website, API and application security reviews", "Vulnerability remediation and hardening", "Recovery checks and prioritised security guidance"],
+    idealFor: "Businesses needing help investigating a compromise or reducing security risks across their digital products."
   }
 ];
 
