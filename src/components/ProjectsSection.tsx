@@ -110,7 +110,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             return (
               <div
                 key={project.id}
-                className="group flex flex-col h-full rounded-3xl overflow-hidden bg-black/50 backdrop-blur-2xl border border-white/10 transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.25)] hover:-translate-y-1.5"
+                className="electric-border electric-border--red group flex flex-col h-full overflow-hidden bg-black/50 backdrop-blur-2xl border border-white/10 transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.25)] hover:-translate-y-1.5"
               >
                 {/* Card Header */}
                 <div className="relative z-10 p-5 pb-3">
