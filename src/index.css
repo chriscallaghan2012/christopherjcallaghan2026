@@ -701,11 +701,12 @@ select:focus {
 
 
 /* Site-wide animated neon perimeter for cards.
-   A narrow conic-gradient traces the outside edge; the card surface stays readable.
-   Per-card accent colours can be set with --card-glow, with a site palette fallback. */
+   The shared classes allow deliberate accents; common rounded, bordered card surfaces
+   also receive the effect so it carries across pages without changing each component. */
 .card-glow,
 [data-card-glow],
-.site-card {
+.site-card,
+div[class*="rounded-"][class*="border"][class*="bg-"] {
   --card-glow: #00d5ff;
   --card-glow-secondary: #8b5cf6;
   position: relative;
@@ -715,7 +716,8 @@ select:focus {
 }
 .card-glow::before,
 [data-card-glow]::before,
-.site-card::before {
+.site-card::before,
+div[class*="rounded-"][class*="border"][class*="bg-"]::before {
   content: "";
   position: absolute;
   inset: -1px;
@@ -740,13 +742,15 @@ select:focus {
 }
 .card-glow:hover,
 [data-card-glow]:hover,
-.site-card:hover {
+.site-card:hover,
+div[class*="rounded-"][class*="border"][class*="bg-"]:hover {
   border-color: color-mix(in srgb, var(--card-glow) 68%, white 8%);
   box-shadow: 0 0 22px color-mix(in srgb, var(--card-glow) 17%, transparent);
 }
 .card-glow:hover::before,
 [data-card-glow]:hover::before,
-.site-card:hover::before {
+.site-card:hover::before,
+div[class*="rounded-"][class*="border"][class*="bg-"]:hover::before {
   opacity: 1;
   animation-duration: 2.8s;
 }
@@ -756,6 +760,13 @@ select:focus {
 .card-glow--orange { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
 .card-glow--red { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
 .card-glow--cyan { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
+
+/* Varied accents for cards grouped in the same grid/list. */
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 2) { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 3) { --card-glow: #31e6a2; --card-glow-secondary: #00a878; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 4) { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 5) { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n) { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
 
 @property --card-glow-angle {
   syntax: "<angle>";
