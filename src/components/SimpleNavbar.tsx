@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
-import { ArrowRight, Bot, BookOpen, BriefcaseBusiness, ChevronDown, Code, FileText, Gauge, Home, Mail, MapPin, Menu, MousePointerClick, Rocket, Search, Share2, Smartphone, Users, Wrench, X } from 'lucide-react';
+import { ArrowRight, Bot, BookOpen, BriefcaseBusiness, ChevronDown, Code, FileText, Gauge, Home, Mail, MapPin, Menu, MousePointerClick, Rocket, Search, Share2, ShieldCheck, Smartphone, Users, Wrench, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { ScreenTab } from '../types';
 import { TOOLS } from '../data/tools';
@@ -22,7 +22,8 @@ const SERVICE_MENU = [
   { href: '/social-media-marketing', label: 'Social Media Marketing', description: 'Content, audiences and campaign planning.', icon: Share2 },
   { href: '/agency-development-partner', label: 'Agency Development Partner', description: 'White-label delivery and dependable overflow capacity.', icon: Users },
   { href: '/app-development', label: 'iPhone & Android Apps', description: 'Mobile products from focused MVP to release.', icon: Smartphone },
-  { href: '/ai-automation', label: 'AI & Business Automation', description: 'Useful AI integrations and connected workflows.', icon: Bot }
+  { href: '/ai-automation', label: 'AI & Business Automation', description: 'Useful AI integrations and connected workflows.', icon: Bot },
+  { href: '/security-malware-removal', label: 'Website Security & Malware Removal', description: 'Investigate suspicious activity, clean infected sites and harden WordPress or custom websites.', icon: ShieldCheck }
 ];
 
 export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab, activeHref }) => {
