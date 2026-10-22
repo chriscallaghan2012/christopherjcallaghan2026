@@ -23,7 +23,7 @@ const SERVICE_MENU = [
   { href: '/agency-development-partner', label: 'Agency Development Partner', description: 'White-label delivery and dependable overflow capacity.', icon: Users },
   { href: '/app-development', label: 'iPhone & Android Apps', description: 'Mobile products from focused MVP to release.', icon: Smartphone },
   { href: '/ai-automation', label: 'AI & Business Automation', description: 'Useful AI integrations and connected workflows.', icon: Bot },
-  { href: '/security-malware-removal', label: 'Website Security & Malware Removal', description: 'Investigate suspicious activity, clean infected sites and harden WordPress or custom websites.', icon: ShieldCheck }
+  { href: '/security-malware-removal', label: 'Website, Software & App Security', description: 'Malware investigation, vulnerability fixes and security hardening for websites, software and mobile apps.', icon: ShieldCheck }
 ];
 
 export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelectTab, activeHref }) => {
