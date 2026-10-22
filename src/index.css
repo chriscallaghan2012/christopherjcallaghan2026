@@ -700,8 +700,8 @@ select:focus {
 }
 
 
-/* Thin electric trace: a short neon arc chases around deliberately marked cards.
-   Keep the effect opt-in so it never draws a full perimeter around unrelated UI. */
+/* Sharp-corner electric trace. The neon segment runs continuously around
+   marked cards; only the hover lift/glow intensifies on interaction. */
 .electric-border,
 .card-glow,
 [data-card-glow],
@@ -720,19 +720,19 @@ select:focus {
   content: "";
   position: absolute;
   inset: -1px;
-  z-index: 2;
+  z-index: 3;
   padding: 1px;
-  border-radius: 0;
+  border-radius: 0 !important;
   background: conic-gradient(
     from var(--card-glow-angle, 0deg),
-    transparent 0deg 292deg,
-    var(--card-glow) 307deg,
+    transparent 0deg 300deg,
+    var(--card-glow) 309deg,
     #ffffff 313deg,
-    var(--card-glow-secondary) 322deg,
-    transparent 338deg 360deg
+    var(--card-glow-secondary) 320deg,
+    transparent 330deg 360deg
   );
-  opacity: .9;
-  animation: electricTraceOrbit 3.2s linear infinite;
+  opacity: .95;
+  animation: electricTraceOrbit 2.6s linear infinite;
   pointer-events: none;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -745,12 +745,19 @@ select:focus {
   position: relative;
   z-index: 1;
 }
+.electric-border:hover,
+.card-glow:hover,
+[data-card-glow]:hover,
+.site-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px rgba(0, 213, 255, .12), 0 0 22px rgba(139, 92, 246, .12);
+}
 .electric-border:hover::before,
 .card-glow:hover::before,
 [data-card-glow]:hover::before,
 .site-card:hover::before {
   opacity: 1;
-  animation-duration: 1.8s;
+  animation-duration: 1.2s;
 }
 .card-glow--blue { --card-glow: #18a8ff; --card-glow-secondary: #4f46e5; }
 .card-glow--purple { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
@@ -775,6 +782,6 @@ select:focus {
   .site-card::before {
     animation: none;
     background: linear-gradient(90deg, var(--card-glow), var(--card-glow-secondary));
-    opacity: .6;
+    opacity: .65;
   }
 }
