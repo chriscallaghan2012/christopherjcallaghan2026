@@ -236,7 +236,8 @@ export default function BusinessCardCreator() {
     a.href = url;
     a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.svg';
     a.click();
-    URL.revokeObjectURL(url);
+    // Keep the object URL alive briefly so browsers can finish reading the download.
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const downloadPng = () => {
@@ -249,15 +250,24 @@ export default function BusinessCardCreator() {
       canvas.height = size.heightPx + bleedPx * 2;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        const a = document.createElement('a');
-        a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.png';
-        a.href = canvas.toDataURL('image/png');
-        a.click();
+        try {
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          const a = document.createElement('a');
+          a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.png';
+          a.href = canvas.toDataURL('image/png');
+          a.click();
+        } catch {
+          setAssistantError('The PNG could not be exported by this browser. Try the SVG download or use a current browser.');
+        }
+      } else {
+        setAssistantError('PNG export is unavailable because this browser could not create a canvas. Try the SVG download.');
       }
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    image.onerror = () => {
+      setAssistantError('The card artwork could not be rendered as a PNG. Try the SVG download or use a current browser.');
       URL.revokeObjectURL(url);
     };
-    image.onerror = () => URL.revokeObjectURL(url);
     image.src = url;
   };
 
