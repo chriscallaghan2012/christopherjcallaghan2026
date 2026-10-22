@@ -108,6 +108,32 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
     />
     <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
 
+    <section aria-labelledby="neural-architectures-title" className="relative overflow-hidden border-y border-white/10 bg-black/40 py-20 md:py-28">
+      <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 bg-[#DF80FF]/10 blur-[120px]" />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-[1.1fr_.9fr] md:items-center md:px-8">
+        <div>
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-[#DF80FF]">AI systems / intelligence layer</p>
+          <h2 id="neural-architectures-title" className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">Neural Architectures <span className="text-[#DF80FF]">&amp; Autonomous Pipelines</span></h2>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-white/65 md:text-lg">Beyond basic prompt wrappers: connected AI systems that retrieve the right knowledge, coordinate specialised agents and turn repeatable business processes into dependable workflows.</p>
+          <a href="/services" className="mt-7 inline-flex min-h-12 items-center gap-3 border border-white/20 px-5 text-xs font-black tracking-[0.14em] text-white transition-colors hover:border-[#DF80FF]/70 hover:text-[#DF80FF]">EXPLORE AI &amp; SOFTWARE SERVICES <ArrowRight className="h-4 w-4" /></a>
+        </div>
+        <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+          {[
+            ['01 / RETRIEVAL', 'RAG & semantic search', 'Ground AI answers in relevant documents, structured data and vector-backed knowledge.'],
+            ['02 / ORCHESTRATION', 'Autonomous agent workflows', 'Coordinate tools and task steps with clear boundaries, checks and human oversight.'],
+            ['03 / INTEGRATION', 'Connected AI pipelines', 'Connect models to APIs, databases and existing business systems.'],
+            ['04 / DELIVERY', 'Production-minded systems', 'Design for observability, access control, evaluation and ongoing improvement.']
+          ].map(([eyebrow, title, description]) => (
+            <article key={eyebrow} className="electric-border relative bg-[#08080B] p-5 md:p-6">
+              <p className="font-mono text-[9px] font-bold tracking-[0.16em] text-[#DF80FF]">{eyebrow}</p>
+              <h3 className="mt-3 text-lg font-black text-white">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
