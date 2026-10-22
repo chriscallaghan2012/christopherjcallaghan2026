@@ -214,6 +214,14 @@ export default function BusinessCardCreator() {
   const [phone, setPhone] = useState('');
   const [website, setWebsite] = useState('christopherjcallaghan.com');
   const [company, setCompany] = useState('');
+  const [backgroundOverride, setBackgroundOverride] = useState('');
+  const [accentOverride, setAccentOverride] = useState('');
+  const [foregroundOverride, setForegroundOverride] = useState('');
+  const [gradientEnabled, setGradientEnabled] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
+  const [logoDataUrl, setLogoDataUrl] = useState('');
+  const [logoPosition, setLogoPosition] = useState<'left' | 'right'>('right');
+
   const [template, setTemplate] = useState<TemplateId>('crimson-executive');
   const [side, setSide] = useState<Side>('front');
   const [sizeId, setSizeId] = useState<CardSizeId>('uk');
@@ -227,8 +235,27 @@ export default function BusinessCardCreator() {
   const [exportError, setExportError] = useState('');
   const size = CARD_SIZES.find((item) => item.id === sizeId) || CARD_SIZES[0];
   const selectedTemplate = TEMPLATES.find((item) => item.id === template) || TEMPLATES[0];
-  const artwork = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed: false }), [name, title, specialism, email, phone, website, company, template, side, size]);
-  const svgForExport = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed }), [name, title, specialism, email, phone, website, company, template, side, size, bleed]);
+  const baseArtwork = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed: false }), [name, title, specialism, email, phone, website, company, template, side, size]);
+  const enhancedArtwork = useMemo(() => {
+    let svg = baseArtwork;
+    const bg = backgroundOverride || selectedTemplate.background;
+    const fg = foregroundOverride || selectedTemplate.foreground;
+    const accent = accentOverride || selectedTemplate.accent;
+    if (gradientEnabled) {
+      svg = svg.replace('<svg ', '<svg ').replace(/<\/svg>$/, '<defs><linearGradient id="studio-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="' + bg + '"/><stop offset="100%" stop-color="' + accent + '" stop-opacity=".32"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#studio-gradient)"/><\/svg>');
+    }
+    if (backgroundOverride) svg = svg.replace(new RegExp('fill="' + selectedTemplate.background.replace('#','\\#') + '"', 'g'), 'fill="' + bg + '"');
+    if (foregroundOverride) svg = svg.replace(new RegExp('fill="' + selectedTemplate.foreground.replace('#','\\#') + '"', 'g'), 'fill="' + fg + '"');
+    if (accentOverride) svg = svg.replace(new RegExp('fill="' + selectedTemplate.accent.replace('#','\\#') + '"', 'g'), 'fill="' + accent + '"').replace(new RegExp('stroke="' + selectedTemplate.accent.replace('#','\\#') + '"', 'g'), 'stroke="' + accent + '"');
+    if (qrUrl.trim()) {
+      const qr = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=4&data=' + encodeURIComponent(qrUrl.trim());
+      svg = svg.replace('</svg>', '<image href="' + qr + '" x="' + Math.round(size.widthPx * .79) + '" y="' + Math.round(size.heightPx * .55) + '" width="' + Math.round(size.heightPx * .30) + '" height="' + Math.round(size.heightPx * .30) + '" preserveAspectRatio="xMidYMid meet"/></svg>');
+    }
+    if (logoDataUrl) svg = svg.replace('</svg>', '<image href="' + logoDataUrl + '" x="' + (logoPosition === 'left' ? 28 : Math.round(size.widthPx * .78)) + '" y="24" width="' + Math.round(size.heightPx * .24) + '" height="' + Math.round(size.heightPx * .24) + '" preserveAspectRatio="xMidYMid meet"/></svg>');
+    return svg;
+  }, [baseArtwork, backgroundOverride, accentOverride, foregroundOverride, gradientEnabled, qrUrl, logoDataUrl, logoPosition, selectedTemplate, size]);
+  const artwork = enhancedArtwork;
+  const svgForExport = useMemo(() => enhancedArtwork.replace('width="' + size.widthMm + 'mm" height="' + size.heightMm + 'mm"', 'width="' + (size.widthMm + (bleed ? 6 : 0)) + 'mm" height="' + (size.heightMm + (bleed ? 6 : 0)) + 'mm"'), [enhancedArtwork, size, bleed]);
 
   const downloadSvg = () => {
     setExportError('');
@@ -425,6 +452,26 @@ export default function BusinessCardCreator() {
               {field('Phone / WhatsApp number', phone, setPhone, '+44…')}
               {field('Website', website, setWebsite, 'yourwebsite.com')}
               {field('Business / brand name', company, setCompany, 'Optional')}
+            </div>
+            <div className="mt-6 border-t border-white/10 pt-5">
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[.18em] text-white/45">03 / Premium design controls</p>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="text-xs text-white/65">Background <input type="color" value={backgroundOverride || selectedTemplate.background} onChange={e => setBackgroundOverride(e.target.value)} className="mt-2 h-10 w-full cursor-pointer rounded-lg bg-transparent" /></label>
+                <label className="text-xs text-white/65">Accent <input type="color" value={accentOverride || selectedTemplate.accent} onChange={e => setAccentOverride(e.target.value)} className="mt-2 h-10 w-full cursor-pointer rounded-lg bg-transparent" /></label>
+                <label className="text-xs text-white/65">Text colour <input type="color" value={foregroundOverride || selectedTemplate.foreground} onChange={e => setForegroundOverride(e.target.value)} className="mt-2 h-10 w-full cursor-pointer rounded-lg bg-transparent" /></label>
+                <label className="flex items-center gap-2 text-xs text-white/65"><input type="checkbox" checked={gradientEnabled} onChange={e => setGradientEnabled(e.target.checked)} className="accent-[#F04444]" /> Gradient background</label>
+              </div>
+              <label className="mt-4 block text-xs text-white/65">QR code destination (URL, email, or contact link)
+                <input value={qrUrl} onChange={e => setQrUrl(e.target.value)} placeholder="https://yourwebsite.com" className="mt-2 w-full rounded-xl border border-white/10 bg-[#0B0B0E] px-3.5 py-3 text-sm text-white outline-none focus:border-[#F04444]" />
+                <span className="mt-1 block text-[11px] leading-5 text-white/40">QR artwork is fetched from a QR service when exported or printed; verify the code scans before sending to a printer.</span>
+              </label>
+              <label className="mt-4 block text-xs text-white/65">Upload brand logo
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={e => { const file=e.target.files?.[0]; if (!file) return; const reader=new FileReader(); reader.onload=()=>setLogoDataUrl(String(reader.result || '')); reader.readAsDataURL(file); }} className="mt-2 block w-full text-xs text-white/65 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white" />
+              </label>
+              {logoDataUrl && <div className="mt-3 flex items-center justify-between text-xs text-white/65"><span>Logo loaded into artwork</span><button type="button" onClick={()=>setLogoDataUrl('')} className="text-[#FF7777]">Remove logo</button></div>}
+              <label className="mt-4 block text-xs text-white/65">Logo placement
+                <select value={logoPosition} onChange={e => setLogoPosition(e.target.value as 'left' | 'right')} className="mt-2 w-full rounded-xl border border-white/10 bg-[#0B0B0E] px-3.5 py-3 text-sm text-white"><option value="left">Top left</option><option value="right">Top right</option></select>
+              </label>
             </div>
             <div className="mt-6 border-t border-white/10 pt-5">
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[.18em] text-white/45">02 / Print format</p>
