@@ -3,8 +3,8 @@ INSERT INTO blog_posts (
   content_markdown, meta_title, meta_description, ai_prompt, status, published_at
 )
 VALUES (
-  'Critical PHP Security Update: Two Remote Code Execution Flaws and What Hosting Customers Should Do',
-  'critical-php-security-update-cve-2026-109618-cve-2026-109619',
+  'PHP2Shell Explained: The Critical PHP Vulnerability and How to Check Your Hosting Is Patched',
+  'php2shell-critical-php-vulnerability-how-to-check-hosting-patches',
   'Two critical PHP vulnerabilities disclosed on 21 October 2026 can enable unauthenticated remote code execution. Learn what to update, how legacy PHP backports work, and what to ask your hosting provider.',
   'Full-Stack Development',
   '',
@@ -12,7 +12,7 @@ VALUES (
   $phpsecurity$
 **Updated: 22 October 2026**
 
-Two critical vulnerabilities in the PHP runtime were disclosed on 21 October 2026: **CVE-2026-109618** and **CVE-2026-109619**. The PHP project says both can lead to remote code execution without authentication. This is a runtime-level security issue, not simply a WordPress or plugin vulnerability.
+**PHP2Shell** is the name being used for two critical vulnerabilities in the PHP runtime disclosed on 21 October 2026: **CVE-2026-109618** and **CVE-2026-109619**. The PHP project says both can lead to remote code execution without authentication. This is a runtime-level security issue, not simply a WordPress or plugin vulnerability.
 
 If your website runs PHP, do not assume you are safe because your site uses a familiar CMS, a Linux server, or a PHP version number that has not changed recently. Check the security status of the actual PHP build serving web requests and ask your hosting provider to confirm that the relevant fixes are installed.
 
@@ -81,9 +81,9 @@ A web application firewall, a plugin update, hiding PHP error messages, or chang
 
 **Bottom line:** contact your host, ask specifically about both CVEs, verify the actual serving runtime and any backport, and plan an upgrade if you are still on an end-of-life branch. Do not assume that every hosting company has already patched every server.
 $phpsecurity$,
-  'Critical PHP Security Update: CVE-2026-109618 and CVE-2026-109619',
+  'PHP2Shell: Critical PHP RCE Vulnerabilities and Hosting Fixes',
   'Two critical PHP RCE flaws disclosed on 21 October 2026. Learn fixed versions, hosting-provider checks, PHP 7.4 backports and urgent remediation steps.',
-  'Write a timely, evidence-led security explainer for website owners about PHP CVE-2026-109618 and CVE-2026-109619, fixed versions, vendor backports for legacy branches and practical hosting questions.',
+  'Write a clear, urgent and evidence-led explainer about PHP2Shell, CVE-2026-109618 and CVE-2026-109619. Explain fixed PHP versions, end-of-life branches and vendor backports, and give website owners a practical message to send to their host. Link to official advisories.',
   'published',
   NOW()
 );
