@@ -60,7 +60,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           {SERVICES_DATA.map((service) => (
             <div
               key={service.id}
-              className="group relative rounded-3xl border border-white/10 bg-black/70 backdrop-blur-2xl p-7 flex flex-col justify-between transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.2)] hover:-translate-y-1.5 overflow-hidden"
+              className="electric-border group relative border border-white/10 bg-black/70 backdrop-blur-2xl p-7 flex flex-col justify-between transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.2)] hover:-translate-y-1.5 overflow-hidden"
             >
               {/* Corner tech accent line */}
               <div className="absolute top-4 left-4 w-4 h-4 border-l-2 border-t-2 border-white/10 group-hover:border-[#FF003C] transition-colors" />
