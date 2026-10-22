@@ -224,22 +224,26 @@ export default function BusinessCardCreator() {
   const [assistantLoading, setAssistantLoading] = useState(false);
   const [assistantError, setAssistantError] = useState('');
   const [assistantNeedsKey, setAssistantNeedsKey] = useState(false);
+  const [exportError, setExportError] = useState('');
   const size = CARD_SIZES.find((item) => item.id === sizeId) || CARD_SIZES[0];
   const selectedTemplate = TEMPLATES.find((item) => item.id === template) || TEMPLATES[0];
   const artwork = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed: false }), [name, title, specialism, email, phone, website, company, template, side, size]);
   const svgForExport = useMemo(() => makeCardSvg({ name, title, specialism, email, phone, website, company, template, side, size, bleed }), [name, title, specialism, email, phone, website, company, template, side, size, bleed]);
 
   const downloadSvg = () => {
+    setExportError('');
     const blob = new Blob([svgForExport], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.svg';
     a.click();
-    URL.revokeObjectURL(url);
+    // Keep the object URL alive briefly so browsers can finish reading the download.
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const downloadPng = () => {
+    setExportError('');
     const image = new Image();
     const url = URL.createObjectURL(new Blob([svgForExport], { type: 'image/svg+xml;charset=utf-8' }));
     image.onload = () => {
@@ -249,15 +253,24 @@ export default function BusinessCardCreator() {
       canvas.height = size.heightPx + bleedPx * 2;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        const a = document.createElement('a');
-        a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.png';
-        a.href = canvas.toDataURL('image/png');
-        a.click();
+        try {
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          const a = document.createElement('a');
+          a.download = 'business-card-' + sizeId + '-' + template + '-' + side + (bleed ? '-3mm-bleed' : '') + '.png';
+          a.href = canvas.toDataURL('image/png');
+          a.click();
+        } catch {
+          setExportError('The PNG could not be exported by this browser. Try the SVG download or use a current browser.');
+        }
+      } else {
+        setExportError('PNG export is unavailable because this browser could not create a canvas. Try the SVG download.');
       }
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    image.onerror = () => {
+      setExportError('The card artwork could not be rendered as a PNG. Try the SVG download or use a current browser.');
       URL.revokeObjectURL(url);
     };
-    image.onerror = () => URL.revokeObjectURL(url);
     image.src = url;
   };
 
@@ -444,6 +457,7 @@ export default function BusinessCardCreator() {
             <div className="print-hide mt-4 flex flex-wrap gap-3">
               <button type="button" onClick={downloadPng} className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#F04444] px-5 text-sm font-bold text-white shadow-lg shadow-[#F04444]/10 transition hover:bg-[#D93636]"><Download size={16} /> Download PNG</button>
               <button type="button" onClick={downloadSvg} className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/[.03] px-5 text-sm font-bold text-white transition hover:bg-white/[.08]"><Download size={16} /> Download SVG</button>
+              {exportError && <p role="alert" className="mt-3 text-sm leading-6 text-amber-200">{exportError}</p>}
               <button type="button" onClick={() => window.print()} className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/[.03] px-5 text-sm font-bold text-white transition hover:bg-white/[.08]"><Printer size={16} /> Print / Save PDF</button>
             </div>
             <p className="print-hide mt-4 max-w-3xl text-xs leading-6 text-white/40">PNG exports at 300 DPI. SVG is vector artwork and scales without losing sharpness. For commercial printing, ask your printer whether they need bleed, crop marks, CMYK colour or a PDF/X file; this tool exports RGB artwork, not a certified press-ready PDF.</p>

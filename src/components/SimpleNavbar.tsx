@@ -147,7 +147,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
             </a>
 
             {servicesOpen && (
-              <div id="services-mega-menu" aria-label="Services menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openServices} onMouseLeave={closeServices}>
+              <div id="services-mega-menu" aria-label="Services menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden max-h-[calc(100dvh-68px)] overflow-y-auto overscroll-contain border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openServices} onMouseLeave={closeServices}>
                 <div className="mx-auto grid max-w-7xl gap-10 px-5 py-8 md:px-8 lg:grid-cols-[1fr_280px]">
                   <div>
                     <div className="mb-5">
@@ -212,7 +212,7 @@ export const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ currentTab, onSelect
               </Link>
 
               {toolsOpen && (
-                <div id="tools-mega-menu" aria-label="Tools menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openTools} onMouseLeave={closeTools}>
+                <div id="tools-mega-menu" aria-label="Tools menu" className="menu-panel fixed inset-x-0 top-[68px] z-[60] hidden max-h-[calc(100dvh-68px)] overflow-y-auto overscroll-contain border-b border-white/10 bg-[#08080a]/95 backdrop-blur-2xl lg:block" onMouseEnter={openTools} onMouseLeave={closeTools}>
                   <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 md:px-8 lg:grid-cols-[1fr_280px]">
                     <div>
                       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">

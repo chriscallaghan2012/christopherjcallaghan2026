@@ -698,3 +698,86 @@ select:focus {
     will-change: auto;
   }
 }
+
+
+/* Site-wide animated neon perimeter for cards.
+   The shared classes allow deliberate accents; common rounded, bordered card surfaces
+   also receive the effect so it carries across pages without changing each component. */
+.card-glow,
+[data-card-glow],
+.site-card,
+div[class*="rounded-"][class*="border"][class*="bg-"] {
+  --card-glow: #00d5ff;
+  --card-glow-secondary: #8b5cf6;
+  position: relative;
+  isolation: isolate;
+  border-color: color-mix(in srgb, var(--card-glow) 34%, rgba(255,255,255,.12));
+  transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+.card-glow::before,
+[data-card-glow]::before,
+.site-card::before,
+div[class*="rounded-"][class*="border"][class*="bg-"]::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--card-glow-angle, 0deg),
+    transparent 0deg,
+    transparent 245deg,
+    var(--card-glow) 285deg,
+    var(--card-glow-secondary) 315deg,
+    transparent 350deg,
+    transparent 360deg
+  );
+  opacity: .72;
+  animation: card-glow-orbit 5.5s linear infinite;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.card-glow:hover,
+[data-card-glow]:hover,
+.site-card:hover,
+div[class*="rounded-"][class*="border"][class*="bg-"]:hover {
+  border-color: color-mix(in srgb, var(--card-glow) 68%, white 8%);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--card-glow) 17%, transparent);
+}
+.card-glow:hover::before,
+[data-card-glow]:hover::before,
+.site-card:hover::before,
+div[class*="rounded-"][class*="border"][class*="bg-"]:hover::before {
+  opacity: 1;
+  animation-duration: 2.8s;
+}
+.card-glow--blue { --card-glow: #18a8ff; --card-glow-secondary: #4f46e5; }
+.card-glow--purple { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
+.card-glow--green { --card-glow: #31e6a2; --card-glow-secondary: #00a878; }
+.card-glow--orange { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
+.card-glow--red { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
+.card-glow--cyan { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
+
+/* Varied accents for cards grouped in the same grid/list. */
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 2) { --card-glow: #c45cff; --card-glow-secondary: #7c3aed; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 3) { --card-glow: #31e6a2; --card-glow-secondary: #00a878; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 4) { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n + 5) { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
+div[class*="rounded-"][class*="border"][class*="bg-"]:nth-child(6n) { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
+
+@property --card-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes card-glow-orbit {
+  to { --card-glow-angle: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-glow::before,
+  [data-card-glow]::before,
+  .site-card::before { animation: none; }
+}
