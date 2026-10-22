@@ -706,8 +706,8 @@ select:focus {
 .card-glow,
 [data-card-glow],
 .site-card {
-  --card-glow: #00d5ff;
-  --card-glow-secondary: #8b5cf6;
+  --card-glow: #FF003C;
+  --card-glow-secondary: #FFB347;
   position: relative;
   isolation: isolate;
   border-radius: 0 !important;
@@ -765,6 +765,10 @@ select:focus {
 .card-glow--orange { --card-glow: #ffb347; --card-glow-secondary: #ff6b35; }
 .card-glow--red { --card-glow: #ff5577; --card-glow-secondary: #ff003c; }
 .card-glow--cyan { --card-glow: #28e8ef; --card-glow-secondary: #008cff; }
+.electric-border--red { --card-glow: #FF003C; --card-glow-secondary: #FF6B35; }
+.electric-border--orange { --card-glow: #FFB347; --card-glow-secondary: #FF6B35; }
+.electric-border--purple { --card-glow: #DF80FF; --card-glow-secondary: #8B5CF6; }
+.electric-border--teal { --card-glow: #00DFC9; --card-glow-secondary: #18A8FF; }
 
 @property --card-glow-angle {
   syntax: "<angle>";
