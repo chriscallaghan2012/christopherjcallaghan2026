@@ -173,11 +173,36 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
           </header>
           {!isAbout && <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
-            <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
-            <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
-              {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
-            </ul>
+            {page === 'ai-automation' ? (
+              <>
+                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
+                  <div>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#DF80FF]">AUTONOMOUS WORKFLOW / 01—04</p>
+                    <h2 className="mt-2 text-xl font-black text-white">From trigger to verified outcome.</h2>
+                  </div>
+                  <span aria-hidden="true" className="mt-1 h-3 w-3 shrink-0 bg-[#DF80FF] shadow-[0_0_16px_rgba(223,128,255,.8)]" />
+                </div>
+                <ol className="mt-5 space-y-0">
+                  {(content.flow?.steps ?? []).map((step, index) => (
+                    <li key={step.title} className="grid grid-cols-[34px_1fr] gap-3 border-l border-[#DF80FF]/35 pb-5 pl-4 last:pb-0">
+                      <span className="font-mono text-[10px] font-bold text-[#DF80FF]">{String(index + 1).padStart(2, '0')}</span>
+                      <div>
+                        <h3 className="text-sm font-bold text-white">{step.title}</h3>
+                        <p className="mt-1 text-xs leading-5 text-white/55">{step.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            ) : (
+              <>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
+                <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
+                <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
+                  {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
+                </ul>
+              </>
+            )}
           </aside>}
         </section>
 
@@ -250,17 +275,32 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
             <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
           </div>
-          <ol className="divide-y divide-white/10 border-y border-white/10">
-            {content.points.map((point, index) => (
-              <li key={point.title} className="grid gap-3 py-6 sm:grid-cols-[80px_1fr] sm:gap-5">
-                <span className="font-mono text-4xl font-black leading-none text-[#FF003C] sm:text-5xl">{String(index + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3 className="text-base font-bold text-white">{point.title}</h3>
-                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">{point.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          {page === 'ai-automation' ? (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {content.points.map((point, index) => (
+                <article key={point.title} className="site-card electric-border electric-border--purple relative overflow-hidden border border-[#DF80FF]/20 bg-[#09070D]/90 p-6 transition-colors hover:bg-[#120B18]" style={{ '--card-glow': '#DF80FF', '--card-glow-secondary': '#8B5CF6' } as React.CSSProperties}>
+                  <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#DF80FF]">AUTOMATION / {String(index + 1).padStart(2, '0')}</span>
+                    <span aria-hidden="true" className="h-2 w-2 bg-[#DF80FF] shadow-[0_0_12px_rgba(223,128,255,.8)]" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-black text-white">{point.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-white/60">{point.description}</p>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <ol className="divide-y divide-white/10 border-y border-white/10">
+              {content.points.map((point, index) => (
+                <li key={point.title} className="grid gap-3 py-6 sm:grid-cols-[80px_1fr] sm:gap-5">
+                  <span className="font-mono text-4xl font-black leading-none text-[#FF003C] sm:text-5xl">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 className="text-base font-bold text-white">{point.title}</h3>
+                    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">{point.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
         </section>}
 
         {content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
@@ -271,17 +311,29 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">SCOPED TO THE PROJECT</span>
           </div>
-          <ol className="grid gap-x-10 sm:grid-cols-2">
-            {content.deliverables.map((item, index) => (
-              <li key={item.title} className="grid grid-cols-[36px_1fr] gap-3 border-t border-white/10 py-4">
-                <span className="font-mono text-xs font-bold text-[#FF003C]">{String(index + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3 className="text-sm font-bold text-white">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-white/60">{item.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          {page === 'ai-automation' ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {content.deliverables.map((item, index) => (
+                <article key={item.title} className="site-card electric-border electric-border--purple relative border border-white/10 bg-[#09070D]/80 p-5" style={{ '--card-glow': '#DF80FF', '--card-glow-secondary': '#8B5CF6' } as React.CSSProperties}>
+                  <p className="font-mono text-[10px] font-bold tracking-[0.16em] text-[#DF80FF]">DELIVERABLE / {String(index + 1).padStart(2, '0')}</p>
+                  <h3 className="mt-3 text-base font-bold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60">{item.description}</p>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <ol className="grid gap-x-10 sm:grid-cols-2">
+              {content.deliverables.map((item, index) => (
+                <li key={item.title} className="grid grid-cols-[36px_1fr] gap-3 border-t border-white/10 py-4">
+                  <span className="font-mono text-xs font-bold text-[#FF003C]">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-white">{item.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-white/60">{item.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
         </section>}
 
         {content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">

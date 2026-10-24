@@ -38,11 +38,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
 
   return (
-    <section id="services" className="relative w-full py-20 md:py-28 overflow-hidden bg-black/40">
+    <section id="services" className="services-section relative w-full py-20 md:py-28 overflow-hidden bg-black/40">
       <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-6xl">
         {/* Section Header */}
         <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/10 bg-white/5 text-white/70 text-[10px] font-mono font-bold uppercase tracking-[0.3em]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 border border-white/10 bg-white/5 text-white/70 text-[10px] font-mono font-bold uppercase tracking-[0.3em]">
             Precision Engineering Services
           </div>
 
@@ -60,7 +60,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           {SERVICES_DATA.map((service) => (
             <div
               key={service.id}
-              className="electric-border electric-border--red group relative border border-white/10 bg-black/70 backdrop-blur-2xl p-7 flex flex-col justify-between transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.2)] overflow-hidden"
+              className="site-card electric-border electric-border--red group relative border border-white/10 bg-black/70 backdrop-blur-2xl p-7 flex flex-col justify-between transition-all duration-500 hover:border-[#FF003C]/50 hover:shadow-[0_0_35px_rgba(255,0,60,0.2)] overflow-hidden"
             >
               {/* Corner tech accent line */}
               <div className="absolute top-4 left-4 w-4 h-4 border-l-2 border-t-2 border-white/10 group-hover:border-[#FF003C] transition-colors" />
@@ -68,7 +68,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               <div>
                 {/* Icon Header */}
                 <div className="mb-6 relative">
-                  <div className="p-3.5 w-fit rounded-2xl bg-white/5 border border-white/10 group-hover:border-[#FF003C]/40 group-hover:bg-[#FF003C]/10 transition-colors">
+                  <div className="p-3.5 w-fit bg-white/5 border border-white/10 group-hover:border-[#FF003C]/40 group-hover:bg-[#FF003C]/10 transition-colors">
                     {serviceIconMap[service.icon] || <Code className="h-7 w-7 text-[#FF003C]" />}
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               <div className="pt-4 border-t border-white/5 mt-auto">
                 <button
                   onClick={() => onSelectServiceForInquiry(service)}
-                  className="w-full flex items-center justify-between py-2.5 px-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono font-bold uppercase tracking-wider text-white/70 group-hover:bg-[#FF003C] group-hover:text-white group-hover:border-transparent transition-all"
+                  className="w-full flex items-center justify-between py-2.5 px-4 bg-white/[0.03] border border-white/10 text-xs font-mono font-bold uppercase tracking-wider text-white/70 group-hover:bg-[#FF003C] group-hover:text-white group-hover:border-transparent transition-all"
                 >
                   <span>Request Scope</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
