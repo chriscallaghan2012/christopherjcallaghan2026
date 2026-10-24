@@ -789,3 +789,10 @@ select:focus {
     opacity: .65;
   }
 }
+
+
+/* Site-wide sharp-corner rule: cards and actionable controls never use rounded corners. */
+:where(button, [role="button"], input[type="button"], input[type="submit"], .site-card, .electric-border, .card-glow, [data-card-glow], .glass-card, article, .brief-control, .brief-option, .brief-checkbox) {
+  border-radius: 0 !important;
+}
+.electric-border--blue { --card-glow: #18A8FF; --card-glow-secondary: #4F46E5; }

@@ -124,7 +124,7 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
             ['03 / INTEGRATION', 'Connected AI pipelines', 'Connect models to APIs, databases and existing business systems.'],
             ['04 / DELIVERY', 'Production-minded systems', 'Design for observability, access control, evaluation and ongoing improvement.']
           ].map(([eyebrow, title, description]) => (
-            <article key={eyebrow} className="electric-border electric-border--purple relative bg-[#08080B] p-5 md:p-6">
+            <article key={eyebrow} className="site-card electric-border electric-border--purple relative bg-[#08080B] p-5 md:p-6">
               <p className="font-mono text-[9px] font-bold tracking-[0.16em] text-[#DF80FF]">{eyebrow}</p>
               <h3 className="mt-3 text-lg font-black text-white">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
