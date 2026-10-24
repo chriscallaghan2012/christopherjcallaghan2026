@@ -162,7 +162,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <section className="grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]" aria-label={content.title}>
+        <section className={isAbout ? "" : "grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"} aria-label={content.title}>
           <header className="max-w-5xl">
             <p className="mb-6 font-mono text-xs font-bold uppercase tracking-[0.22em]" style={{ color: heroTheme.accent }}>{content.eyebrow}</p>
             <ScrollWritingTitle as="h1" text={content.headline} accentWords={headlineAccents[page]} className="text-5xl font-black leading-[0.92] text-white sm:text-7xl md:text-8xl" />
@@ -172,13 +172,13 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
               <a href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/20 px-6 text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:border-white/50 hover:text-white">SEND AN ENQUIRY</a>
             </div>
           </header>
-          <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
+          {!isAbout && <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
             <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
             <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
               {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
             </ul>
-          </aside>
+          </aside>}
         </section>
 
         {isAbout ? (
