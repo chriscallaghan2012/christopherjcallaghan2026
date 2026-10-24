@@ -173,11 +173,36 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
           </header>
           {!isAbout && <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
-            <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
-            <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
-              {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
-            </ul>
+            {page === 'ai-automation' ? (
+              <>
+                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
+                  <div>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#DF80FF]">AUTONOMOUS WORKFLOW / 01—04</p>
+                    <h2 className="mt-2 text-xl font-black text-white">From trigger to verified outcome.</h2>
+                  </div>
+                  <span aria-hidden="true" className="mt-1 h-3 w-3 shrink-0 bg-[#DF80FF] shadow-[0_0_16px_rgba(223,128,255,.8)]" />
+                </div>
+                <ol className="mt-5 space-y-0">
+                  {(content.flow?.steps ?? []).map((step, index) => (
+                    <li key={step.title} className="grid grid-cols-[34px_1fr] gap-3 border-l border-[#DF80FF]/35 pb-5 pl-4 last:pb-0">
+                      <span className="font-mono text-[10px] font-bold text-[#DF80FF]">{String(index + 1).padStart(2, '0')}</span>
+                      <div>
+                        <h3 className="text-sm font-bold text-white">{step.title}</h3>
+                        <p className="mt-1 text-xs leading-5 text-white/55">{step.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            ) : (
+              <>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
+                <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
+                <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
+                  {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
+                </ul>
+              </>
+            )}
           </aside>}
         </section>
 
