@@ -146,16 +146,40 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
     ]
   };
   const relatedTools = relatedToolsByPage[content.slug] ?? [];
+  const serviceTheme: Record<string, { trace: string; accent: string; soft: string; panelTitle: string; bullets: string[] }> = {
+    'seo-services': { trace: 'electric-border--orange', accent: '#FFB347', soft: 'rgba(255,179,71,.10)', panelTitle: 'Make search work harder', bullets: ['Technical SEO and indexing foundations', 'Useful content mapped to search intent', 'Clearer service pages and conversion paths', 'Measurement tied to meaningful enquiries'] },
+    'local-seo': { trace: 'electric-border--orange', accent: '#FFB347', soft: 'rgba(255,179,71,.10)', panelTitle: 'Strengthen local visibility', bullets: ['Google Business Profile improvements', 'Consistent business details across listings', 'Useful service-area landing pages', 'Calls, directions and enquiries measured'] },
+    'google-ads-management': { trace: 'electric-border--purple', accent: '#DF80FF', soft: 'rgba(139,92,246,.12)', panelTitle: 'Build campaigns around outcomes', bullets: ['Clear campaign goals and audience intent', 'Keyword, creative and landing-page alignment', 'Budget and search-term monitoring', 'Reporting focused on valuable actions'] },
+    'social-media-marketing': { trace: 'electric-border--purple', accent: '#DF80FF', soft: 'rgba(139,92,246,.12)', panelTitle: 'Give content a clear direction', bullets: ['Content pillars and publishing plans', 'Platform-specific creative and messaging', 'Consistent brand voice and presentation', 'Engagement reviewed against business goals'] },
+    'web-design-development': { trace: 'electric-border--red', accent: '#FF5577', soft: 'rgba(255,0,60,.10)', panelTitle: 'Design and build for real use', bullets: ['Clear user journeys and responsive layouts', 'Accessible, fast and maintainable interfaces', 'Integrations and content workflows', 'Testing, launch support and iteration'] },
+    'agency-development-partner': { trace: 'electric-border--teal', accent: '#00DFC9', soft: 'rgba(0,223,201,.10)', panelTitle: 'Add reliable delivery capacity', bullets: ['White-label development support', 'Frontend, backend and integration work', 'Clear handovers and technical communication', 'Flexible support aligned to project scope'] },
+    'app-development': { trace: 'electric-border--blue', accent: '#18A8FF', soft: 'rgba(24,168,255,.10)', panelTitle: 'Build an app people can use', bullets: ['Product scope and user-flow planning', 'iOS, Android or cross-platform options', 'API, account and data integrations', 'Testing and release-readiness support'] },
+    'ai-automation': { trace: 'electric-border--purple', accent: '#DF80FF', soft: 'rgba(139,92,246,.12)', panelTitle: 'Make repetitive work lighter', bullets: ['Map workflows and remove manual friction', 'Connect the tools your team already uses', 'Add AI where it improves a real task', 'Validation, safeguards and human oversight'] }
+  };
+  const heroTheme = serviceTheme[content.slug] ?? { trace: 'electric-border--red', accent: '#FF5577', soft: 'rgba(255,0,60,.10)', panelTitle: 'A practical way forward', bullets: (content.points ?? []).slice(0, 4).map((point) => point.title) };
 
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <header className="max-w-5xl">
-          <p className="mb-6 font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#FF003C]">{content.eyebrow}</p>
-          <ScrollWritingTitle as="h1" text={content.headline} accentWords={headlineAccents[page]} className="text-5xl font-black leading-[0.92] text-white sm:text-7xl md:text-8xl" />
-          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">{content.intro}</p>
-        </header>
+        <section className="grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]" aria-label={content.title}>
+          <header className="max-w-5xl">
+            <p className="mb-6 font-mono text-xs font-bold uppercase tracking-[0.22em]" style={{ color: heroTheme.accent }}>{content.eyebrow}</p>
+            <ScrollWritingTitle as="h1" text={content.headline} accentWords={headlineAccents[page]} className="text-5xl font-black leading-[0.92] text-white sm:text-7xl md:text-8xl" />
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">{content.intro}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-black transition-colors hover:brightness-110" style={{ backgroundColor: heroTheme.accent }}>LET&apos;S BUILD <ArrowRight className="h-4 w-4" /></a>
+              <a href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/20 px-6 text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:border-white/50 hover:text-white">SEND AN ENQUIRY</a>
+            </div>
+          </header>
+          <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: heroTheme.accent }}>SERVICE SNAPSHOT</p>
+            <h2 className="mt-2 border-b border-white/10 pb-5 text-xl font-bold text-white">{heroTheme.panelTitle}</h2>
+            <ul className="mt-5 space-y-4 text-sm leading-6 text-white/70">
+              {heroTheme.bullets.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 shrink-0" style={{ backgroundColor: heroTheme.accent }} />{item}</li>)}
+            </ul>
+          </aside>
+        </section>
 
         {isAbout ? (
           <div className="mt-16 max-w-5xl">
