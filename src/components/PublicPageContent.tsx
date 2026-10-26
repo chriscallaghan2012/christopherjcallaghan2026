@@ -173,7 +173,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
           </header>
           {!isAbout && <aside className={`site-card ${heroTheme.trace} border border-white/10 bg-[#09090c]/90 p-5 md:p-7`} style={{ '--card-glow': heroTheme.accent, '--card-glow-secondary': heroTheme.accent, backgroundColor: heroTheme.soft } as React.CSSProperties}>
-            {page === 'ai-automation' ? (
+            {String(page) === 'ai-automation' ? (
               <>
                 <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
                   <div>
@@ -395,7 +395,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
                         <h3 className="mt-1 text-sm font-black text-white">{node.title}</h3>
                         <p className="mt-2 text-[10px] leading-4 text-white/50">{node.detail}</p>
                       </article>
-                      {index < 3 && <div aria-hidden="true" className="flex h-7 items-center justify-center lg:h-auto"><svg viewBox="0 0 34 20" className="h-5 w-8 overflow-visible text-[#DF80FF] lg:w-[34px]" fill="none"><path d="M1 10 H29 M23 4 L29 10 L23 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" /><path d="M1 10 H29" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 8" className="animate-[pipeline-flow_1.4s_linear_infinite]" /></svg></div>}
+                      {index < 3 && <div aria-hidden="true" className="flex h-7 items-center justify-center lg:h-auto"><svg viewBox="0 0 34 20" className="h-5 w-8 overflow-visible text-[#DF80FF] lg:w-[34px]" fill="none"><path d="M1 10 H29 M23 4 L29 10 L23 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" /><path d="M1 10 H29" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 8" ><animate attributeName="stroke-dashoffset" from="0" to="-22" dur="1.4s" repeatCount="indefinite" /></path></svg></div>}
                     </React.Fragment>
                   ))}
                 </div>
@@ -425,7 +425,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
             <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
           </div>
-          {page === 'ai-automation' ? (
+          {String(page) === 'ai-automation' ? (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {content.points.map((point, index) => (
                 <article key={point.title} className="site-card electric-border electric-border--purple relative overflow-hidden border border-[#DF80FF]/20 bg-[#09070D]/90 p-6 transition-colors hover:bg-[#120B18]" style={{ '--card-glow': '#DF80FF', '--card-glow-secondary': '#8B5CF6' } as React.CSSProperties}>
@@ -461,7 +461,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">SCOPED TO THE PROJECT</span>
           </div>
-          {page === 'ai-automation' ? (
+          {String(page) === 'ai-automation' ? (
             <div className="grid gap-4 sm:grid-cols-2">
               {content.deliverables.map((item, index) => (
                 <article key={item.title} className="site-card electric-border electric-border--purple relative border border-white/10 bg-[#09070D]/80 p-5" style={{ '--card-glow': '#DF80FF', '--card-glow-secondary': '#8B5CF6' } as React.CSSProperties}>
@@ -515,13 +515,13 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         {page !== 'ai-automation' && content.chart && <KpiTrendChart chart={content.chart} />}
 
         {serviceCtaHeadlines[page] && <section className="mt-16 max-w-5xl border-t border-white/10 pt-10">
-          <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${page === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
+          <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${String(page) === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
           <ScrollWritingTitle as="h2" text={serviceCtaHeadlines[page] ?? ''} accentWords={serviceCtaAccents[page]} className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl" />
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell me what you want to improve. We can shape the scope and the next step around your business.</p>
         </section>}
 
         <div className={`${serviceCtaHeadlines[page] ? 'mt-8' : 'mt-12'} flex flex-col gap-4 sm:flex-row`}>
-          <a href={buildHref} className={`inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-white transition-all ${page === 'ai-automation' ? 'bg-[#8B5CF6] shadow-[0_0_28px_rgba(139,92,246,0.24)] hover:bg-[#DF80FF] hover:text-black' : 'bg-[#FF003C] shadow-[0_0_28px_rgba(255,0,60,0.24)] hover:bg-[#ffb347] hover:text-black hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]'}`}>
+          <a href={buildHref} className={`inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-white transition-all ${String(page) === 'ai-automation' ? 'bg-[#8B5CF6] shadow-[0_0_28px_rgba(139,92,246,0.24)] hover:bg-[#DF80FF] hover:text-black' : 'bg-[#FF003C] shadow-[0_0_28px_rgba(255,0,60,0.24)] hover:bg-[#ffb347] hover:text-black hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]'}`}>
             LET&apos;S BUILD <ArrowRight className="h-4 w-4" />
           </a>
           {isAbout ? (
