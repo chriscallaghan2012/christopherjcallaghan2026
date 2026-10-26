@@ -158,13 +158,13 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
             <Hero
               onNavigate={handleSelectTab}
             />
-            <HomeSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <ProjectsSection
               onSelectProject={setSelectedProject}
               onOpenConsultation={handleOpenConsultation}
               compact
-              onViewAll={() => setCurrentTab('projects')}
+              onViewAll={() => handleSelectTab('projects')}
             />
+            <HomeSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />
           </>
