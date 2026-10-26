@@ -209,6 +209,37 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
 
         {page === 'ai-automation' && <div className="mt-12 md:mt-16"><AutomationWorkflowCanvas /></div>}
 
+        {!isAbout && (
+          <nav aria-label="Explore other services" className="mt-12 border-y border-white/10 py-5 md:mt-16">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="shrink-0">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Explore services</p>
+                <p className="mt-1 text-sm font-bold text-white/80">Need a connected part of the picture?</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { slug: 'web-design-development', label: 'Web & software' },
+                  { slug: 'app-development', label: 'Apps' },
+                  { slug: 'ai-automation', label: 'AI & automation' },
+                  { slug: 'seo-services', label: 'SEO' },
+                  { slug: 'local-seo', label: 'Local SEO' },
+                  { slug: 'google-ads-management', label: 'Google Ads' },
+                  { slug: 'social-media-marketing', label: 'Social media' },
+                  { slug: 'agency-development-partner', label: 'Agency partner' }
+                ].filter((service) => service.slug !== content.slug).map((service) => (
+                  <a
+                    key={service.slug}
+                    href={`/${service.slug}`}
+                    className="inline-flex min-h-9 items-center border border-white/10 bg-white/[0.025] px-3 py-2 text-[11px] font-bold text-white/65 transition-colors hover:border-white/35 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB347]"
+                  >
+                    {service.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </nav>
+        )}
+
         {isAbout ? (
           <div className="mt-16 max-w-5xl">
             <section className="grid gap-8 border-y border-white/10 py-10 md:grid-cols-[180px_1fr]" aria-labelledby="about-profile-title">
