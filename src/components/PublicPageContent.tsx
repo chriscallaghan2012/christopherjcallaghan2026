@@ -365,13 +365,56 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
                 ))}
               </ol>
             </section>
+
+            <section aria-labelledby="automation-pipeline-title" className="relative overflow-hidden border border-[#DF80FF]/25 bg-[#09070F] p-5 sm:p-8 lg:p-10">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(139,92,246,.16),transparent_58%)]" />
+              <div className="relative">
+                <div className="flex flex-col gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">INSIDE THE SYSTEM / LIVE FLOW CONCEPT</p>
+                    <h2 id="automation-pipeline-title" className="mt-3 text-3xl font-black text-white sm:text-4xl">A pipeline you can actually follow.</h2>
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">An example architecture, not a live connection: each stage passes validated information forward, while failures branch to review instead of disappearing silently.</p>
+                  </div>
+                  <span className="inline-flex w-fit items-center gap-2 border border-[#DF80FF]/30 px-3 py-2 font-mono text-[9px] uppercase tracking-[.15em] text-[#DF80FF]"><span className="h-2 w-2 animate-pulse bg-[#DF80FF]" /> ANIMATED CONCEPT</span>
+                </div>
+                <div className="mt-8 grid items-stretch gap-3 lg:grid-cols-[1fr_28px_1fr_28px_1fr_28px_1fr]">
+                  {[
+                    { n: '01', title: 'TRIGGER', sub: 'Form, inbox or event', icon: '↗' },
+                    { n: '02', title: 'NORMALISE', sub: 'Clean and validate data', icon: '⌘' },
+                    { n: '03', title: 'DECIDE', sub: 'Rules + bounded AI', icon: '✳' },
+                    { n: '04', title: 'EXECUTE', sub: 'Approved API action', icon: '✓' }
+                  ].map((node, index) => (
+                    <React.Fragment key={node.n}>
+                      <article className="relative flex min-h-[150px] flex-col border border-[#DF80FF]/25 bg-[#130D1B] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#DF80FF]/70 hover:shadow-[0_0_28px_rgba(139,92,246,.16)]">
+                        <div className="flex items-center justify-between"><span className="font-mono text-[10px] text-[#DF80FF]">{node.n} / STAGE</span><span className="text-xl text-[#DF80FF]">{node.icon}</span></div>
+                        <h3 className="mt-5 text-sm font-black tracking-[.12em] text-white">{node.title}</h3>
+                        <p className="mt-2 text-xs leading-5 text-white/55">{node.sub}</p>
+                        <span aria-hidden="true" className="absolute bottom-0 left-0 h-px w-full origin-left animate-pulse bg-gradient-to-r from-[#8B5CF6] via-[#DF80FF] to-transparent" />
+                      </article>
+                      {index < 3 && <div aria-hidden="true" className="hidden items-center justify-center text-xl text-[#DF80FF] lg:flex"><span className="animate-pulse">→</span></div>}
+                    </React.Fragment>
+                  ))}
+                </div>
+                <div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr]">
+                  <div className="flex items-start gap-3 border border-emerald-300/20 bg-emerald-300/[.04] p-4">
+                    <span className="mt-0.5 text-emerald-300">✓</span><div><p className="font-mono text-[10px] font-bold uppercase tracking-[.14em] text-emerald-200">Verified path</p><p className="mt-1 text-xs leading-5 text-white/60">Record the result, update status and make the next step visible.</p></div>
+                  </div>
+                  <div className="flex items-start gap-3 border border-amber-300/20 bg-amber-300/[.04] p-4">
+                    <span className="mt-0.5 text-amber-200">↳</span><div><p className="font-mono text-[10px] font-bold uppercase tracking-[.14em] text-amber-200">Exception / human review</p><p className="mt-1 text-xs leading-5 text-white/60">Low confidence, invalid data or a failed action routes to a review queue with context.</p></div>
+                  </div>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-2" aria-label="Pipeline controls">
+                  {['Permissions', 'Validation', 'Audit trail', 'Retries', 'Monitoring'].map((item) => <span key={item} className="border border-white/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[.12em] text-white/50">{item}</span>)}
+                </div>
+              </div>
+            </section>
           </div>
         )}
 
-        {content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
-        {content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
+        {page !== 'ai-automation' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
+        {page !== 'ai-automation' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
-        {content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
+        {page !== 'ai-automation' && content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
           <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
             <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
             <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
@@ -404,7 +447,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
+        {page !== 'ai-automation' && content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">THE WORK, MADE TANGIBLE</p>
@@ -437,7 +480,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
+        {page !== 'ai-automation' && content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
           <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
@@ -463,16 +506,16 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </ol>}
         </section>}
 
-        {content.chart && <KpiTrendChart chart={content.chart} />}
+        {page !== 'ai-automation' && content.chart && <KpiTrendChart chart={content.chart} />}
 
         {serviceCtaHeadlines[page] && <section className="mt-16 max-w-5xl border-t border-white/10 pt-10">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">NEXT STEP</p>
+          <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${page === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
           <ScrollWritingTitle as="h2" text={serviceCtaHeadlines[page] ?? ''} accentWords={serviceCtaAccents[page]} className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl" />
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell me what you want to improve. We can shape the scope and the next step around your business.</p>
         </section>}
 
         <div className={`${serviceCtaHeadlines[page] ? 'mt-8' : 'mt-12'} flex flex-col gap-4 sm:flex-row`}>
-          <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 bg-[#FF003C] hover:bg-[#ffb347] hover:text-black px-6 text-xs font-black tracking-[0.16em] text-white shadow-[0_0_28px_rgba(255,0,60,0.24)] transition-all hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]">
+          <a href={buildHref} className={`inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-white transition-all ${page === 'ai-automation' ? 'bg-[#8B5CF6] shadow-[0_0_28px_rgba(139,92,246,0.24)] hover:bg-[#DF80FF] hover:text-black' : 'bg-[#FF003C] shadow-[0_0_28px_rgba(255,0,60,0.24)] hover:bg-[#ffb347] hover:text-black hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]'}`}>
             LET&apos;S BUILD <ArrowRight className="h-4 w-4" />
           </a>
           {isAbout ? (
@@ -480,7 +523,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           ) : <a href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/20 px-6 text-xs font-bold tracking-[0.16em] text-white/75 transition-colors hover:border-white/50 hover:text-white">SEND AN ENQUIRY</a>}
         </div>
 
-        {relatedTools.length > 0 && (
+        {page !== 'ai-automation' && relatedTools.length > 0 && (
           <section className="mt-20 border-t border-white/10 pt-8" aria-labelledby="related-tools-title">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF003C]">FREE TOOLS</p>
             <h2 id="related-tools-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">Start with a practical check.</h2>
