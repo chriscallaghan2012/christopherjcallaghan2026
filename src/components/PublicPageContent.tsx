@@ -366,45 +366,51 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
               </ol>
             </section>
 
-            <section aria-labelledby="automation-pipeline-title" className="relative overflow-hidden border border-[#DF80FF]/25 bg-[#09070F] p-5 sm:p-8 lg:p-10">
-              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(139,92,246,.16),transparent_58%)]" />
-              <div className="relative">
-                <div className="flex flex-col gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <section aria-labelledby="automation-pipeline-title" className="relative overflow-hidden border border-[#DF80FF]/25 bg-[#09070F]">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(rgba(223,128,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(223,128,255,.055) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+              <div className="relative border-b border-white/10 p-5 sm:p-8">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">INSIDE THE SYSTEM / LIVE FLOW CONCEPT</p>
-                    <h2 id="automation-pipeline-title" className="mt-3 text-3xl font-black text-white sm:text-4xl">A pipeline you can actually follow.</h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">An example architecture, not a live connection: each stage passes validated information forward, while failures branch to review instead of disappearing silently.</p>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">WORKFLOW CANVAS / EXAMPLE ARCHITECTURE</p>
+                    <h2 id="automation-pipeline-title" className="mt-3 text-3xl font-black text-white sm:text-4xl">See how the pieces connect.</h2>
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60">A node-based view of an automation, inspired by visual workflow builders. Follow the main path, then see where exceptions go. This is a design example, not a live connected workflow.</p>
                   </div>
-                  <span className="inline-flex w-fit items-center gap-2 border border-[#DF80FF]/30 px-3 py-2 font-mono text-[9px] uppercase tracking-[.15em] text-[#DF80FF]"><span className="h-2 w-2 animate-pulse bg-[#DF80FF]" /> ANIMATED CONCEPT</span>
+                  <span className="inline-flex w-fit items-center gap-2 border border-[#DF80FF]/30 bg-[#160E20] px-3 py-2 font-mono text-[9px] uppercase tracking-[.15em] text-[#DF80FF]"><span className="h-2 w-2 animate-pulse bg-[#DF80FF]" /> WORKFLOW PREVIEW</span>
                 </div>
-                <div className="mt-8 grid items-stretch gap-3 lg:grid-cols-[1fr_28px_1fr_28px_1fr_28px_1fr]">
+              </div>
+              <div className="relative p-4 sm:p-8 lg:p-10">
+                <div className="grid items-center gap-y-3 lg:grid-cols-[minmax(0,1fr)_34px_minmax(0,1fr)_34px_minmax(0,1fr)_34px_minmax(0,1fr)]">
                   {[
-                    { n: '01', title: 'TRIGGER', sub: 'Form, inbox or event', icon: '↗' },
-                    { n: '02', title: 'NORMALISE', sub: 'Clean and validate data', icon: '⌘' },
-                    { n: '03', title: 'DECIDE', sub: 'Rules + bounded AI', icon: '✳' },
-                    { n: '04', title: 'EXECUTE', sub: 'Approved API action', icon: '✓' }
+                    { n: '01', title: 'New enquiry', kind: 'TRIGGER', detail: 'Form / inbox / webhook', icon: '↗', color: '#DF80FF' },
+                    { n: '02', title: 'Prepare data', kind: 'TRANSFORM', detail: 'Extract · clean · validate', icon: '⌘', color: '#A78BFA' },
+                    { n: '03', title: 'Route decision', kind: 'LOGIC + AI', detail: 'Rules · classify · confidence', icon: '✳', color: '#C4B5FD' },
+                    { n: '04', title: 'Update CRM', kind: 'ACTION', detail: 'Create record · assign owner', icon: '✓', color: '#6EE7B7' }
                   ].map((node, index) => (
                     <React.Fragment key={node.n}>
-                      <article className="relative flex min-h-[150px] flex-col border border-[#DF80FF]/25 bg-[#130D1B] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#DF80FF]/70 hover:shadow-[0_0_28px_rgba(139,92,246,.16)]">
-                        <div className="flex items-center justify-between"><span className="font-mono text-[10px] text-[#DF80FF]">{node.n} / STAGE</span><span className="text-xl text-[#DF80FF]">{node.icon}</span></div>
-                        <h3 className="mt-5 text-sm font-black tracking-[.12em] text-white">{node.title}</h3>
-                        <p className="mt-2 text-xs leading-5 text-white/55">{node.sub}</p>
-                        <span aria-hidden="true" className="absolute bottom-0 left-0 h-px w-full origin-left animate-pulse bg-gradient-to-r from-[#8B5CF6] via-[#DF80FF] to-transparent" />
+                      <article className="group relative min-h-[150px] border border-[#DF80FF]/30 bg-[#100B18] p-4 shadow-[0_8px_28px_rgba(0,0,0,.25)] transition-all duration-300 hover:-translate-y-1 hover:border-[#DF80FF]/80 hover:shadow-[0_0_30px_rgba(139,92,246,.16)]">
+                        <div className="absolute -top-[5px] left-4 h-[9px] w-[9px] border border-[#DF80FF]/70 bg-[#100B18]" />
+                        <div className="absolute -bottom-[5px] left-4 h-[9px] w-[9px] border border-[#DF80FF]/70 bg-[#100B18]" />
+                        <div className="flex items-center justify-between gap-2"><span className="font-mono text-[9px] tracking-[.14em] text-white/40">NODE {node.n}</span><span className="text-lg" style={{ color: node.color }}>{node.icon}</span></div>
+                        <p className="mt-4 font-mono text-[9px] font-bold tracking-[.15em]" style={{ color: node.color }}>{node.kind}</p>
+                        <h3 className="mt-1 text-sm font-black text-white">{node.title}</h3>
+                        <p className="mt-2 text-[10px] leading-4 text-white/50">{node.detail}</p>
                       </article>
-                      {index < 3 && <div aria-hidden="true" className="hidden items-center justify-center text-xl text-[#DF80FF] lg:flex"><span className="animate-pulse">→</span></div>}
+                      {index < 3 && <div aria-hidden="true" className="flex h-7 items-center justify-center lg:h-auto"><svg viewBox="0 0 34 20" className="h-5 w-8 overflow-visible text-[#DF80FF] lg:w-[34px]" fill="none"><path d="M1 10 H29 M23 4 L29 10 L23 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" /><path d="M1 10 H29" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 8" className="animate-[pipeline-flow_1.4s_linear_infinite]" /></svg></div>}
                     </React.Fragment>
                   ))}
                 </div>
-                <div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr]">
-                  <div className="flex items-start gap-3 border border-emerald-300/20 bg-emerald-300/[.04] p-4">
-                    <span className="mt-0.5 text-emerald-300">✓</span><div><p className="font-mono text-[10px] font-bold uppercase tracking-[.14em] text-emerald-200">Verified path</p><p className="mt-1 text-xs leading-5 text-white/60">Record the result, update status and make the next step visible.</p></div>
+                <div className="mx-auto mt-3 hidden h-8 w-px bg-gradient-to-b from-[#DF80FF]/70 to-amber-300/60 lg:block" />
+                <div className="grid gap-3 lg:grid-cols-2">
+                  <div className="relative border border-emerald-300/25 bg-[#071510]/95 p-4 sm:p-5">
+                    <div className="flex items-start gap-3"><span className="mt-0.5 text-emerald-300">✓</span><div><p className="font-mono text-[9px] font-bold uppercase tracking-[.16em] text-emerald-200">SUCCESS PATH / LOG + CONFIRM</p><h3 className="mt-2 text-sm font-bold text-white">Verified and recorded</h3><p className="mt-1 text-xs leading-5 text-white/55">Confirm the action, write an audit event and update the workflow status.</p></div></div>
                   </div>
-                  <div className="flex items-start gap-3 border border-amber-300/20 bg-amber-300/[.04] p-4">
-                    <span className="mt-0.5 text-amber-200">↳</span><div><p className="font-mono text-[10px] font-bold uppercase tracking-[.14em] text-amber-200">Exception / human review</p><p className="mt-1 text-xs leading-5 text-white/60">Low confidence, invalid data or a failed action routes to a review queue with context.</p></div>
+                  <div className="relative border border-amber-300/25 bg-[#191208]/90 p-4 sm:p-5">
+                    <div className="flex items-start gap-3"><span className="mt-0.5 text-amber-200">↳</span><div><p className="font-mono text-[9px] font-bold uppercase tracking-[.16em] text-amber-200">EXCEPTION PATH / HUMAN REVIEW</p><h3 className="mt-2 text-sm font-bold text-white">Pause safely when needed</h3><p className="mt-1 text-xs leading-5 text-white/55">Invalid data, low confidence or failed actions go to a review queue instead of silently continuing.</p></div></div>
                   </div>
                 </div>
-                <div className="mt-5 flex flex-wrap gap-2" aria-label="Pipeline controls">
-                  {['Permissions', 'Validation', 'Audit trail', 'Retries', 'Monitoring'].map((item) => <span key={item} className="border border-white/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[.12em] text-white/50">{item}</span>)}
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
+                  <span className="mr-1 font-mono text-[9px] uppercase tracking-[.14em] text-white/35">Built-in controls</span>
+                  {['Scoped permissions', 'Validation', 'Retries', 'Audit trail', 'Monitoring'].map((item) => <span key={item} className="border border-white/10 bg-black/20 px-3 py-2 font-mono text-[9px] uppercase tracking-[.1em] text-white/55">{item}</span>)}
                 </div>
               </div>
             </section>
