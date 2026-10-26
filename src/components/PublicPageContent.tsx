@@ -176,25 +176,35 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
       { slug: 'app-development', label: 'Apps' },
       { slug: 'ai-automation', label: 'AI & automation' },
       { slug: 'seo-services', label: 'SEO' },
-      { slug: 'agency-development-partner', label: 'Agency partner' }
+      { slug: 'agency-development-partner', label: 'Agency partner' },
+      { slug: 'security-malware-removal', label: 'Security' }
     ],
     'agency-development-partner': [
       { slug: 'web-design-development', label: 'Web & software' },
       { slug: 'app-development', label: 'Apps' },
       { slug: 'ai-automation', label: 'AI & automation' },
-      { slug: 'seo-services', label: 'SEO' }
+      { slug: 'seo-services', label: 'SEO' },
+      { slug: 'security-malware-removal', label: 'Security' }
     ],
     'app-development': [
       { slug: 'web-design-development', label: 'Web & software' },
       { slug: 'ai-automation', label: 'AI & automation' },
       { slug: 'agency-development-partner', label: 'Agency partner' },
-      { slug: 'seo-services', label: 'SEO' }
+      { slug: 'seo-services', label: 'SEO' },
+      { slug: 'security-malware-removal', label: 'Security' }
     ],
     'ai-automation': [
       { slug: 'web-design-development', label: 'Web & software' },
       { slug: 'app-development', label: 'Apps' },
       { slug: 'agency-development-partner', label: 'Agency partner' },
-      { slug: 'seo-services', label: 'SEO' }
+      { slug: 'seo-services', label: 'SEO' },
+      { slug: 'security-malware-removal', label: 'Security' }
+    ],
+    'security-malware-removal': [
+      { slug: 'web-design-development', label: 'Web & software' },
+      { slug: 'app-development', label: 'Apps' },
+      { slug: 'ai-automation', label: 'AI & automation' },
+      { slug: 'agency-development-partner', label: 'Agency partner' }
     ]
   };
   const relatedServices = serviceRecommendations[content.slug] ?? [];
