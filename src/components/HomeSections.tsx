@@ -4,6 +4,7 @@ import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
+import { AutomationWorkflowCanvas } from './AutomationWorkflowCanvas';
 import type { SystemMapContent } from '../types';
 import { ACADEMY_URL } from '../../lib/academy';
 
@@ -157,6 +158,16 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
         { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
       ]}
     />
+    <section aria-labelledby="automation-workflow-example" className="relative border-y border-white/10 bg-[#0b0b10]/90 py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-8 max-w-3xl">
+          <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-[#FF003C]">Interactive workflow example</p>
+          <h2 id="automation-workflow-example" className="text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl">See how an AI-powered workflow connects.</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">Explore a simulated enquiry workflow: data is prepared, AI and rules route the decision, and the result is passed to the right system. Run it, pause it or replay it to see the sequence in action.</p>
+        </div>
+        <AutomationWorkflowCanvas />
+      </div>
+    </section>
     <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
 
     <section aria-labelledby="neural-architectures-title" className="relative overflow-hidden border-y border-white/10 bg-black/40 py-20 md:py-28">
