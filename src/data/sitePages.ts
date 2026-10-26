@@ -425,47 +425,51 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
   'ai-automation': {
     slug: 'ai-automation',
     tab: 'ai-automation',
-    title: 'AI Integration and Business Automation',
-    description: 'Practical AI integrations and business process automation that connect your existing tools, reduce repetitive work and keep people in control.',
-    eyebrow: 'AI INTEGRATION / BUSINESS AUTOMATION',
-    headline: 'AUTOMATE THE WORK THAT SLOWS YOU DOWN.',
-    intro: 'Use AI where it makes a real process better. Connect the tools you already use, remove repetitive handoffs and add human review where accuracy, privacy or judgement matters.',
+    title: 'AI Automation & Intelligent Business Systems',
+    description: 'Premium AI integration and business automation for UK businesses. Connect your systems, reduce repetitive admin, build practical AI assistants and keep people in control.',
+    eyebrow: 'AI SYSTEMS / WORKFLOW ENGINEERING / INTEGRATION',
+    headline: 'MAKE YOUR BUSINESS WORK SMARTER.',
+    intro: 'Stop stitching your operations together by hand. I design and build connected workflows that move information between your tools, use AI for well-defined tasks, and bring the right work back to your team for review. Practical systems, designed around how your business actually runs.',
     points: [
-      { title: 'Process discovery', description: 'Map how work moves today, who handles each step, where information gets re-entered and which exceptions still need a person.' },
-      { title: 'AI inside existing workflows', description: 'Add summarisation, classification, drafting, extraction or natural-language search to a process where the input and expected output can be checked.' },
-      { title: 'Business system integrations', description: 'Connect CRM, email, forms, databases, calendars and APIs so information moves between systems without brittle copy-and-paste routines.' },
-      { title: 'Human review and safeguards', description: 'Set confidence checks, approval points, fallbacks and audit trails so important decisions remain visible and reversible.' },
-      { title: 'Internal tools and assistants', description: 'Build focused dashboards, knowledge assistants or task interfaces that give teams useful access to approved data and actions.' },
-      { title: 'Monitoring and iteration', description: 'Track completion, exceptions, time saved and output quality. Refine the workflow using real operating evidence, not an AI demo alone.' }
+      { title: 'Workflow automation', description: 'Turn repeatable processes into dependable workflows: capture an enquiry, route the information, trigger the next action, notify the right person and record what happened.' },
+      { title: 'AI assistants grounded in your information', description: 'Give teams a useful way to search approved documents, policies, product information and internal knowledge, with answers grounded in source material rather than guesswork.' },
+      { title: 'Document and data processing', description: 'Extract key fields from forms, emails and documents, classify incoming requests, summarise long information and validate outputs before they enter business systems.' },
+      { title: 'Connected business systems', description: 'Connect websites, CRM platforms, email, calendars, spreadsheets, databases, payment services and third-party APIs through maintainable integrations.' },
+      { title: 'Customer communication workflows', description: 'Support enquiry triage, lead qualification, follow-up drafts, appointment reminders and service updates while keeping sensitive or high-impact messages reviewable.' },
+      { title: 'Custom AI tools and dashboards', description: 'Build focused internal interfaces that bring data, workflow status, approvals and AI-assisted actions into one clear working space.' },
+      { title: 'Agentic workflows with boundaries', description: 'Coordinate multiple steps and tools for bounded tasks, with explicit permissions, approval gates, logs and a clear route for exceptions.' },
+      { title: 'Monitoring, evaluation and improvement', description: 'Track successful runs, failures, exceptions, correction rates and processing time so the system can be improved using operational evidence.' }
     ],
     deliverables: [
-      { title: 'Process map', description: 'A before-and-after view of systems, manual steps, exceptions and human approvals.' },
-      { title: 'Working integration', description: 'A tested connection between agreed tools, with clear handling for failures and retries.' },
-      { title: 'AI task with guardrails', description: 'A bounded AI capability with defined inputs, output checks and escalation paths.' },
-      { title: 'Operational handover', description: 'Monitoring, ownership and improvement measures your team can use after launch.' }
+      { title: 'Workflow blueprint', description: 'A clear map of triggers, systems, data movement, decision points, exception paths and ownership.' },
+      { title: 'Connected working workflow', description: 'An implemented automation connecting the agreed systems, including validation, retries and useful failure messages.' },
+      { title: 'AI capability with checks', description: 'A bounded model-powered task with defined inputs, output validation, access controls and human review where needed.' },
+      { title: 'Operational dashboard or review queue', description: 'A practical view of activity, items needing approval, failed runs and work requiring human attention when the scope calls for it.' },
+      { title: 'Testing and handover', description: 'Test scenarios, known limitations, operating notes, ownership and a sensible plan for monitoring and iteration.' }
     ],
     flow: {
-      title: 'Automate a real process, not just a demo',
-      intro: 'Start with the repetitive task, connect the right systems, keep decisions reviewable and measure whether the new process is genuinely better.',
+      title: 'From manual friction to a dependable workflow',
+      intro: 'A good automation is not just a prompt connected to an API. It is an end-to-end process with clear ownership, reliable system connections, safe failure handling and evidence that it is doing the right job.',
       steps: [
-        { title: 'Map the current work', description: 'Document triggers, tools, handoffs, exceptions and the time involved.' },
-        { title: 'Choose the right intervention', description: 'Decide whether rules, integration, AI or a combination fits the task.' },
-        { title: 'Build with controls', description: 'Add permissions, validation, human approval and failure handling.' },
-        { title: 'Measure in operation', description: 'Review time, completion, exceptions and output quality after launch.' }
+        { title: '01 / Find the friction', description: 'Map the real process, repeated admin, handoffs, data sources, exceptions and the cost of the current way of working.' },
+        { title: '02 / Design the system', description: 'Choose what should be handled by deterministic rules, integrations, AI or a person—and define the boundaries before building.' },
+        { title: '03 / Connect and validate', description: 'Build the workflow, secure its credentials, validate inputs and outputs, and test normal cases alongside failures and edge cases.' },
+        { title: '04 / Launch with visibility', description: 'Add logging, alerts, approval queues and ownership so the team can see what happened and recover when something goes wrong.' },
+        { title: '05 / Measure and refine', description: 'Review processing time, successful completions, exception rates and output quality; improve the parts that evidence shows need attention.' }
       ]
     },
     systemMap: {
-      title: 'How practical automation works',
-      intro: 'An existing business process becomes a connected workflow with explicit checks, human decisions and operating measures.',
+      title: 'The architecture behind useful AI automation',
+      intro: 'A connected workflow links your existing tools to a controlled orchestration layer. AI is used for the tasks it suits; rules, permissions and people remain in charge of consequential actions.',
       nodes: [
-        { id: 'manual-process', title: 'Current process', summary: 'Tasks, handoffs and repeated work', detail: 'Understand the workflow as it actually operates, including exceptions and the information people re-enter.', examples: ['Email and spreadsheet handoffs', 'Repeated data entry', 'Approval and exception paths'], group: 'source' },
-        { id: 'business-systems', title: 'Existing systems', summary: 'Tools and data already in use', detail: 'Identify the systems that own the data and the supported ways they can be connected.', examples: ['CRM and email', 'Forms and databases', 'Document stores and APIs'], group: 'source' },
-        { id: 'workflow-design', title: 'Workflow design', summary: 'Triggers, rules and ownership', detail: 'Define what starts the process, which steps are deterministic, where AI helps and who owns exceptions.', examples: ['Event triggers', 'Business rules', 'Escalation and retry paths'], group: 'work' },
-        { id: 'ai-capability', title: 'AI capability', summary: 'A bounded task with checks', detail: 'Use a model for a specific task and validate its output before it can affect important business records or decisions.', examples: ['Document extraction', 'Message classification', 'Drafting with human approval'], group: 'work' },
-        { id: 'human-control', title: 'Human control', summary: 'Review and approval points', detail: 'Keep people involved where judgement, confidence, compliance or customer impact requires a decision.', examples: ['Confidence thresholds', 'Approval queues', 'Audit and correction history'], group: 'work' },
-        { id: 'measured-workflow', title: 'Measured workflow', summary: 'Visible quality and operating impact', detail: 'Monitor successful completions, exceptions, processing time and quality to guide safe iteration.', examples: ['Completion and exception rate', 'Time per task', 'Output review and correction rate'], group: 'outcome' }
+        { id: 'business-trigger', title: 'Business trigger', summary: 'A real event starts the work', detail: 'The workflow starts from an observable business event rather than relying on someone to remember the next step.', examples: ['New enquiry or form submission', 'Incoming email or document', 'Scheduled check or system event'], group: 'source' },
+        { id: 'existing-tools', title: 'Your existing tools', summary: 'Systems remain the source of truth', detail: 'Use supported APIs and connectors to access the systems that already hold your customer, operational and business data.', examples: ['CRM and email', 'Website and database', 'Calendar, documents and business APIs'], group: 'source' },
+        { id: 'orchestration', title: 'Workflow orchestration', summary: 'Rules, routing and state', detail: 'Coordinate each step, record progress and determine what happens next, including retries and exception handling.', examples: ['Business rules and routing', 'Idempotency and retries', 'State and audit history'], group: 'work' },
+        { id: 'ai-task', title: 'Bounded AI task', summary: 'AI handles a defined piece of work', detail: 'Use AI for language-heavy or unstructured tasks, then validate the result against an expected schema or business rule.', examples: ['Classification and extraction', 'Summaries and draft responses', 'Knowledge retrieval with sources'], group: 'work' },
+        { id: 'review-controls', title: 'Controls and human review', summary: 'Permissioned actions and approvals', detail: 'Keep sensitive actions gated, give people a way to correct outputs and provide safe fallbacks when confidence or validation is insufficient.', examples: ['Role-based permissions', 'Approval before external actions', 'Fallback and escalation paths'], group: 'work' },
+        { id: 'business-outcome', title: 'Measured business outcome', summary: 'A visible result with an owner', detail: 'Return the outcome to the right system, notify the right people and track whether the workflow is working as intended.', examples: ['Updated record or task', 'Status, alerts and reporting', 'Quality, time and exception measures'], group: 'outcome' }
       ],
-      connections: [['manual-process', 'workflow-design'], ['business-systems', 'workflow-design'], ['workflow-design', 'ai-capability'], ['ai-capability', 'human-control'], ['human-control', 'measured-workflow']]
+      connections: [['business-trigger', 'orchestration'], ['existing-tools', 'orchestration'], ['orchestration', 'ai-task'], ['ai-task', 'review-controls'], ['review-controls', 'business-outcome']]
     }
   }
 };

@@ -267,7 +267,108 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </div>
         ) : null}
 
-        {content.flow && <div className="mt-12"><ProcessFlow {...content.flow} /></div>}
+        {page === 'ai-automation' && (
+          <div className="mt-16 space-y-20 md:mt-24 md:space-y-28">
+            <section aria-labelledby="automation-value-title" className="relative overflow-hidden border border-[#DF80FF]/25 bg-[#100b18] p-6 sm:p-9 lg:p-12">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(139,92,246,.20),transparent_48%)]" />
+              <div className="relative grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[.22em] text-[#DF80FF]">THE OUTCOME / NOT THE HYPE</p>
+                  <h2 id="automation-value-title" className="mt-4 max-w-xl text-3xl font-black leading-tight text-white sm:text-4xl">Less chasing. Less copying. More work that actually moves forward.</h2>
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/65">The goal is not to automate everything. It is to remove avoidable friction from the work that matters, while making the process easier to understand, measure and manage.</p>
+                </div>
+                <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+                  {[
+                    ['01', 'Fewer manual handoffs', 'Move information between systems without repeated copy-and-paste steps.'],
+                    ['02', 'More consistent processes', 'Apply the same rules, checks and routing every time.'],
+                    ['03', 'Faster access to information', 'Find and summarise approved business knowledge when it is needed.'],
+                    ['04', 'Clearer operational visibility', 'See completed work, exceptions, approvals and failures in one place.']
+                  ].map(([number, title, description]) => (
+                    <article key={number} className="bg-[#100b18]/95 p-5 sm:p-6">
+                      <span className="font-mono text-xs text-[#DF80FF]">{number} / VALUE</span>
+                      <h3 className="mt-4 text-base font-bold text-white">{title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section aria-labelledby="automation-usecases-title">
+              <div className="mb-8 max-w-3xl">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">REAL-WORLD APPLICATIONS</p>
+                <h2 id="automation-usecases-title" className="mt-3 text-3xl font-black text-white sm:text-4xl">Where intelligent automation can earn its place.</h2>
+                <p className="mt-4 text-base leading-7 text-white/60">Start with the process, not a fashionable tool. These are examples of the kinds of workflows that can be scoped around your systems and operating rules.</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {[
+                  { n: '01', title: 'Enquiry to qualified lead', flow: 'Form or email → classify → enrich → CRM → assigned follow-up', body: 'Capture incoming enquiries, extract key details, route by service or urgency and prepare a useful handover for the right person.' },
+                  { n: '02', title: 'Documents into structured data', flow: 'Document → extract → validate → review → system record', body: 'Turn repeatable forms, invoices or requests into structured information with validation and a review route for ambiguous fields.' },
+                  { n: '03', title: 'Internal knowledge assistant', flow: 'Question → approved sources → grounded answer → source links', body: 'Help staff find policies, procedures and product information from approved material, with source references and clear limits.' },
+                  { n: '04', title: 'Customer support triage', flow: 'New request → categorise → prioritise → draft → human send', body: 'Group incoming requests, surface urgent cases, suggest replies and send complex or sensitive issues to a person.' },
+                  { n: '05', title: 'Reporting without the admin', flow: 'Business data → scheduled checks → summary → dashboard', body: 'Collect agreed metrics, prepare regular summaries and flag unusual changes without manually assembling the same report.' },
+                  { n: '06', title: 'Operations and task routing', flow: 'Event → rules → owner → status updates → exception queue', body: 'Coordinate multi-step internal work, notify the next owner and make blocked tasks or failed steps visible.' }
+                ].map((item) => (
+                  <article key={item.n} className="site-card electric-border electric-border--purple flex min-h-full flex-col border border-white/10 bg-[#0b0b10] p-5 sm:p-6" style={{ '--card-glow': '#DF80FF', '--card-glow-secondary': '#8B5CF6' } as React.CSSProperties}>
+                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                      <span className="font-mono text-xs text-[#DF80FF]">{item.n} / USE CASE</span>
+                      <span aria-hidden="true" className="h-2 w-2 bg-[#DF80FF]" />
+                    </div>
+                    <h3 className="mt-5 text-xl font-black text-white">{item.title}</h3>
+                    <p className="mt-3 flex-1 text-sm leading-6 text-white/60">{item.body}</p>
+                    <p className="mt-5 border-l-2 border-[#DF80FF]/70 bg-white/[.025] px-3 py-3 font-mono text-[10px] leading-5 text-white/65 sm:text-xs">{item.flow}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section aria-labelledby="automation-principles-title" className="grid gap-8 lg:grid-cols-[.75fr_1.25fr]">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">BUILT FOR REAL OPERATIONS</p>
+                <h2 id="automation-principles-title" className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">Useful AI needs more than a clever prompt.</h2>
+                <p className="mt-5 text-sm leading-7 text-white/60">The workflow around the model matters just as much as the model itself. I design for the awkward cases, the permissions and the people who have to operate the system after launch.</p>
+              </div>
+              <div className="divide-y divide-white/10 border-y border-white/10">
+                {[
+                  ['Deterministic where possible', 'Use normal code and business rules for predictable steps. Bring AI in where language, ambiguity or unstructured information makes it useful.'],
+                  ['Data access with boundaries', 'Only expose the data and actions the workflow needs. Treat credentials, personal information and external inputs carefully.'],
+                  ['Human approval where it matters', 'Keep review gates for consequential actions, uncertain outputs, sensitive messages and decisions that need judgement.'],
+                  ['Designed for failure and recovery', 'Validate results, handle timeouts, retry safely, record what happened and provide a clear route when the workflow cannot continue.'],
+                  ['Measured, not assumed', 'Agree what success means and monitor completion, correction, exceptions and processing time. Do not confuse a demo with proven business value.']
+                ].map(([title, description], index) => (
+                  <article key={title} className="grid gap-3 py-5 sm:grid-cols-[44px_1fr]">
+                    <span className="font-mono text-xs text-[#DF80FF]">0{index + 1}</span>
+                    <div><h3 className="font-bold text-white">{title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{description}</p></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section aria-labelledby="automation-delivery-title">
+              <div className="max-w-3xl">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#DF80FF]">A CLEAR PATH TO DELIVERY</p>
+                <h2 id="automation-delivery-title" className="mt-3 text-3xl font-black text-white sm:text-4xl">Small enough to prove. Solid enough to build on.</h2>
+                <p className="mt-4 text-sm leading-7 text-white/60">We agree the first workflow and how it will be judged, deliver a controlled version, then expand only when the evidence supports it.</p>
+              </div>
+              <ol className="mt-8 grid gap-px border border-white/10 bg-white/10 md:grid-cols-4">
+                {[
+                  ['01', 'Discover', 'Review the current process, tools, access, risks and success criteria.'],
+                  ['02', 'Prototype', 'Prove the core path with realistic examples before widening the scope.'],
+                  ['03', 'Harden', 'Test edge cases, permissions, failures, monitoring and human approvals.'],
+                  ['04', 'Improve', 'Review real operation, fix friction and prioritise the next useful step.']
+                ].map(([number, title, description]) => (
+                  <li key={number} className="bg-[#0b0b10] p-5 sm:p-6">
+                    <span className="font-mono text-xs text-[#DF80FF]">{number} / PHASE</span>
+                    <h3 className="mt-4 text-lg font-black text-white">{title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </div>
+        )}
+
+        {content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
         {content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
         {content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
