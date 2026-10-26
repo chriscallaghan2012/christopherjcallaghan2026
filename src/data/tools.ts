@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Braces, CreditCard, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
