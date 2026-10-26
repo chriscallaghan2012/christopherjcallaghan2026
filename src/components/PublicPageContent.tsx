@@ -221,7 +221,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
   const heroTheme = serviceTheme[content.slug] ?? { trace: 'electric-border--red', accent: '#FF5577', soft: 'rgba(255,0,60,.10)', panelTitle: 'A practical way forward', bullets: (content.points ?? []).slice(0, 4).map((point) => point.title) };
 
   return (
-    <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
+    <div className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <section className={isAbout ? "" : "grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"} aria-label={content.title}>
@@ -595,6 +595,6 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </div>
         </nav>}
       </div>
-    </main>
+    </div>
   );
 };
