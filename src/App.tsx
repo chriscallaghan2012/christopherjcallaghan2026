@@ -107,7 +107,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
 
   const handleSelectTab = (tab: ScreenTab) => {
     setCurrentTab(tab);
-    window.history.replaceState(null, '', getUrlForTab(tab));
+    window.history.pushState(null, '', getUrlForTab(tab));
   };
 
   const handleSelectServiceForInquiry = (service: ServiceItem) => {
@@ -165,8 +165,8 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
               onViewAll={() => handleSelectTab('projects')}
             />
             <HomeSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
-            <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />
+            <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
           </>
         )}
 
@@ -180,7 +180,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
           <div className="pt-6">
             <TheWholePackage
               onNavigateToBuild={() => handleSelectTab('build')}
-              onNavigateToProjects={() => setCurrentTab('projects')}
+              onNavigateToProjects={() => handleSelectTab('projects')}
             />
             <ProjectsSection
               onSelectProject={setSelectedProject}
@@ -207,7 +207,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
               onSelectServiceForInquiry={handleSelectServiceForInquiry}
             />
             <SpecialtyDomains
-              onNavigateTab={setCurrentTab}
+              onNavigateTab={handleSelectTab}
               onOpenConsultation={handleOpenConsultation}
             />
             <ContactSection />
@@ -286,7 +286,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
 
       {/* Footer */}
       <SimpleFooter
-        onNavigate={setCurrentTab}
+        onNavigate={handleSelectTab}
       />
 
       {/* Case Study Modal */}
