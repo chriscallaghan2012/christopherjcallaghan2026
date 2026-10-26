@@ -206,7 +206,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </aside>}
         </section>
 
-        {page === 'ai-automation' && <div className="mt-12 md:mt-16">{
+        {page === 'ai-automation' && <div className="mt-12 md:mt-16">
           <section aria-labelledby="automation-pipeline-title" className="relative overflow-hidden border border-[#DF80FF]/25 bg-[#09070F]">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(rgba(223,128,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(223,128,255,.055) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
             <div className="relative border-b border-white/10 p-5 sm:p-8">
@@ -255,7 +255,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
               </div>
             </div>
           </section>
-        }</div>}
+        </div>}
 
         {isAbout ? (
           <div className="mt-16 max-w-5xl">
