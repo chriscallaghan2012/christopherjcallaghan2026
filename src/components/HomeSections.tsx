@@ -101,101 +101,6 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
       </div>
     </section>
 
-    <section aria-labelledby="growth-services-title" className="border-y border-white/10 bg-white/[0.015] py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
-            <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
-        </div>
-        <MotionConfig reducedMotion="user">
-          <motion.nav
-            aria-label="SEO, local SEO, Google Ads and web design services"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {growthServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <motion.a
-                  key={service.href}
-                  href={service.href}
-                  variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
-                  whileHover={{ y: -4 }}
-                  whileTap={{ scale: 0.99 }}
-                  className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}
-                >
-                  <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
-                  <span className="flex w-full flex-col items-center text-center">
-                    <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
-                      <Icon aria-hidden="true" className="h-5 w-5" />
-                    </span>
-                    <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
-                    <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
-                  </span>
-                  <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
-                </motion.a>
-              );
-            })}
-          </motion.nav>
-        </MotionConfig>
-      </div>
-    </section>
-
-    <ProcessFlow
-      eyebrow="From first conversation to live product"
-      title="A clear route from idea to launch."
-      intro="Start with the outcome. Shape the right scope, build the product and its connections, then launch and improve it with real feedback."
-      steps={[
-        { title: 'Set the objective', description: 'Clarify the problem, audience and outcome the work needs to support.' },
-        { title: 'Shape the scope', description: 'Choose the right product, priorities, integrations and delivery plan.' },
-        { title: 'Build and connect', description: 'Create the experience, backend and services needed to make it work.' },
-        { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
-      ]}
-    />
-    <section aria-labelledby="automation-workflow-example" className="relative border-y border-white/10 bg-[#0b0b10]/90 py-16 md:py-24">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <div className="mb-8 max-w-3xl">
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-[#FF003C]">Interactive workflow example</p>
-          <h2 id="automation-workflow-example" className="text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl">See how an AI-powered workflow connects.</h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">Explore a simulated enquiry workflow: data is prepared, AI and rules route the decision, and the result is passed to the right system. Run it, pause it or replay it to see the sequence in action.</p>
-        </div>
-        <AutomationWorkflowCanvas />
-      </div>
-    </section>
-    <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
-
-    <section aria-labelledby="neural-architectures-title" className="relative overflow-hidden border-y border-white/10 bg-black/40 py-20 md:py-28">
-      <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 bg-[#DF80FF]/10 blur-[120px]" />
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-[1.1fr_.9fr] md:items-center md:px-8">
-        <div>
-          <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-[#DF80FF]">AI systems / intelligence layer</p>
-          <h2 id="neural-architectures-title" className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">Neural Architectures <span className="text-[#DF80FF]">&amp; Autonomous Pipelines</span></h2>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-white/65 md:text-lg">Beyond basic prompt wrappers: connected AI systems that retrieve the right knowledge, coordinate specialised agents and turn repeatable business processes into dependable workflows.</p>
-          <a href="/services" className="mt-7 inline-flex min-h-12 items-center gap-3 border border-white/20 px-5 text-xs font-black tracking-[0.14em] text-white transition-colors hover:border-[#DF80FF]/70 hover:text-[#DF80FF]">EXPLORE AI &amp; SOFTWARE SERVICES <ArrowRight className="h-4 w-4" /></a>
-        </div>
-        <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
-          {[
-            ['01 / RETRIEVAL', 'RAG & semantic search', 'Ground AI answers in relevant documents, structured data and vector-backed knowledge.'],
-            ['02 / ORCHESTRATION', 'Autonomous agent workflows', 'Coordinate tools and task steps with clear boundaries, checks and human oversight.'],
-            ['03 / INTEGRATION', 'Connected AI pipelines', 'Connect models to APIs, databases and existing business systems.'],
-            ['04 / DELIVERY', 'Production-minded systems', 'Design for observability, access control, evaluation and ongoing improvement.']
-          ].map(([eyebrow, title, description]) => (
-            <article key={eyebrow} className="site-card electric-border electric-border--purple relative bg-[#08080B] p-5 md:p-6">
-              <p className="font-mono text-[9px] font-bold tracking-[0.16em] text-[#DF80FF]">{eyebrow}</p>
-              <h3 className="mt-3 text-lg font-black text-white">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
@@ -308,6 +213,101 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
         <ScrollWritingTitle text={"YOU DON'T NEED\nTO KNOW\nWHAT TECHNOLOGY\nYOU NEED."} accentWords={[{ word: 'TECHNOLOGY', color: 'orange' }, { word: 'NEED.', color: 'purple' }]} className="max-w-6xl text-5xl font-black leading-[0.9] tracking-tight text-white sm:text-7xl md:text-8xl" />
         <p className="mt-10 max-w-3xl text-xl font-bold uppercase leading-snug text-white md:text-3xl">You just need to know what you&apos;re trying to achieve.</p>
         <p className="mt-4 text-sm text-white/55 md:text-base">Bring me the idea, problem or goal. I&apos;ll work out the technology.</p>
+      </div>
+    </section>
+
+    <ProcessFlow
+      eyebrow="From first conversation to live product"
+      title="A clear route from idea to launch."
+      intro="Start with the outcome. Shape the right scope, build the product and its connections, then launch and improve it with real feedback."
+      steps={[
+        { title: 'Set the objective', description: 'Clarify the problem, audience and outcome the work needs to support.' },
+        { title: 'Shape the scope', description: 'Choose the right product, priorities, integrations and delivery plan.' },
+        { title: 'Build and connect', description: 'Create the experience, backend and services needed to make it work.' },
+        { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
+      ]}
+    />
+    <section aria-labelledby="automation-workflow-example" className="relative border-y border-white/10 bg-[#0b0b10]/90 py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-8 max-w-3xl">
+          <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-[#FF003C]">Interactive workflow example</p>
+          <h2 id="automation-workflow-example" className="text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl">See how an AI-powered workflow connects.</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">Explore a simulated enquiry workflow: data is prepared, AI and rules route the decision, and the result is passed to the right system. Run it, pause it or replay it to see the sequence in action.</p>
+        </div>
+        <AutomationWorkflowCanvas />
+      </div>
+    </section>
+    <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
+
+    <section aria-labelledby="growth-services-title" className="border-y border-white/10 bg-white/[0.015] py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
+            <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
+        </div>
+        <MotionConfig reducedMotion="user">
+          <motion.nav
+            aria-label="SEO, local SEO, Google Ads and web design services"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
+            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {growthServices.map((service) => {
+              const Icon = service.icon;
+              return (
+                <motion.a
+                  key={service.href}
+                  href={service.href}
+                  variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.99 }}
+                  className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}
+                >
+                  <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
+                  <span className="flex w-full flex-col items-center text-center">
+                    <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
+                      <Icon aria-hidden="true" className="h-5 w-5" />
+                    </span>
+                    <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
+                    <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
+                  </span>
+                  <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
+                </motion.a>
+              );
+            })}
+          </motion.nav>
+        </MotionConfig>
+      </div>
+    </section>
+
+    <section aria-labelledby="neural-architectures-title" className="relative overflow-hidden border-y border-white/10 bg-black/40 py-20 md:py-28">
+      <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 bg-[#DF80FF]/10 blur-[120px]" />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-[1.1fr_.9fr] md:items-center md:px-8">
+        <div>
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-[#DF80FF]">AI systems / intelligence layer</p>
+          <h2 id="neural-architectures-title" className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">Neural Architectures <span className="text-[#DF80FF]">&amp; Autonomous Pipelines</span></h2>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-white/65 md:text-lg">Beyond basic prompt wrappers: connected AI systems that retrieve the right knowledge, coordinate specialised agents and turn repeatable business processes into dependable workflows.</p>
+          <a href="/services" className="mt-7 inline-flex min-h-12 items-center gap-3 border border-white/20 px-5 text-xs font-black tracking-[0.14em] text-white transition-colors hover:border-[#DF80FF]/70 hover:text-[#DF80FF]">EXPLORE AI &amp; SOFTWARE SERVICES <ArrowRight className="h-4 w-4" /></a>
+        </div>
+        <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+          {[
+            ['01 / RETRIEVAL', 'RAG & semantic search', 'Ground AI answers in relevant documents, structured data and vector-backed knowledge.'],
+            ['02 / ORCHESTRATION', 'Autonomous agent workflows', 'Coordinate tools and task steps with clear boundaries, checks and human oversight.'],
+            ['03 / INTEGRATION', 'Connected AI pipelines', 'Connect models to APIs, databases and existing business systems.'],
+            ['04 / DELIVERY', 'Production-minded systems', 'Design for observability, access control, evaluation and ongoing improvement.']
+          ].map(([eyebrow, title, description]) => (
+            <article key={eyebrow} className="site-card electric-border electric-border--purple relative bg-[#08080B] p-5 md:p-6">
+              <p className="font-mono text-[9px] font-bold tracking-[0.16em] text-[#DF80FF]">{eyebrow}</p>
+              <h3 className="mt-3 text-lg font-black text-white">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-white/55">{description}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
