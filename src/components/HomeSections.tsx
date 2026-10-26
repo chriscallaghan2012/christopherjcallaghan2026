@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, ArrowRight, Bot, Code, MapPin, MousePointerClick, Search, Share2, Smartphone, Users } from 'lucide-react';
+import { ArrowDown, ArrowRight, Bot, Code, MapPin, MousePointerClick, Search, Share2, ShieldCheck, Smartphone, Users } from 'lucide-react';
 import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
@@ -54,7 +54,8 @@ const growthServices = [
   { label: 'Social Media', href: '/social-media-marketing', description: 'Plan content and campaigns with a purpose.', icon: Share2, accent: 'text-[#DF80FF]', hoverText: 'group-hover:text-[#DF80FF]', border: 'hover:border-[#DF80FF]/55', wash: 'group-hover:bg-[#DF80FF]/[0.035]' },
   { label: 'Apps', href: '/app-development', description: 'Turn a useful idea into a mobile product.', icon: Smartphone, accent: 'text-[#18A8FF]', hoverText: 'group-hover:text-[#18A8FF]', border: 'hover:border-[#18A8FF]/55', wash: 'group-hover:bg-[#18A8FF]/[0.035]' },
   { label: 'AI & Automation', href: '/ai-automation', description: 'Connect tools and reduce repetitive work.', icon: Bot, accent: 'text-[#DF80FF]', hoverText: 'group-hover:text-[#DF80FF]', border: 'hover:border-[#DF80FF]/55', wash: 'group-hover:bg-[#DF80FF]/[0.035]' },
-  { label: 'Agency Development Partner', href: '/agency-development-partner', description: 'Add hands-on development capacity to your team.', icon: Users, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' }
+  { label: 'Agency Development Partner', href: '/agency-development-partner', description: 'Add hands-on development capacity to your team.', icon: Users, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' },
+  { label: 'Security & Malware Removal', href: '/security-malware-removal', description: 'Investigate vulnerabilities, malware and recovery needs.', icon: ShieldCheck, accent: 'text-[#FF5577]', hoverText: 'group-hover:text-[#FF5577]', border: 'hover:border-[#FF5577]/55', wash: 'group-hover:bg-[#FF5577]/[0.035]' }
 ];
 
 const homepageSystemMap: SystemMapContent = {
