@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, ArrowRight, Code, MapPin, MousePointerClick, Search } from 'lucide-react';
+import { ArrowDown, ArrowRight, Bot, Code, MapPin, MousePointerClick, Search, Share2, Smartphone, Users } from 'lucide-react';
 import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
@@ -50,7 +50,11 @@ const growthServices = [
   { label: 'SEO', href: '/seo-services', description: 'Build long-term visibility in search.', icon: Search, accent: 'text-[#FFB347]', hoverText: 'group-hover:text-[#FFB347]', border: 'hover:border-[#FFB347]/55', wash: 'group-hover:bg-[#FFB347]/[0.035]' },
   { label: 'Local SEO', href: '/local-seo', description: 'Help nearby customers find you.', icon: MapPin, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' },
   { label: 'Google Ads', href: '/google-ads-management', description: 'Reach people ready to take action.', icon: MousePointerClick, accent: 'text-[#FF6F91]', hoverText: 'group-hover:text-[#FF6F91]', border: 'hover:border-[#FF6F91]/55', wash: 'group-hover:bg-[#FF6F91]/[0.035]' },
-  { label: 'Web Design & Development', href: '/web-design-development', description: 'Websites built, fixed and kept working.', icon: Code, accent: 'text-[#FF003C]', hoverText: 'group-hover:text-[#FF003C]', border: 'hover:border-[#FF003C]/55', wash: 'group-hover:bg-[#FF003C]/[0.035]' }
+  { label: 'Web Design & Development', href: '/web-design-development', description: 'Websites built, fixed and kept working.', icon: Code, accent: 'text-[#FF003C]', hoverText: 'group-hover:text-[#FF003C]', border: 'hover:border-[#FF003C]/55', wash: 'group-hover:bg-[#FF003C]/[0.035]' },
+  { label: 'Social Media', href: '/social-media-marketing', description: 'Plan content and campaigns with a purpose.', icon: Share2, accent: 'text-[#DF80FF]', hoverText: 'group-hover:text-[#DF80FF]', border: 'hover:border-[#DF80FF]/55', wash: 'group-hover:bg-[#DF80FF]/[0.035]' },
+  { label: 'Apps', href: '/app-development', description: 'Turn a useful idea into a mobile product.', icon: Smartphone, accent: 'text-[#18A8FF]', hoverText: 'group-hover:text-[#18A8FF]', border: 'hover:border-[#18A8FF]/55', wash: 'group-hover:bg-[#18A8FF]/[0.035]' },
+  { label: 'AI & Automation', href: '/ai-automation', description: 'Connect tools and reduce repetitive work.', icon: Bot, accent: 'text-[#DF80FF]', hoverText: 'group-hover:text-[#DF80FF]', border: 'hover:border-[#DF80FF]/55', wash: 'group-hover:bg-[#DF80FF]/[0.035]' },
+  { label: 'Agency Development Partner', href: '/agency-development-partner', description: 'Add hands-on development capacity to your team.', icon: Users, accent: 'text-[#00DFC9]', hoverText: 'group-hover:text-[#00DFC9]', border: 'hover:border-[#00DFC9]/55', wash: 'group-hover:bg-[#00DFC9]/[0.035]' }
 ];
 
 const homepageSystemMap: SystemMapContent = {
@@ -92,6 +96,52 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="growth-services-title" className="border-y border-white/10 bg-white/[0.015] py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
+            <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
+        </div>
+        <MotionConfig reducedMotion="user">
+          <motion.nav
+            aria-label="SEO, local SEO, Google Ads and web design services"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
+            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {growthServices.map((service) => {
+              const Icon = service.icon;
+              return (
+                <motion.a
+                  key={service.href}
+                  href={service.href}
+                  variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.99 }}
+                  className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}
+                >
+                  <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
+                  <span className="flex w-full flex-col items-center text-center">
+                    <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
+                      <Icon aria-hidden="true" className="h-5 w-5" />
+                    </span>
+                    <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
+                    <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
+                  </span>
+                  <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
+                </motion.a>
+              );
+            })}
+          </motion.nav>
+        </MotionConfig>
       </div>
     </section>
 
@@ -160,51 +210,7 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
       </div>
     </section>
 
-    <section aria-labelledby="growth-services-title" className="border-y border-white/10 bg-white/[0.015] py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#00DFC9]">Growth services</p>
-            <h2 id="growth-services-title" className="text-2xl font-black text-white md:text-3xl">Make it easier to get found.</h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-white/55">Search, local visibility, paid campaigns and the websites that connect them to your business goals.</p>
-        </div>
-        <MotionConfig reducedMotion="user">
-          <motion.nav
-            aria-label="SEO, local SEO, Google Ads and web design services"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {growthServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <motion.a
-                  key={service.href}
-                  href={service.href}
-                  variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
-                  whileHover={{ y: -4 }}
-                  whileTap={{ scale: 0.99 }}
-                  className={`group relative flex min-h-40 flex-col items-center justify-between overflow-hidden border border-white/10 bg-white/[0.025] p-5 text-center transition-colors duration-300 ${service.border} ${service.wash}`}
-                >
-                  <span aria-hidden="true" className={`absolute left-5 right-5 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${service.accent.replace('text-', 'bg-')}`} />
-                  <span className="flex w-full flex-col items-center text-center">
-                    <span className={`mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-black/20 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:scale-110 ${service.accent}`}>
-                      <Icon aria-hidden="true" className="h-5 w-5" />
-                    </span>
-                    <span className={`block text-xl font-black text-white transition-colors ${service.hoverText}`}>{service.label}</span>
-                    <span className="mt-2 block max-w-xs text-sm leading-relaxed text-white/60">{service.description}</span>
-                  </span>
-                  <span className={`mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${service.accent}`}>Explore {service.label}<ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" /></span>
-                </motion.a>
-              );
-            })}
-          </motion.nav>
-        </MotionConfig>
-      </div>
-    </section>
+
   </>
 );
 
