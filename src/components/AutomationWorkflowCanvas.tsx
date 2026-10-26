@@ -25,16 +25,14 @@ export const AutomationWorkflowCanvas: React.FC = () => {
   useEffect(() => {
     if (runState !== 'running') return;
     const timer = window.setInterval(() => {
-      setActiveStep((current) => {
-        if (current >= nodes.length - 1) {
-          setRunState('complete');
-          return nodes.length - 1;
-        }
-        return current + 1;
-      });
+      setActiveStep((current) => Math.min(current + 1, nodes.length - 1));
     }, 1350);
     return () => window.clearInterval(timer);
   }, [runState, runCount]);
+
+  useEffect(() => {
+    if (activeStep >= nodes.length - 1 && runState === 'running') setRunState('complete');
+  }, [activeStep, runState]);
 
   const replay = () => {
     setActiveStep(0);
@@ -113,7 +111,7 @@ export const AutomationWorkflowCanvas: React.FC = () => {
           <div className="border border-white/10 bg-black/25 p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-3"><p className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[.15em] text-white/55"><Activity size={12} className="text-[#DF80FF]" /> Execution log</p><span className="font-mono text-[8px] text-white/30">SIMULATED EVENTS</span></div>
             <ol className="mt-3 space-y-2">
-              {steps.slice(0, activeStep + 1).map((step, index) => <li key={step} className="flex items-start gap-2 text-xs leading-5"><span className="mt-1 font-mono text-[9px] text-[#DF80FF]">{new Date(0, 0, 0, 0, index * 0, index).toLocaleTimeString('en-GB', { hour12: false, minute: '2-digit', second: '2-digit' })}</span><span className={index === activeStep && runState === 'running' ? 'text-white' : 'text-white/50'}>{step}{index === activeStep && runState === 'running' ? '…' : ''}</span>{(index < activeStep || isComplete) && <Check size={12} className="ml-auto mt-1 shrink-0 text-emerald-200" />}</li>)}
+              {steps.slice(0, activeStep + 1).map((step, index) => <li key={step} className="flex items-start gap-2 text-xs leading-5"><span className="mt-1 font-mono text-[9px] text-[#DF80FF]">{`00:00:0${index}`}</span><span className={index === activeStep && runState === 'running' ? 'text-white' : 'text-white/50'}>{step}{index === activeStep && runState === 'running' ? '…' : ''}</span>{(index < activeStep || isComplete) && <Check size={12} className="ml-auto mt-1 shrink-0 text-emerald-200" />}</li>)}
               {runState === 'paused' && <li className="text-[10px] text-amber-200">Execution paused. Resume to continue.</li>}
               {isComplete && <li className="text-[10px] text-emerald-200">All demo steps completed. No external systems were contacted.</li>}
             </ol>
