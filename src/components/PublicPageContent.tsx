@@ -8,6 +8,7 @@ import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
 import { AutomationWorkflowCanvas } from './AutomationWorkflowCanvas';
 import { SeoSearchExperience } from './SeoSearchExperience';
+import { GoogleAdsExperience } from './GoogleAdsExperience';
 
 type PublicContentTab = Exclude<PublicPageTab, 'contact'>;
 
@@ -270,6 +271,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         </section>
 
         {page === 'seo-services' && <SeoSearchExperience content={content} />}
+        {page === 'google-ads-management' && <GoogleAdsExperience />}
 
         {page === 'ai-automation' && <div className="mt-12 md:mt-16"><AutomationWorkflowCanvas /></div>}
 
@@ -458,10 +460,10 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </div>
         )}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
-        {page !== 'ai-automation' && page !== 'seo-services' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
           <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
             <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
             <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
@@ -494,7 +496,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">THE WORK, MADE TANGIBLE</p>
@@ -527,7 +529,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
           <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
@@ -553,7 +555,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </ol>}
         </section>}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && content.chart && <KpiTrendChart chart={content.chart} />}
+        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.chart && <KpiTrendChart chart={content.chart} />}
 
         {serviceCtaHeadlines[page] && <section className={`mt-16 ${page === 'seo-services' ? 'max-w-none px-5 md:px-8 xl:px-12' : 'max-w-5xl'} border-t border-white/10 pt-10`}>
           <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${String(page) === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
