@@ -286,48 +286,53 @@ export const PUBLIC_PAGES: Record<string, PublicPage> = {
   'web-design-development': {
     slug: 'web-design-development',
     tab: 'web-design-development',
-    title: 'Website Design, Development & Repairs in Manchester',
-    description: 'Website design, development, repairs and maintenance in Manchester. New websites, redesigns, e-commerce and fixes for businesses across Greater Manchester and the UK.',
-    eyebrow: 'WEB DESIGN / DEVELOPMENT',
+    title: 'Website Design & Development | Custom Websites, Web Apps & Ecommerce',
+    description: 'Custom website design and development, web applications, ecommerce, redesigns and technical repairs. Modern, responsive websites built for businesses across Manchester and the UK.',
+    eyebrow: 'WEB DESIGN / DEVELOPMENT / ENGINEERING',
     headline: 'MAKE YOUR WEBSITE WORK.',
-    intro: 'Need a website built, improved or fixed? I provide freelance website design and development in Manchester, including new builds, redesigns, e-commerce and practical repairs for businesses across Greater Manchester and the UK.',
+    intro: 'I design, build and improve websites and web applications that do more than look good. From a sharp business website to a connected ecommerce platform or custom software, the focus is on useful experiences, solid engineering and measurable business outcomes.',
     points: [
-      { title: 'Web design', description: 'Clear, on-brand design that guides visitors towards the next step, with responsive layouts that work on mobile, tablet and desktop.' },
-      { title: 'Website development', description: 'Fast, reliable websites built on modern foundations such as Next.js, React and WordPress, with clean code that is easy to update and maintain.' },
-      { title: 'Fixes and repairs', description: 'Broken layouts, broken forms, slow pages, console errors and display issues diagnosed and fixed so the site works the way it should.' },
-      { title: 'Software and system fixes', description: 'Bugs, crashes and performance problems in existing applications and software, repaired without rewriting what already works.' },
-      { title: 'Redesigns and improvements', description: 'Refresh an existing site with a modern design, clearer structure, faster pages and content that performs like a website built today.' },
-      { title: 'Updates and maintenance', description: 'Keep the site secure and current with regular updates, backups, monitoring and small improvements that compound over time.' }
+      { title: 'Website strategy and UX', description: 'Start with the people using the site. Map customer journeys, page structure, content priorities and calls to action so visitors can quickly understand what you do and what to do next.' },
+      { title: 'Bespoke website design', description: 'Distinctive visual design shaped around your brand, audience and goals. No forced templates or generic layouts — just a coherent design system that works across desktop, tablet and mobile.' },
+      { title: 'Custom website development', description: 'Modern, maintainable builds using the right stack for the job, including React, Next.js, TypeScript, Node.js, PHP and WordPress. The technology serves the project, not the other way around.' },
+      { title: 'Ecommerce and online payments', description: 'Product catalogues, shopping journeys, customer accounts, order flows and payment integrations. Build a store around how your business actually sells and fulfils orders.' },
+      { title: 'Web applications and portals', description: 'Move beyond brochure websites with dashboards, booking systems, customer portals, admin tools, internal platforms and bespoke business workflows.' },
+      { title: 'APIs and system integrations', description: 'Connect websites to CRMs, databases, payment providers, email platforms, stock systems and third-party APIs. Make information move reliably between the tools your business depends on.' },
+      { title: 'Website redesigns and upgrades', description: 'Modernise an existing website without throwing away what already works. Improve structure, usability, accessibility, speed, content and conversion paths in manageable stages.' },
+      { title: 'Repairs, debugging and performance', description: 'Diagnose broken layouts, failed forms, JavaScript errors, slow pages, integration faults and application bugs. Find the cause, fix it properly and test the result.' },
+      { title: 'Security, maintenance and support', description: 'Keep the platform healthy with updates, backups, monitoring, access controls and planned improvements. Get practical technical support as your business and website evolve.' }
     ],
     deliverables: [
-      { title: 'Page and content structure', description: 'A clear sitemap, page priorities and content hierarchy shaped around customer tasks.' },
-      { title: 'Responsive implementation', description: 'A considered mobile, tablet and desktop experience, tested across key breakpoints.' },
-      { title: 'Working integrations', description: 'Forms, analytics, booking, payments or other agreed tools connected and checked.' },
-      { title: 'Launch and handover', description: 'A tested release with practical editing notes, backups and maintenance options.' }
+      { title: 'Project blueprint', description: 'Agreed goals, sitemap, user journeys, feature scope, technical approach and delivery priorities.' },
+      { title: 'Responsive design system', description: 'Page layouts, reusable components, typography, spacing and visual rules that keep the experience consistent.' },
+      { title: 'Production-ready build', description: 'The agreed website or application, built with maintainable code and sensible project structure.' },
+      { title: 'Connected functionality', description: 'Forms, APIs, databases, accounts, payments, content management or other scoped integrations.' },
+      { title: 'Testing and optimisation', description: 'Responsive, accessibility, browser, performance, security and key journey checks appropriate to the project.' },
+      { title: 'Launch and handover', description: 'Release support, deployment notes, access and ownership handover, documentation and optional ongoing maintenance.' }
     ],
     flow: {
-      title: 'From a website that works to one that works harder',
-      intro: 'A practical cycle for websites and software: understand the problem, design or fix it, launch it, then keep improving.',
+      title: 'From first idea to a website that earns its place',
+      intro: 'A transparent build process. Each stage has a purpose, a tangible output and a chance to check direction before the next investment.',
       steps: [
-        { title: 'Find the problem', description: 'Understand what the site or software needs to achieve and what is currently holding it back.' },
-        { title: 'Design or fix', description: 'Create the design, rebuild the page or repair the broken piece with a clear goal in mind.' },
-        { title: 'Test and launch', description: 'Check on real devices, confirm the essentials work, then launch or hand over.' },
-        { title: 'Maintain and improve', description: 'Keep it secure and current, measure how it performs and improve what matters.' }
+        { title: 'Discover and plan', description: 'Understand the business, audience, existing systems, requirements and what success should look like.' },
+        { title: 'Map and design', description: 'Shape the user journeys, page structure and visual direction before committing to the full build.' },
+        { title: 'Develop and integrate', description: 'Build the interface, application logic, data and agreed third-party connections.' },
+        { title: 'Test and refine', description: 'Check real devices and key journeys, resolve issues and optimise the experience.' }
       ]
     },
     systemMap: {
-      title: 'How a working website stays connected',
-      intro: 'Business goals, the current website and budget shape the design and build work, while testing, launch and maintenance keep it working over time.',
+      title: 'The parts behind a modern website',
+      intro: 'A website is a connected product. The interface, application logic, data and external services need to work together as one dependable experience.',
       nodes: [
-        { id: 'business-goal', title: 'Business goal', summary: 'The outcome the site should support', detail: 'Clarify what the business needs the website or software to achieve, such as enquiries, bookings, sales or simply a clearer professional presence.', examples: ['More enquiries or bookings', 'Faster, clearer information', 'A more professional impression'], group: 'source' },
-        { id: 'current-site', title: 'Current website or software', summary: 'What exists today and where it falls short', detail: 'Review the existing site or system to find broken elements, performance issues, outdated design or missing functionality.', examples: ['Broken forms or links', 'Slow page load times', 'Layout or mobile issues'], group: 'source' },
-        { id: 'budget', title: 'Budget and priorities', summary: 'What matters most right now', detail: 'Agree on the scope that fits the budget, prioritising the fixes and improvements that will make the biggest difference.', examples: ['Fix first, redesign later', 'Priority pages or features', 'A realistic timeline'], group: 'source' },
-        { id: 'design-build', title: 'Design and build', summary: 'The work that makes the goal real', detail: 'Design, build or repair the site or software against the agreed priorities, keeping it simple and maintainable.', examples: ['Responsive design', 'Modern development stack', 'Clean, updatable code'], group: 'work' },
-        { id: 'testing', title: 'Testing', summary: 'Checked before it reaches customers', detail: 'Test everything on real devices and browsers, confirm forms and key actions work, and review against the original goal.', examples: ['Mobile and desktop checks', 'Form and checkout testing', 'Speed and accessibility review'], group: 'work' },
-        { id: 'launch', title: 'Launch and handover', summary: 'Live and easy to manage', detail: 'Launch the change and hand over with clear, simple instructions so the business can manage its own content and not depend on a developer for every edit.', examples: ['Launch or deploy', 'Editing guidance', 'Backup and handover notes'], group: 'outcome' },
-        { id: 'maintenance', title: 'Maintenance', summary: 'Secure, current and improving', detail: 'Regular updates, backups and monitoring keep the site secure, while small measured improvements build on what is working.', examples: ['Updates and backups', 'Uptime and performance checks', 'Small improvement rounds'], group: 'outcome' }
+        { id: 'visitor', title: 'Visitor experience', summary: 'Pages, navigation and interactions', detail: 'The customer-facing experience: content, responsive layouts, accessible controls and clear journeys.', examples: ['Landing and service pages', 'Navigation and search', 'Forms and conversion actions'], group: 'source' },
+        { id: 'frontend', title: 'Frontend application', summary: 'The interface users interact with', detail: 'Reusable components and page behaviour turn the design into a responsive, usable interface.', examples: ['React or Next.js', 'TypeScript components', 'Responsive design system'], group: 'work' },
+        { id: 'backend', title: 'Backend and APIs', summary: 'Rules, permissions and integrations', detail: 'Server-side logic validates requests, applies business rules and connects approved services.', examples: ['API routes and server functions', 'Authentication and permissions', 'Payment and CRM integrations'], group: 'work' },
+        { id: 'database', title: 'Data layer', summary: 'Structured and reliable information', detail: 'A database stores the records the application needs, with appropriate validation, access rules and backups.', examples: ['Products and orders', 'Customer and account data', 'Content and operational records'], group: 'work' },
+        { id: 'services', title: 'Connected services', summary: 'External tools working together', detail: 'Third-party platforms extend the product without making the customer journey feel disconnected.', examples: ['Payments and email', 'Analytics and search tools', 'Booking, stock or CRM systems'], group: 'source' },
+        { id: 'quality', title: 'Quality and delivery', summary: 'Testing, security and deployment', detail: 'The complete product is checked before release and monitored after launch so problems can be found and addressed.', examples: ['Browser and device testing', 'Performance and accessibility', 'Deployment and monitoring'], group: 'work' },
+        { id: 'business', title: 'Business outcome', summary: 'A useful tool for the people it serves', detail: 'The finished website supports the agreed business goal and has a clear path for maintenance and future improvement.', examples: ['Enquiries and bookings', 'Sales and customer service', 'Operational time saved'], group: 'outcome' }
       ],
-      connections: [['business-goal', 'design-build'], ['current-site', 'design-build'], ['budget', 'design-build'], ['design-build', 'testing'], ['testing', 'launch'], ['launch', 'maintenance']]
+      connections: [['visitor', 'frontend'], ['frontend', 'backend'], ['backend', 'database'], ['services', 'backend'], ['frontend', 'quality'], ['database', 'quality'], ['quality', 'business']]
     }
   },
   'agency-development-partner': {
