@@ -288,7 +288,7 @@ export const DeliveryPathSection: React.FC = () => (
         <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">A practical delivery path</p>
-            <h2 className="mt-2 max-w-3xl text-2xl font-black leading-tight text-white sm:text-3xl md:text-4xl">A clear route from idea to launch.</h2>
+            <h2 id="delivery-path-title" className="mt-2 max-w-3xl text-2xl font-black leading-tight text-white sm:text-3xl md:text-4xl">A clear route from idea to launch.</h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/60 md:text-base">Move from a promising thought to something people can use. Each step makes the next decision clearer, keeps the scope grounded and gives the work a way to learn after launch.</p>
           </div>
           <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-white/40">One practical step at a time</p>
