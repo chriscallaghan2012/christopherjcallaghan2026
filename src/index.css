@@ -796,3 +796,39 @@ select:focus {
   border-radius: 0 !important;
 }
 .electric-border--blue { --card-glow: #18A8FF; --card-glow-secondary: #4F46E5; }
+
+/* SEO service page: subtle, reduced-motion-aware conversation and reveal motion. */
+.seo-chat-user {
+  animation: seoChatRise 360ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.seo-chat-answer {
+  animation: seoChatAnswer 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.seo-position-one {
+  isolation: isolate;
+}
+
+.seo-full-width-band {
+  width: 100%;
+}
+
+@keyframes seoChatRise {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes seoChatAnswer {
+  0% { opacity: 0; transform: translateY(10px); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seo-chat-user,
+  .seo-chat-answer {
+    animation: none;
+  }
+}
+
