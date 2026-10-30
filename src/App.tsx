@@ -6,7 +6,7 @@ import type { ScreenTab, Project, ServiceItem, AIStudioContext, PublicPageTab, B
 import { PUBLIC_PAGES } from './data/sitePages';
 import { SimpleNavbar } from './components/SimpleNavbar';
 import { Hero } from './components/Hero';
-import { AcademySection, HomeClosingSections, HomeSections } from './components/HomeSections';
+import { AcademySection, DeliveryPathSection, HomeClosingSections, HomeSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
 import { SimpleFooter } from './components/SimpleFooter';
 import { ToolsDirectory } from './components/ToolsDirectory';
@@ -165,6 +165,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
               compact
               onViewAll={() => handleSelectTab('projects')}
             />
+            <DeliveryPathSection />
             <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />
           </>
