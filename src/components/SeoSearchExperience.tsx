@@ -75,7 +75,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
               <div className="flex items-start gap-3">
                 <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center border border-white/10 bg-white/[.04] text-[#FFB347]"><Sparkles className="h-4 w-4" /></div>
                 <div className="min-w-0 flex-1">
-                  <div className="seo-chat-answer border border-white/10 bg-white/[.035] p-4 sm:p-5">
+                  <div key={active.question} className="seo-chat-answer border border-white/10 bg-white/[.035] p-4 sm:p-5">
                     <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.12em] text-white/45"><span className="h-1.5 w-1.5 rounded-full bg-[#FFB347]" /> Example response</div>
                     <p className="text-sm leading-7 text-white/80">{active.answer}</p>
                     <div className="mt-4 border-t border-white/10 pt-3">
