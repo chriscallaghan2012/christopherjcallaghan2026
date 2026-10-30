@@ -225,11 +225,16 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
-      <div className={`relative mx-auto ${page === 'seo-services' ? 'max-w-[1680px] px-0 md:px-0' : 'max-w-7xl px-5 md:px-8'}`}>
-        <section className={isAbout ? "" : "grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"} aria-label={content.title}>
-          <header className="max-w-5xl">
+      <div className={`relative mx-auto ${page === 'seo-services' ? 'w-full max-w-[1500px] px-5 md:px-8 xl:px-12' : 'max-w-7xl px-5 md:px-8'}`}>
+        <section className={isAbout ? "" : page === 'seo-services' ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,.95fr)] lg:gap-14 xl:gap-20" : "grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"} aria-label={content.title}>
+          <header className={page === 'seo-services' ? "max-w-3xl" : "max-w-5xl"}>
             <p className="mb-6 font-mono text-xs font-bold uppercase tracking-[0.22em]" style={{ color: heroTheme.accent }}>{content.eyebrow}</p>
-            <ScrollWritingTitle as="h1" text={content.headline} accentWords={headlineAccents[page]} className="text-5xl font-black leading-[0.92] text-white sm:text-7xl md:text-8xl" />
+            {page === 'seo-services' ? (
+              <h1 className="max-w-3xl text-5xl font-black leading-[.94] tracking-[-.045em] text-white sm:text-6xl lg:text-7xl xl:text-8xl">{content.headline.split(' ').map((word, index) => {
+                const accent = headlineAccents[page].find((item) => item.word === word.replace(/[^A-Z0-9]/gi, '').toUpperCase());
+                return <React.Fragment key={`${word}-${index}`}>{index > 0 ? ' ' : ''}<span style={accent ? { color: accent.color === 'orange' ? '#FFB347' : '#DF80FF' } : undefined}>{word}</span></React.Fragment>;
+              })}</h1>
+            ) : <ScrollWritingTitle as="h1" text={content.headline} accentWords={headlineAccents[page]} className="text-5xl font-black leading-[0.92] text-white sm:text-7xl md:text-8xl" />}
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">{content.intro}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a href={buildHref} className="inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-black transition-colors hover:brightness-110" style={{ backgroundColor: heroTheme.accent }}>LET&apos;S BUILD <ArrowRight className="h-4 w-4" /></a>
