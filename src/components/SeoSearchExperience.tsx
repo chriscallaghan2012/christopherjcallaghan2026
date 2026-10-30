@@ -131,7 +131,6 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
                 </div>
               </div>
             </div>
-            </div>
 
             <div className="border-t border-white/10 bg-white/[.02] p-4 sm:px-6">
               <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-white/40">Try another question</p>
