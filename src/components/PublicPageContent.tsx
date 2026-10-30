@@ -7,6 +7,7 @@ import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
 import { SystemMap } from './SystemMap';
 import { AutomationWorkflowCanvas } from './AutomationWorkflowCanvas';
+import { SeoSearchExperience } from './SeoSearchExperience';
 
 type PublicContentTab = Exclude<PublicPageTab, 'contact'>;
 
@@ -223,7 +224,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
   return (
     <main className="relative min-h-[75svh] overflow-hidden py-24 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_16%,rgba(255,0,60,0.09),transparent_38%)]" />
-      <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+      <div className={`relative mx-auto ${page === 'seo-services' ? 'max-w-[1680px] px-0 md:px-0' : 'max-w-7xl px-5 md:px-8'}`}>
         <section className={isAbout ? "" : "grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]"} aria-label={content.title}>
           <header className="max-w-5xl">
             <p className="mb-6 font-mono text-xs font-bold uppercase tracking-[0.22em]" style={{ color: heroTheme.accent }}>{content.eyebrow}</p>
@@ -267,6 +268,8 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
             )}
           </aside>}
         </section>
+
+        {page === 'seo-services' && <SeoSearchExperience content={content} />}
 
         {page === 'ai-automation' && <div className="mt-12 md:mt-16"><AutomationWorkflowCanvas /></div>}
 
@@ -455,10 +458,10 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </div>
         )}
 
-        {page !== 'ai-automation' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
-        {page !== 'ai-automation' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
+        {page !== 'ai-automation' && page !== 'seo-services' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
+        {page !== 'ai-automation' && page !== 'seo-services' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
 
-        {page !== 'ai-automation' && content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && content.points && <section className="mt-12 max-w-5xl" aria-labelledby="service-includes-title">
           <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
             <h2 id="service-includes-title" className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">WHAT THIS CAN INCLUDE</h2>
             <span className="shrink-0 font-mono text-[10px] text-white/55">{String(content.points.length).padStart(2, '0')} AREAS</span>
@@ -491,7 +494,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {page !== 'ai-automation' && content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && content.deliverables && <section className="mt-16 max-w-5xl border-y border-white/10 py-8" aria-labelledby="service-deliverables-title">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">THE WORK, MADE TANGIBLE</p>
@@ -524,7 +527,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           )}
         </section>}
 
-        {page !== 'ai-automation' && content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
+        {page !== 'ai-automation' && page !== 'seo-services' && content.metrics && <section className="mt-16 max-w-5xl" aria-labelledby="service-metrics-title">
           <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF003C]">MEASURE WHAT CHANGES</p>
@@ -550,15 +553,15 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </ol>}
         </section>}
 
-        {page !== 'ai-automation' && content.chart && <KpiTrendChart chart={content.chart} />}
+        {page !== 'ai-automation' && page !== 'seo-services' && content.chart && <KpiTrendChart chart={content.chart} />}
 
-        {serviceCtaHeadlines[page] && <section className="mt-16 max-w-5xl border-t border-white/10 pt-10">
+        {serviceCtaHeadlines[page] && <section className={`mt-16 ${page === 'seo-services' ? 'max-w-none px-5 md:px-8 xl:px-12' : 'max-w-5xl'} border-t border-white/10 pt-10`}>
           <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${String(page) === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
           <ScrollWritingTitle as="h2" text={serviceCtaHeadlines[page] ?? ''} accentWords={serviceCtaAccents[page]} className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] text-white sm:text-5xl md:text-6xl" />
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell me what you want to improve. We can shape the scope and the next step around your business.</p>
         </section>}
 
-        <div className={`${serviceCtaHeadlines[page] ? 'mt-8' : 'mt-12'} flex flex-col gap-4 sm:flex-row`}>
+        <div className={`${serviceCtaHeadlines[page] ? 'mt-8' : 'mt-12'} ${page === 'seo-services' ? 'px-5 md:px-8 xl:px-12' : ''} flex flex-col gap-4 sm:flex-row`}>
           <a href={buildHref} className={`inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-black tracking-[0.16em] text-white transition-all ${String(page) === 'ai-automation' ? 'bg-[#8B5CF6] shadow-[0_0_28px_rgba(139,92,246,0.24)] hover:bg-[#DF80FF] hover:text-black' : 'bg-[#FF003C] shadow-[0_0_28px_rgba(255,0,60,0.24)] hover:bg-[#ffb347] hover:text-black hover:shadow-[0_0_40px_rgba(255,0,60,0.42)]'}`}>
             LET&apos;S BUILD <ArrowRight className="h-4 w-4" />
           </a>
@@ -568,7 +571,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         </div>
 
         {page !== 'ai-automation' && relatedTools.length > 0 && (
-          <section className="mt-20 border-t border-white/10 pt-8" aria-labelledby="related-tools-title">
+          <section className={`mt-20 border-t border-white/10 pt-8 ${page === 'seo-services' ? 'mx-5 md:mx-8 xl:mx-12' : ''}`} aria-labelledby="related-tools-title">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF003C]">FREE TOOLS</p>
             <h2 id="related-tools-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">Start with a practical check.</h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">Use these tools to gather evidence and identify useful next steps before deciding what needs work.</p>
@@ -586,7 +589,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </section>
         )}
 
-        {!isAbout && <nav className="mt-20 border-t border-white/10 pt-8" aria-label="More growth services">
+        {!isAbout && <nav className={`mt-20 border-t border-white/10 pt-8 ${page === 'seo-services' ? 'mx-5 md:mx-8 xl:mx-12' : ''}`} aria-label="More growth services">
           <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">MORE WAYS TO GROW</p>
           <div className="flex flex-wrap gap-x-7 gap-y-4">
             {[['SEO', '/seo-services'], ['Local SEO', '/local-seo'], ['Google Ads', '/google-ads-management'], ['Social media', '/social-media-marketing'], ['Web design & development', '/web-design-development'], ['Agency development partner', '/agency-development-partner'], ['iPhone & Android apps', '/app-development'], ['AI & automation', '/ai-automation']].filter(([, href]) => href !== `/${content.slug}`).map(([label, href]) => (
