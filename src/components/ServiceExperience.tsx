@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'motion/react';
-import { ArrowRight, Check, ChevronRight, CircleDot, Layers3, Workflow, Gauge, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, CircleDot } from 'lucide-react';
 
 type ServiceConfig = {
   accent: string;
