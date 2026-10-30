@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowDownRight, ArrowRight, Bot, Check, ChevronRight, Globe2, MapPin, MessageCircle, Search, ShieldCheck, Sparkles, Star, Workflow } from 'lucide-react';
 import type { PublicPage } from '../data/sitePages';
 
@@ -44,11 +44,40 @@ const deliverySteps = [
 
 export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ content }) => {
   const [activeConversation, setActiveConversation] = useState(0);
+  const [displayedAnswer, setDisplayedAnswer] = useState('');
   const active = conversations[activeConversation];
+
+  useEffect(() => {
+    setDisplayedAnswer('');
+    let cursor = 0;
+    const typing = window.setInterval(() => {
+      cursor = Math.min(cursor + 3, active.answer.length);
+      setDisplayedAnswer(active.answer.slice(0, cursor));
+      if (cursor >= active.answer.length) window.clearInterval(typing);
+    }, 16);
+    return () => window.clearInterval(typing);
+  }, [active.answer]);
+
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('.seo-reveal'));
+    if (!('IntersectionObserver' in window)) {
+      sections.forEach((section) => section.classList.add('is-in-view'));
+      return;
+    }
+    document.documentElement.classList.add('seo-motion-ready');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => entry.target.classList.toggle('is-in-view', entry.isIntersecting));
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    sections.forEach((section) => observer.observe(section));
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove('seo-motion-ready');
+    };
+  }, []);
 
   return (
     <div className="seo-experience mt-14 space-y-16 md:mt-20 md:space-y-24">
-      <section className="seo-position-one relative isolate overflow-hidden border-y border-white/10 bg-[#0b0b10] py-14 sm:py-20 lg:py-24" aria-labelledby="seo-position-one-title">
+      <section className="seo-reveal seo-position-one relative isolate overflow-hidden border-y border-white/10 bg-[#0b0b10] py-14 sm:py-20 lg:py-24" aria-labelledby="seo-position-one-title">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_10%,rgba(255,179,71,.14),transparent_42%),radial-gradient(ellipse_at_0%_100%,rgba(255,0,60,.09),transparent_36%)]" />
         <div className="mx-auto grid max-w-[1500px] gap-10 px-5 md:px-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-16 xl:px-12">
           <div>
@@ -68,22 +97,37 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
               <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-emerald-300"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" /> Demo</span>
             </div>
 
-            <div className="space-y-5 px-4 py-5 sm:px-6 sm:py-7" aria-live="polite">
-              <div className="flex justify-end">
-                <div key={active.question} className="seo-chat-user max-w-[92%] border border-[#FFB347]/25 bg-[#FFB347]/10 px-4 py-3 text-sm leading-6 text-white sm:max-w-[85%]">{active.question}</div>
+            <div className="seo-chat-thread space-y-6 px-4 py-5 sm:px-6 sm:py-7" aria-live="polite">
+              <div className="flex justify-end gap-2">
+                <div key={active.question} className="seo-chat-user max-w-[92%] bg-[#303039] px-4 py-3 text-sm leading-6 text-white sm:max-w-[85%]">{active.question}</div>
+                <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center bg-[#FFB347] text-[10px] font-black text-[#111114]">YOU</span>
               </div>
               <div className="flex items-start gap-3">
-                <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center border border-white/10 bg-white/[.04] text-[#FFB347]"><Sparkles className="h-4 w-4" /></div>
+                <div className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[#111114]"><Sparkles className="h-4 w-4" /></div>
                 <div className="min-w-0 flex-1">
-                  <div key={active.question} className="seo-chat-answer border border-white/10 bg-white/[.035] p-4 sm:p-5">
-                    <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.12em] text-white/45"><span className="h-1.5 w-1.5 rounded-full bg-[#FFB347]" /> Example response</div>
-                    <p className="text-sm leading-7 text-white/80">{active.answer}</p>
-                    <div className="mt-4 border-t border-white/10 pt-3">
-                      <p className="font-mono text-[9px] uppercase tracking-[.13em] text-white/40">Signals that may support this answer</p>
-                      <div className="mt-2 flex flex-wrap gap-2">{active.source.split(' · ').map((source) => <span key={source} className="inline-flex items-center gap-1.5 border border-white/10 bg-black/30 px-2 py-1 text-[10px] text-white/60"><Check className="h-3 w-3 text-[#FFB347]" />{source}</span>)}</div>
+                  <div key={active.question} className="seo-chat-answer">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-white/85"><span>AI search assistant</span><span className="text-white/30">·</span><span className="text-[10px] font-normal text-white/40">Example response</span></div>
+                    <p className="whitespace-pre-wrap text-sm leading-7 text-white/80">{displayedAnswer}<span className={displayedAnswer.length < active.answer.length ? "seo-typing-caret" : "hidden"} aria-hidden="true" /></p>
+                    <div className="mt-5 border-t border-white/10 pt-4">
+                      <p className="font-mono text-[9px] uppercase tracking-[.13em] text-white/40">Signals that may support an answer</p>
+                      <div className="mt-2 flex flex-wrap gap-2">{active.source.split(' · ').map((source) => <span key={source} className="inline-flex items-center gap-1.5 border border-white/10 bg-white/[.035] px-2 py-1 text-[10px] text-white/60"><Check className="h-3 w-3 text-[#FFB347]" />{source}</span>)}</div>
+                    </div>
+                    <div className="mt-5 border-t border-white/10 pt-4">
+                      <p className="font-mono text-[9px] uppercase tracking-[.13em] text-white/40">AI discovery surfaces</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="seo-ai-brand seo-ai-brand--chatgpt"><span className="seo-ai-brand-mark">✳</span>ChatGPT</span>
+                        <span className="seo-ai-brand seo-ai-brand--gemini"><span className="seo-ai-brand-mark">✦</span>Gemini</span>
+                        <span className="seo-ai-brand seo-ai-brand--claude"><span className="seo-ai-brand-mark">✳</span>Claude</span>
+                        <span className="seo-ai-brand seo-ai-brand--perplexity"><span className="seo-ai-brand-mark">◈</span>Perplexity</span>
+                        <span className="seo-ai-brand seo-ai-brand--copilot"><span className="seo-ai-brand-mark">◉</span>Copilot</span>
+                        <span className="seo-ai-brand seo-ai-brand--google"><span className="seo-ai-brand-mark">G</span>Google AI</span>
+                        <span className="seo-ai-brand seo-ai-brand--grok"><span className="seo-ai-brand-mark">𝕏</span>Grok</span>
+                        <span className="seo-ai-brand seo-ai-brand--meta"><span className="seo-ai-brand-mark">∞</span>Meta AI</span>
+                        <span className="seo-ai-brand seo-ai-brand--deepseek"><span className="seo-ai-brand-mark">◌</span>DeepSeek</span>
+                      </div>
                     </div>
                   </div>
-                  <p className="mt-3 text-[10px] leading-5 text-white/35">Illustrative only. This is a scripted demonstration, not a live AI search result or a promise of recommendation.</p>
+                  <p className="mt-4 text-[10px] leading-5 text-white/35">Illustrative only. These are examples of AI discovery products, not live integrations, citations or a promise that any platform will recommend a business.</p>
                 </div>
               </div>
             </div>
@@ -102,7 +146,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section id="seo-signal-system" className="mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-signals-title">
+      <section id="seo-signal-system" className="seo-reveal mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-signals-title">
         <div className="grid gap-6 border-b border-white/10 pb-8 lg:grid-cols-[.85fr_1.15fr] lg:items-end">
           <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">THE SIGNAL SYSTEM / 01—06</p><h2 id="seo-signals-title" className="mt-4 max-w-3xl text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">Make every part of your presence tell the same story.</h2></div>
           <p className="max-w-2xl text-sm leading-7 text-white/60 lg:justify-self-end lg:text-base">Search and AI discovery are not one switch. Build a joined-up picture: a technically sound website, useful information, accurate profiles and credible signals that reinforce one another.</p>
@@ -115,7 +159,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section className="seo-full-width-band border-y border-white/10 bg-[#0a0a0e] py-14 sm:py-20" aria-labelledby="seo-work-title">
+      <section className="seo-reveal seo-full-width-band border-y border-white/10 bg-[#0a0a0e] py-14 sm:py-20" aria-labelledby="seo-work-title">
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
           <div className="grid gap-6 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">WHAT THE WORK LOOKS LIKE</p><h2 id="seo-work-title" className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">A practical SEO plan, built around your business.</h2></div>
@@ -129,7 +173,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-deliverables-title">
+      <section className="seo-reveal mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-deliverables-title">
         <div className="grid gap-6 lg:grid-cols-[.75fr_1.25fr] lg:items-end">
           <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">THE OUTPUT / NOT JUST ADVICE</p><h2 id="seo-deliverables-title" className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">Know what was checked, changed and measured.</h2></div>
           <p className="max-w-3xl text-sm leading-7 text-white/60 lg:justify-self-end lg:text-base">The exact scope depends on your site and priorities. The work should leave you with clear decisions, tangible improvements and a baseline for the next round.</p>
@@ -141,7 +185,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section className="seo-full-width-band border-y border-white/10 bg-[#0b0b10] py-14 sm:py-20" aria-labelledby="seo-process-title">
+      <section className="seo-reveal seo-full-width-band border-y border-white/10 bg-[#0b0b10] py-14 sm:py-20" aria-labelledby="seo-process-title">
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
           <div className="max-w-4xl"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">FROM AUDIT TO IMPROVEMENT</p><h2 id="seo-process-title" className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">{content.flow?.title ?? 'From audit to useful improvement'}</h2><p className="mt-4 text-sm leading-7 text-white/60 sm:text-base">{content.flow?.intro}</p></div>
           <ol className="mt-10 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 xl:grid-cols-4">
@@ -152,7 +196,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-measure-title">
+      <section className="seo-reveal mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12" aria-labelledby="seo-measure-title">
         <div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr] lg:items-start">
           <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">MEASURE WHAT CHANGES</p><h2 id="seo-measure-title" className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">Visibility matters. Useful actions matter more.</h2><p className="mt-5 text-sm leading-7 text-white/60">{content.measurement?.intro}</p><div className="mt-6 flex items-start gap-3 border-l-2 border-[#FFB347] bg-white/[.025] p-4"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#FFB347]" /><p className="text-xs leading-6 text-white/55">The figures below are illustrative placeholders, not client results or forecasts. Actual reporting uses agreed baselines and available analytics/search data.</p></div></div>
           <div className="border border-white/10 bg-[#09090d] p-5 sm:p-7">
@@ -169,7 +213,7 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
         </div>
       </section>
 
-      <section className="seo-full-width-band border-y border-white/10 bg-[#0a0a0e] py-14 sm:py-20" aria-labelledby="seo-system-title">
+      <section className="seo-reveal seo-full-width-band border-y border-white/10 bg-[#0a0a0e] py-14 sm:py-20" aria-labelledby="seo-system-title">
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 xl:px-12">
           <div className="grid gap-6 lg:grid-cols-[.85fr_1.15fr] lg:items-end"><div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-[#FFB347]">HOW THE PIECES CONNECT</p><h2 id="seo-system-title" className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">A joined-up system, not isolated SEO tasks.</h2></div><p className="max-w-3xl text-sm leading-7 text-white/60 lg:justify-self-end lg:text-base">{content.systemMap?.intro}</p></div>
           <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
