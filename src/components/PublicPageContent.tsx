@@ -10,6 +10,7 @@ import { AutomationWorkflowCanvas } from './AutomationWorkflowCanvas';
 import { SeoSearchExperience } from './SeoSearchExperience';
 import { GoogleAdsExperience } from './GoogleAdsExperience';
 import { WebBuildExperience } from './WebBuildExperience';
+import { ServiceExperience } from './ServiceExperience';
 
 type PublicContentTab = Exclude<PublicPageTab, 'contact'>;
 
@@ -467,6 +468,8 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
         )}
 
         {page === 'web-design-development' && <WebBuildExperience />}
+
+        {['local-seo', 'social-media-marketing', 'agency-development-partner', 'app-development'].includes(page) && <ServiceExperience page={page} />}
 
         {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.flow && <div className="mt-16"><ProcessFlow {...content.flow} /></div>}
         {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.systemMap && <div className="mt-5"><SystemMap {...content.systemMap} /></div>}
