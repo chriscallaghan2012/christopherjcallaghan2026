@@ -276,7 +276,15 @@ export const AcademySection: React.FC<AcademySectionProps> = ({ onNavigateToClas
         </div>
       </div>
 
-      <div className="mt-12 border-t border-white/10 pt-7 md:mt-16 md:pt-9">
+
+    </div>
+  </section>
+);
+
+export const DeliveryPathSection: React.FC = () => (
+  <section aria-labelledby="delivery-path-title" className="border-y border-white/10 bg-black/35 py-12 md:py-16">
+    <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <div className="border-t border-white/10 pt-7 md:pt-9>
         <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5575]">A practical delivery path</p>
