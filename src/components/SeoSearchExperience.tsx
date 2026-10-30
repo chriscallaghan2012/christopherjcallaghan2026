@@ -121,6 +121,9 @@ export const SeoSearchExperience: React.FC<SeoSearchExperienceProps> = ({ conten
                         <span className="seo-ai-brand seo-ai-brand--perplexity"><span className="seo-ai-brand-mark">◈</span>Perplexity</span>
                         <span className="seo-ai-brand seo-ai-brand--copilot"><span className="seo-ai-brand-mark">◉</span>Copilot</span>
                         <span className="seo-ai-brand seo-ai-brand--google"><span className="seo-ai-brand-mark">G</span>Google AI</span>
+                        <span className="seo-ai-brand seo-ai-brand--grok"><span className="seo-ai-brand-mark">𝕏</span>Grok</span>
+                        <span className="seo-ai-brand seo-ai-brand--meta"><span className="seo-ai-brand-mark">∞</span>Meta AI</span>
+                        <span className="seo-ai-brand seo-ai-brand--deepseek"><span className="seo-ai-brand-mark">◌</span>DeepSeek</span>
                       </div>
                     </div>
                   </div>
