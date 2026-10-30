@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Code, Instagram, MapPin, MousePointerClick, Search, Smartphone } from 'lucide-react';
+import { ArrowDown, ArrowRight, Code, Instagram, MapPin, MousePointerClick, Search, Smartphone } from 'lucide-react';
 import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
