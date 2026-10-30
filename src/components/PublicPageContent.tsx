@@ -560,7 +560,7 @@ export const PublicPageContent: React.FC<PublicPageContentProps> = ({ page, onNa
           </ol>}
         </section>}
 
-        {page !== 'ai-automation' && page !== 'seo-services' && page !== 'google-ads-management' && content.chart && <KpiTrendChart chart={content.chart} />}
+        {page !== 'ai-automation' && page !== 'google-ads-management' && content.chart && <div className={page === 'seo-services' ? 'seo-reveal mx-auto w-full max-w-[1500px] px-5 md:px-8 xl:px-12' : ''}><KpiTrendChart chart={content.chart} /></div>}
 
         {serviceCtaHeadlines[page] && <section className={`mt-16 ${page === 'seo-services' ? 'max-w-none px-5 md:px-8 xl:px-12' : 'max-w-5xl'} border-t border-white/10 pt-10`}>
           <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${String(page) === 'ai-automation' ? 'text-[#DF80FF]' : 'text-[#FF003C]'}`}>NEXT STEP</p>
