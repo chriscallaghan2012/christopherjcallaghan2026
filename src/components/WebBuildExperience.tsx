@@ -93,6 +93,9 @@ const stages = [
 
 export const WebBuildExperience: React.FC = () => {
   const [active, setActive] = useState(0);
+  const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [previewPage, setPreviewPage] = useState<'home' | 'services' | 'contact'>('home');
+  const [enquirySent, setEnquirySent] = useState(false);
   const stage = stages[active];
 
   return (
@@ -144,12 +147,22 @@ export const WebBuildExperience: React.FC = () => {
                   <div className="flex items-center gap-1.5 border-b border-black/10 bg-white px-3 py-2"><span className="h-1.5 w-1.5 rounded-full bg-[#ff6b6b]" /><span className="h-1.5 w-1.5 rounded-full bg-[#ffc45c]" /><span className="h-1.5 w-1.5 rounded-full bg-[#5ccf91]" /><span className="ml-3 flex-1 truncate rounded-sm bg-[#f0eff1] px-3 py-1 font-mono text-[8px] text-black/40">yourbusiness.co.uk</span></div>
                   <AnimatePresence mode="wait">
                     <motion.div key={stage.id} initial={{ opacity: 0, scale: .985 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .99 }} transition={{ duration: .28 }} className="min-h-[330px] p-5 sm:p-7">
-                      <div className="flex items-center justify-between border-b border-black/10 pb-4"><span className="text-[10px] font-black tracking-[.18em]">STUDIO / BUSINESS</span><span className="text-[9px] font-semibold">MENU　 CONTACT ↗</span></div>
+                      <div className="flex items-center justify-between border-b border-black/10 pb-4"><button type="button" onClick={() => { setPreviewPage('home'); setEnquirySent(false); }} className="text-[10px] font-black tracking-[.18em]">STUDIO / BUSINESS</button><nav aria-label="Preview website navigation" className="flex gap-3 text-[9px] font-semibold"><button type="button" onClick={() => { setPreviewPage('services'); setEnquirySent(false); }}>SERVICES</button><button type="button" onClick={() => { setPreviewPage('contact'); setEnquirySent(false); }}>CONTACT ↗</button></nav></div>
                       <div className="py-8 sm:py-10">
-                        <p className="text-[8px] font-bold tracking-[.2em] text-[#d42e50]">{active === 0 ? 'A CLEAR START' : active === 1 ? 'DESIGNED WITH INTENT' : active === 2 ? 'BUILT TO DO MORE' : 'READY FOR THE REAL WORLD'}</p>
-                        <h3 className="mt-3 max-w-[12ch] text-4xl font-black leading-[.92] tracking-[-.06em] sm:text-5xl">{active === 0 ? 'Make your next move.' : active === 1 ? 'Stand out. Stay clear.' : active === 2 ? 'Turn visits into action.' : 'Built to keep moving.'}</h3>
-                        <p className="mt-4 max-w-sm text-[11px] leading-5 text-black/60">{active === 0 ? 'A clear message and a structure that helps people find what they need.' : active === 1 ? 'A distinctive visual system that feels considered on every screen.' : active === 2 ? 'Useful interactions connect the experience to the systems behind your business.' : 'Responsive, accessible and tested — with a plan for what comes next.'}</p>
-                        <div className="mt-5 inline-flex items-center gap-3 bg-[#d92f51] px-4 py-3 text-[9px] font-black uppercase tracking-[.12em] text-white">Explore the project <ArrowRight className="h-3 w-3" /></div>
+                        {previewPage === 'home' ? <>
+                          <p className="text-[8px] font-bold tracking-[.2em] text-[#d42e50]">{active === 0 ? 'A CLEAR START' : active === 1 ? 'DESIGNED WITH INTENT' : active === 2 ? 'BUILT TO DO MORE' : 'READY FOR THE REAL WORLD'}</p>
+                          <h3 className="mt-3 max-w-[12ch] text-4xl font-black leading-[.92] tracking-[-.06em] sm:text-5xl">{active === 0 ? 'Make your next move.' : active === 1 ? 'Stand out. Stay clear.' : active === 2 ? 'Turn visits into action.' : 'Built to keep moving.'}</h3>
+                          <p className="mt-4 max-w-sm text-[11px] leading-5 text-black/60">{active === 0 ? 'A clear message and a structure that helps people find what they need.' : active === 1 ? 'A distinctive visual system that feels considered on every screen.' : active === 2 ? 'Useful interactions connect the experience to the systems behind your business.' : 'Responsive, accessible and tested — with a plan for what comes next.'}</p>
+                          <button type="button" onClick={() => { setPreviewPage('contact'); setEnquirySent(false); }} className="mt-5 inline-flex items-center gap-3 bg-[#d92f51] px-4 py-3 text-[9px] font-black uppercase tracking-[.12em] text-white">Explore the project <ArrowRight className="h-3 w-3" /></button>
+                        </> : previewPage === 'services' ? <>
+                          <p className="text-[8px] font-bold tracking-[.2em] text-[#d42e50]">WHAT WE DO</p><h3 className="mt-3 text-3xl font-black leading-none tracking-[-.05em]">One joined-up digital team.</h3>
+                          <div className="mt-6 grid gap-2 sm:grid-cols-3">{[['01','Strategy'],['02','Design'],['03','Development']].map(([n,label]) => <div key={n} className="border border-black/10 bg-white/70 p-3"><span className="font-mono text-[9px] text-[#d42e50]">{n}</span><p className="mt-3 text-xs font-black">{label}</p><p className="mt-1 text-[9px] leading-4 text-black/50">Planned around the people using it.</p></div>)}</div>
+                          <button type="button" onClick={() => { setPreviewPage('contact'); setEnquirySent(false); }} className="mt-5 bg-[#d92f51] px-4 py-3 text-[9px] font-black uppercase tracking-wider text-white">Discuss a project ↗</button>
+                        </> : <>
+                          <p className="text-[8px] font-bold tracking-[.2em] text-[#d42e50]">LET'S TALK</p><h3 className="mt-3 text-3xl font-black leading-none tracking-[-.05em]">{enquirySent ? 'Message preview complete.' : 'Tell us what you need.'}</h3>
+                          {enquirySent ? <p className="mt-4 text-[11px] leading-5 text-black/60">This is a front-end interaction demo. No information has been sent to a server.</p> : <div className="mt-5 grid gap-3"><label className="text-[9px] font-bold">YOUR EMAIL<input type="email" placeholder="you@example.com" className="mt-1 block w-full border border-black/15 bg-white p-3 text-[11px] font-normal outline-none focus:border-[#d92f51]" /></label><label className="text-[9px] font-bold">PROJECT DETAILS<textarea placeholder="A little about your project..." rows={3} className="mt-1 block w-full border border-black/15 bg-white p-3 text-[11px] font-normal outline-none focus:border-[#d92f51]" /></label><button type="button" onClick={() => setEnquirySent(true)} className="w-fit bg-[#d92f51] px-4 py-3 text-[9px] font-black uppercase tracking-wider text-white">Preview submit state ↗</button></div>}
+                        </>
+                        }
                       </div>
                       <div className="grid grid-cols-3 gap-2 border-t border-black/10 pt-4">
                         {['Strategy', 'Design', 'Technology'].map((label, i) => <div key={label} className="border-l-2 border-[#d92f51] pl-2"><p className="text-[9px] font-bold">{label}</p><p className="mt-1 text-[8px] text-black/45">{['Clear direction', 'Built around people', 'Ready to scale'][i]}</p></div>)}
