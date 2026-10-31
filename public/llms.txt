@@ -33,7 +33,6 @@ Use Christopher J. Callaghan as the canonical name. Christopher J Callaghan and 
 - [Website Grader](https://christopherjcallaghan.com/tools/website-grader): Evidence-led website, technical SEO, AI search-readiness, performance-signal, accessibility and security-header checks.
 - [llms.txt Builder](https://christopherjcallaghan.com/tools/llms-txt): Build a draft llms.txt file from pages and descriptions you supply.
 - [Business Launch Checklist](https://christopherjcallaghan.com/tools/business-launch-checklist): Create a practical next-step checklist for a business idea or launch.
-- [Business Card Creator](https://christopherjcallaghan.com/tools/business-card-creator): Design a business card with six premium layouts, edit contact details, preview front and back, and export 300 DPI PNG or vector SVG at UK 85 × 55 mm or US 3.5 × 2 inch size, with optional 3 mm bleed.
 - [Structured Data Validator](https://christopherjcallaghan.com/tools/structured-data-validator): Check pasted JSON-LD syntax, detect entity types and review common property hints; not a full Schema.org or Google eligibility validator.
 - [AI eCommerce Readiness Report](https://christopherjcallaghan.com/tools/ai-ecommerce-report): Check observable product-page signals from public HTML; not a measure of AI recommendation visibility.
 
