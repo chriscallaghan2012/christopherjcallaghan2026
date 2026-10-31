@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Braces, CreditCard, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Braces, FileText, Gauge, PackageSearch, type LucideIcon } from 'lucide-react';
 import type { ScreenTab } from '../types';
 
 export interface ToolCardData {
@@ -86,20 +86,6 @@ export const TOOLS: ToolCardData[] = [
     status: 'live',
     category: 'Business Tools',
     capabilities: ['Starting or relaunching', 'Personalised next steps', 'Saved progress'],
-    accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
-    eyebrow: 'FREE TOOL'
-  },
-  {
-    slug: 'business-card-creator',
-    href: '/tools/business-card-creator',
-    tab: 'tools',
-    name: 'Business Card Studio',
-    tagline: 'Premium layouts with accurate UK and US print sizing',
-    description: 'Choose from six premium designs, edit your details, preview both sides and export 300 DPI PNG or vector SVG at UK 85 × 55 mm or US 3.5 × 2 inch size, with optional 3 mm bleed.',
-    icon: CreditCard,
-    status: 'live',
-    category: 'Business Tools',
-    capabilities: ['Six premium templates', 'UK and US print sizes', '300 DPI PNG and vector SVG', 'Optional 3 mm bleed'],
     accent: 'text-[#FF5575] border-[#FF003C]/40 bg-[#FF003C]/10',
     eyebrow: 'FREE TOOL'
   }

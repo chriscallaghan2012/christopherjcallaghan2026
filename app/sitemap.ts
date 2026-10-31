@@ -26,7 +26,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/tools/website-grader`, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/tools/llms-txt`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/tools/business-launch-checklist`, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${SITE_URL}/tools/business-card-creator`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/tools/structured-data-validator`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/tools/ai-ecommerce-report`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/blog`, changeFrequency: 'weekly', priority: 0.8 },
