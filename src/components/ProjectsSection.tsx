@@ -57,7 +57,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   }, [selectedCategory, searchQuery, compact, excludeProjectIds]);
 
   return (
-    <section id="projects" className="relative w-full py-20 md:py-28 overflow-hidden bg-black/50">
+    <section id={excludeProjectIds.length > 0 ? "project-archive" : "projects"} className="relative w-full py-20 md:py-28 overflow-hidden bg-black/50">
       <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-12 space-y-4">
