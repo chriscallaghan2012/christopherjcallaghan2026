@@ -146,3 +146,32 @@ test('the live work showcase fits a real phone viewport without desktop device c
   const preview = await showcase.locator('iframe').evaluate((frame) => ({ width: frame.getBoundingClientRect().width, parent: frame.parentElement?.getBoundingClientRect().width ?? 0 }));
   expect(Math.abs(preview.width - preview.parent)).toBeLessThanOrEqual(1);
 });
+
+test('the iMac preview keeps a full desktop CSS viewport while scaled into the showcase', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+  const showcase = page.locator('#projects');
+  const imac = showcase.getByRole('button', { name: 'Preview at iMac size' });
+  await expect(imac).toBeVisible();
+  await imac.click();
+  const frame = showcase.locator('iframe');
+  await expect(frame).toHaveAttribute('src', 'https://matchdayparking.com/');
+  await expect.poll(async () => frame.evaluate((element) => element.style.width)).toBe('1440px');
+  const dimensions = await frame.evaluate((element) => ({
+    cssViewport: Number.parseFloat(element.style.width),
+    renderedWidth: element.getBoundingClientRect().width
+  }));
+  expect(dimensions.cssViewport).toBe(1440);
+  expect(dimensions.renderedWidth).toBeLessThan(1440);
+});
+
+test('MW Fitness is selected as an eager-loaded live website preview', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+  const showcase = page.locator('#projects');
+  await showcase.getByRole('button', { name: /MW Fitness UK/ }).click();
+  const frame = showcase.locator('iframe');
+  await expect(frame).toHaveAttribute('src', 'https://mwfitnessuk.com/');
+  await expect(frame).toHaveAttribute('loading', 'eager');
+  await expect(showcase.getByRole('link', { name: 'OPEN' })).toHaveAttribute('href', 'https://mwfitnessuk.com/');
+});
