@@ -93,7 +93,7 @@ export const LiveWorkShowcase: React.FC = () => {
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-7">
             <div className="min-w-0">
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-none" role="tablist" aria-label="Featured projects">
+                <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Choose a featured project">
                   {projects.map((project, index) => (
                     <button key={project.name} type="button" role="tab" aria-selected={activeProject === index} aria-controls="live-work-panel" id={`live-work-tab-${index}`} onClick={() => changeProject(index)} className={`min-h-10 shrink-0 border px-3.5 text-left text-xs font-semibold transition-colors ${activeProject === index ? 'border-[#FF5575]/60 bg-[#FF003C]/10 text-white' : 'border-white/10 bg-white/[0.02] text-white/50 hover:border-white/25 hover:text-white'}`}>
                       <span className="mr-2 font-mono text-[9px] text-[#00DFC9]">{String(index + 1).padStart(2, '0')}</span>{project.name}
@@ -108,7 +108,7 @@ export const LiveWorkShowcase: React.FC = () => {
                 </div>
               </div>
 
-              <div id="live-work-panel" role="tabpanel" aria-labelledby={`live-work-tab-${activeProject}`} className="overflow-hidden border border-white/10 bg-[#111218] shadow-[0_25px_90px_rgba(0,0,0,0.45)]">
+              <div id="live-work-panel" aria-live="polite" className="overflow-hidden border border-white/10 bg-[#111218] shadow-[0_25px_90px_rgba(0,0,0,0.45)]">
                 <div className="flex min-h-12 items-center gap-3 border-b border-white/10 bg-[#171820] px-3 sm:px-4">
                   <div className="flex shrink-0 items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" /><span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" /><span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" /></div>
                   <div className="flex min-w-0 flex-1 items-center justify-center">
