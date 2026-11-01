@@ -45,7 +45,9 @@ const projects = [
   }
 ] as const;
 
-export const LiveWorkShowcase: React.FC = () => {
+interface LiveWorkShowcaseProps { showViewAllLink?: boolean; }
+
+export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllLink = true }) => {
   const [activeProject, setActiveProject] = useState(0);
   const [device, setDevice] = useState<Device>('desktop');
   const [frameWidth, setFrameWidth] = useState(0);
@@ -98,7 +100,7 @@ export const LiveWorkShowcase: React.FC = () => {
               <h2 id="live-work-title" className="text-4xl font-black leading-[0.98] tracking-tight text-white sm:text-5xl md:text-7xl">Built to work.<br /><span className="text-[#FF5575]">Made for people.</span></h2>
               <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55 md:text-base">Explore selected live projects in a responsive device preview. Switch between desktop, tablet and mobile to see how each experience adapts.</p>
             </div>
-            <a href="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start border-b border-white/20 pb-1 text-xs font-bold tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575] hover:text-white md:self-auto">VIEW ALL PROJECTS <ArrowRight className="h-4 w-4" /></a>
+            {showViewAllLink && <a href="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start border-b border-white/20 pb-1 text-xs font-bold tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575] hover:text-white md:self-auto">VIEW ALL PROJECTS <ArrowRight className="h-4 w-4" /></a>}
           </div>
 
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-7">
