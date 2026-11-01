@@ -100,7 +100,7 @@ export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllL
               <h2 id="live-work-title" className="text-4xl font-black leading-[0.98] tracking-tight text-white sm:text-5xl md:text-7xl">Built to work.<br /><span className="text-[#FF5575]">Made for people.</span></h2>
               <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55 md:text-base">Explore selected live projects in a responsive device preview. Switch between desktop, tablet and mobile to see how each experience adapts.</p>
             </div>
-            {showViewAllLink && <a href="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start border-b border-white/20 pb-1 text-xs font-bold tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575] hover:text-white md:self-auto">VIEW ALL PROJECTS <ArrowRight className="h-4 w-4" /></a>}
+            {showViewAllLink && {showViewAllLink && <a href="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start border-b border-white/20 pb-1 text-xs font-bold tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575] hover:text-white md:self-auto">VIEW ALL PROJECTS <ArrowRight className="h-4 w-4" /></a>}}
           </div>
 
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-7">
@@ -132,8 +132,8 @@ export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllL
 
                 <div ref={viewportRef} className="relative w-full overflow-hidden bg-[#0b0c10] p-0 sm:p-4">
                   <div className="relative mx-auto overflow-hidden border border-white/15 bg-white shadow-[0_12px_45px_rgba(0,0,0,0.45)]" style={{ width: effectiveWidth, height: effectiveHeight, borderRadius: isPhoneLayout ? 0 : device === 'mobile' ? 26 : device === 'tablet' ? 18 : 8 }}>
-                    <div style={{ width: effectiveWidth, height: effectiveHeight, transform: `scale(${effectiveScale})`, transformOrigin: 'top left' }}>
-                      <iframe key={selected.url} title={iframeTitle} src={selected.url} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" onError={() => setFrameUnavailable(true)} className="block border-0 bg-white" style={{ width: effectiveWidth, height: effectiveHeight }} />
+                    <div style={{ width: isPhoneLayout ? effectiveWidth : deviceConfig.width, height: isPhoneLayout ? effectiveHeight : deviceConfig.height, transform: `scale(${effectiveScale})`, transformOrigin: 'top left' }}>
+                      <iframe key={selected.url} title={iframeTitle} src={selected.url} loading="eager" referrerPolicy="strict-origin-when-cross-origin" onError={() => setFrameUnavailable(true)} className="block border-0 bg-white" style={{ width: isPhoneLayout ? effectiveWidth : deviceConfig.width, height: isPhoneLayout ? effectiveHeight : deviceConfig.height }} />
                     </div>
                     {frameUnavailable && <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#111218]/95 p-6 text-center"><Monitor className="h-8 w-8 text-[#FF5575]" /><p className="max-w-sm text-sm font-semibold text-white">This website does not allow an embedded preview.</p><a href={selected.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#FF003C] px-4 py-2.5 text-xs font-bold text-white">OPEN LIVE WEBSITE <ExternalLink className="h-3.5 w-3.5" /></a></div>}
                   </div>
