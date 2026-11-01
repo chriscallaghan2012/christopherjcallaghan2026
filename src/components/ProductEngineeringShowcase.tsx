@@ -13,6 +13,19 @@ const stack = [
   'Linux', 'Apache', 'Nginx', 'jQuery', 'Bootstrap'
 ];
 
+const logoSlugs: Record<string, string> = {
+  React: 'react', 'Next.js': 'nextdotjs', TypeScript: 'typescript', JavaScript: 'javascript',
+  PHP: 'php', Python: 'python', Laravel: 'laravel', 'Node.js': 'nodedotjs',
+  'React Native': 'react', Expo: 'expo', WordPress: 'wordpress', WooCommerce: 'woocommerce',
+  HTML5: 'html5', CSS3: 'css3', 'C#': 'csharp', '.NET': 'dotnet', Java: 'java',
+  SQL: 'databricks', PostgreSQL: 'postgresql', MySQL: 'mysql', Neon: 'neon',
+  Firebase: 'firebase', Redis: 'redis', Docker: 'docker', Vercel: 'vercel',
+  AWS: 'amazonaws', 'Google Cloud': 'googlecloud', Cloudflare: 'cloudflare',
+  GitHub: 'github', Git: 'git', Stripe: 'stripe', OpenAI: 'openai',
+  Anthropic: 'anthropic', 'Google Gemini': 'googlegemini', 'Google AI': 'google',
+  Linux: 'linux', Apache: 'apache', Nginx: 'nginx', jQuery: 'jquery', Bootstrap: 'bootstrap'
+};
+
 const stages = [
   {
     label: '01 / DISCOVER', title: 'Understand the problem before choosing the tools.',
@@ -102,8 +115,17 @@ export const TechStackTicker: React.FC = () => (
         <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#09090d] to-transparent md:w-28" />
         <motion.div className="flex w-max items-center gap-3 pr-3 group-hover:[animation-play-state:paused]" animate={{ x: ['0%', '-50%'] }} transition={{ duration: 58, ease: 'linear', repeat: Infinity }}>
           {[...stack, ...stack].map((name, index) => (
-            <span key={`${name}-${index}`} className="inline-flex h-9 shrink-0 items-center gap-2 border border-white/[0.09] bg-white/[0.025] px-3.5 font-mono text-[11px] font-semibold tracking-wide text-white/65 transition-colors hover:border-[#00DFC9]/40 hover:text-white">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-white/25" />
+            <span key={`${name}-${index}`} className="inline-flex h-10 shrink-0 items-center gap-2.5 border border-white/[0.09] bg-white/[0.025] px-4 font-mono text-[11px] font-semibold tracking-wide text-white/70 transition-colors hover:border-[#00DFC9]/40 hover:text-white">
+              <img
+                src={`https://cdn.simpleicons.org/${logoSlugs[name] ?? ''}/ffffff`}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                width="18"
+                height="18"
+                className="h-[18px] w-[18px] object-contain opacity-80"
+                onError={(event) => { event.currentTarget.style.display = 'none'; }}
+              />
               {name}
             </span>
           ))}
