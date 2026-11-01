@@ -14,18 +14,6 @@ const devices: Array<{ id: Device; label: string; width: number; height: number;
 
 const projects = [
   {
-    name: 'Matchday Parking', url: 'https://matchdayparking.com/', domain: 'matchdayparking.com',
-    type: 'Event parking platform', summary: 'A booking experience for football and rugby supporters, connecting venue discovery with event-specific parking.',
-    detail: 'Explore the customer journey from sport and venue discovery through to event information and booking.',
-    annotations: ['Sport and venue discovery', 'Event-led parking journeys', 'Booking and customer account flows']
-  },
-  {
-    name: 'Concert Parking', url: 'https://concertparking.co.uk/', domain: 'concertparking.co.uk',
-    type: 'Live-event parking platform', summary: 'A dedicated parking experience for concerts and major live events across the UK.',
-    detail: 'See how venue information, practical parking details and booking routes come together for live-show visitors.',
-    annotations: ['Venue-first navigation', 'Concert and event information', 'Clear route into booking']
-  },
-  {
     name: 'MW Fitness UK', url: 'https://mwfitnessuk.com/', domain: 'mwfitnessuk.com',
     type: 'Fitness and online coaching', summary: 'A responsive fitness website presenting coaching, training packages and nutrition support.',
     detail: 'A focused service experience that helps prospective clients understand the coaching offer and take the next step.',
@@ -61,6 +49,7 @@ export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllL
   const effectiveHeight = isPhoneLayout ? 680 : deviceConfig.height * scale;
   const effectiveScale = isPhoneLayout ? 1 : scale;
   const projectNumber = String(activeProject + 1).padStart(2, '0');
+  const projectCount = String(projects.length).padStart(2, '0');
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 640px)');
@@ -98,7 +87,7 @@ export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllL
             <div className="max-w-3xl">
               <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#00DFC9]">Selected work / real websites</p>
               <h2 id="live-work-title" className="text-4xl font-black leading-[0.98] tracking-tight text-white sm:text-5xl md:text-7xl">Built to work.<br /><span className="text-[#FF5575]">Made for people.</span></h2>
-              <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55 md:text-base">Explore selected live projects in a responsive device preview. Switch between desktop, tablet and mobile to see how each experience adapts.</p>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55 md:text-base">Explore selected live projects in a responsive device preview. Switch between projects and device sizes to see how each experience adapts.</p>
             </div>
             {showViewAllLink && <a href="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start border-b border-white/20 pb-1 text-xs font-bold tracking-[0.12em] text-white/75 transition-colors hover:border-[#FF5575] hover:text-white md:self-auto">VIEW ALL PROJECTS <ArrowRight className="h-4 w-4" /></a>}
           </div>
@@ -161,13 +150,13 @@ export const LiveWorkShowcase: React.FC<LiveWorkShowcaseProps> = ({ showViewAllL
               </div>
               <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-5">
                 <button type="button" onClick={() => changeProject(activeProject - 1)} aria-label="Previous project" className="inline-flex h-10 w-10 items-center justify-center border border-white/15 text-white/65 transition-colors hover:border-white/40 hover:text-white"><ArrowLeft className="h-4 w-4" /></button>
-                <span className="font-mono text-[10px] text-white/35">{projectNumber} / 05</span>
+                <span className="font-mono text-[10px] text-white/35">{projectNumber} / {projectCount}</span>
                 <button type="button" onClick={() => changeProject(activeProject + 1)} aria-label="Next project" className="inline-flex h-10 w-10 items-center justify-center border border-[#FF5575]/50 bg-[#FF003C]/10 text-white transition-colors hover:bg-[#FF003C]/20"><ArrowRight className="h-4 w-4" /></button>
               </div>
               <a href={selected.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 bg-[#FF003C] px-4 text-xs font-black tracking-[0.12em] text-white transition-colors hover:bg-[#ffb347] hover:text-black">VISIT LIVE WEBSITE <ExternalLink className="h-4 w-4" /></a>
             </motion.aside>
           </div>
-          <p className="mt-5 text-[10px] leading-relaxed text-white/30">Live previews depend on each website allowing iframe embedding. If a site blocks embedded viewing, use its direct live-site link above.</p>
+          <p className="mt-5 text-[10px] leading-relaxed text-white/30">Selected project previews load external websites. Open a project directly to visit its live website.</p>
         </div>
       </section>
     </MotionConfig>
