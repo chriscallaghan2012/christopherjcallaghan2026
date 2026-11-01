@@ -8,6 +8,7 @@ import { SimpleNavbar } from './components/SimpleNavbar';
 import { Hero } from './components/Hero';
 import { AcademySection, DeliveryPathSection, HomeClosingSections, HomeSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
+import { LiveWorkShowcase } from './components/LiveWorkShowcase';
 import { SimpleFooter } from './components/SimpleFooter';
 import { ToolsDirectory } from './components/ToolsDirectory';
 import { WebsiteGrader } from './components/WebsiteGrader';
@@ -159,12 +160,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
               onNavigate={handleSelectTab}
             />
             <HomeSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
-            <ProjectsSection
-              onSelectProject={setSelectedProject}
-              onOpenConsultation={handleOpenConsultation}
-              compact
-              onViewAll={() => handleSelectTab('projects')}
-            />
+            <LiveWorkShowcase />
             <DeliveryPathSection />
             <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />

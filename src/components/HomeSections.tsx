@@ -3,8 +3,7 @@ import { ArrowDown, ArrowRight, Code, Instagram, MapPin, MousePointerClick, Sear
 import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
-import { SystemMap } from './SystemMap';
-import type { SystemMapContent } from '../types';
+import { ProductEngineeringShowcase, TechStackTicker } from './ProductEngineeringShowcase';
 import { ACADEMY_URL } from '../../lib/academy';
 
 interface HomeSectionsProps {
@@ -55,24 +54,9 @@ const growthServices = [
   { label: 'App Development', href: '/app-development', description: 'Turn your idea into a useful mobile or web app.', icon: Smartphone, accent: 'text-[#80AFFF]', hoverText: 'group-hover:text-[#80AFFF]', border: 'hover:border-[#80AFFF]/55', wash: 'group-hover:bg-[#80AFFF]/[0.035]' }
 ];
 
-const homepageSystemMap: SystemMapContent = {
-  title: 'How an idea becomes a working product',
-  intro: 'The visible website is one part of a connected system: goals and constraints shape the scope, product experience, backend and launch.',
-  nodes: [
-    { id: 'idea', title: 'Idea or problem', summary: 'What needs to change?', detail: 'Start with the opportunity, problem or outcome. The technology choice comes after understanding what the product needs to do.', examples: ['Problem statement', 'Desired user action', 'How success will be judged'], group: 'source' },
-    { id: 'audience', title: 'People using it', summary: 'Who is it for?', detail: 'Identify the customers, teams or users the experience needs to serve and what they need to accomplish.', examples: ['User roles and permissions', 'Key tasks and pain points', 'Accessibility and device needs'], group: 'source' },
-    { id: 'constraints', title: 'Requirements', summary: 'Budget, timing and existing systems', detail: 'Account for delivery constraints, existing tools, integrations, data and operational needs before fixing the scope.', examples: ['Budget and target launch date', 'Existing platforms and APIs', 'Security or data requirements'], group: 'source' },
-    { id: 'scope', title: 'Product scope', summary: 'Priorities and delivery plan', detail: 'Translate the goal into a sensible first release, key user journeys and an order for delivery.', examples: ['MVP features', 'Acceptance checks', 'Milestones and dependencies'], group: 'work' },
-    { id: 'experience', title: 'Website or application', summary: 'The user-facing experience', detail: 'Design and build the interface around the tasks users need to complete, on desktop and mobile.', examples: ['Responsive pages and navigation', 'Forms, accounts or checkout', 'Accessible states and feedback'], group: 'work' },
-    { id: 'backend', title: 'Backend and data', summary: 'Logic, storage and APIs', detail: 'Implement the server-side functions, data model, APIs and integrations needed to make the product work.', examples: ['API routes and validation', 'Database and access rules', 'Payments, email or third-party services'], group: 'work' },
-    { id: 'launch', title: 'Deployment and learning', summary: 'Release, measure and improve', detail: 'Deploy the product, test critical journeys and use real usage or feedback to choose what to improve next.', examples: ['Domain, DNS and SSL', 'Production environment and release checks', 'Analytics and feedback loop'], group: 'work' },
-    { id: 'product', title: 'Working product', summary: 'A connected system ready for real use', detail: 'A live product where the interface, backend, data and integrations work together to support the original goal.', examples: ['A usable customer journey', 'Connected operations and data', 'A clear route for ongoing improvements'], group: 'outcome' }
-  ],
-  connections: [['idea', 'scope'], ['audience', 'experience'], ['constraints', 'backend'], ['scope', 'experience'], ['scope', 'backend'], ['experience', 'launch'], ['backend', 'launch'], ['launch', 'product']]
-};
-
 export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, onNavigate }) => (
   <>
+    <TechStackTicker />
     <section id="ways-to-work" className="relative border-y border-white/10 bg-white/[0.015] py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-14 md:mb-20">
@@ -108,7 +92,7 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
         { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
       ]}
     />
-    <div className="mt-5"><SystemMap {...homepageSystemMap} eyebrow="A system map / idea to launch" /></div>
+    <ProductEngineeringShowcase />
 
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />
