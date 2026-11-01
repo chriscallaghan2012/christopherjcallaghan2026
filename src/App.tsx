@@ -189,7 +189,7 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
 
         {currentTab === 'projects' && (
           <div className="pt-6">
-            <LiveWorkShowcase />
+            <LiveWorkShowcase showViewAllLink={false} />
             <ProjectsSection
               onSelectProject={setSelectedProject}
               onOpenConsultation={handleOpenConsultation}
