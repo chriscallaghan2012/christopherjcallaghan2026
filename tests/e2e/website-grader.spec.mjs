@@ -102,7 +102,7 @@ test('the desktop Tools mega-menu displays all live tools in three columns', asy
 
   const toolsGrid = page.getByLabel('Available tools');
   await expect(toolsGrid).toBeVisible();
-  await expect(toolsGrid.getByRole('link')).toHaveCount(6);
+  await expect(toolsGrid.getByRole('link')).toHaveCount(5);
   await expect.poll(async () => toolsGrid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(3);
 });
 
@@ -126,4 +126,23 @@ test('the mobile navigation closes with Escape and restores focus', async ({ pag
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Open navigation' })).toBeVisible();
   await expect(openButton).toBeFocused();
+});
+
+
+test('the live work showcase fits a real phone viewport without desktop device controls', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/');
+  const showcase = page.locator('#projects');
+  await expect(showcase.getByRole('heading', { name: 'Built to work. Made for people.' })).toBeVisible();
+  await expect(showcase.getByRole('group', { name: 'Choose a featured project' })).toBeVisible();
+  await expect(showcase.getByRole('button', { name: 'Preview at iMac size' })).toBeHidden();
+  await expect(showcase.getByRole('button', { name: 'Preview at iPad size' })).toBeHidden();
+  await expect(showcase.getByRole('button', { name: 'Preview at iPhone size' })).toBeHidden();
+  await expect(showcase.getByRole('button', { name: /Concert Parking/ })).toBeVisible();
+  await showcase.getByRole('button', { name: /Concert Parking/ }).click();
+  await expect(showcase.getByRole('heading', { name: 'Concert Parking' })).toBeVisible();
+  const widths = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
+  expect(widths.content).toBeLessThanOrEqual(widths.viewport + 1);
+  const preview = await showcase.locator('iframe').evaluate((frame) => ({ width: frame.getBoundingClientRect().width, parent: frame.parentElement?.getBoundingClientRect().width ?? 0 }));
+  expect(Math.abs(preview.width - preview.parent)).toBeLessThanOrEqual(1);
 });
