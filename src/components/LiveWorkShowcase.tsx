@@ -50,12 +50,23 @@ export const LiveWorkShowcase: React.FC = () => {
   const [device, setDevice] = useState<Device>('desktop');
   const [frameWidth, setFrameWidth] = useState(0);
   const [frameUnavailable, setFrameUnavailable] = useState(false);
+  const [isPhoneLayout, setIsPhoneLayout] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const selected = projects[activeProject];
   const deviceConfig = devices.find((item) => item.id === device) ?? devices[0];
   const scale = frameWidth > 0 ? Math.min(frameWidth / deviceConfig.width, 1) : 1;
-  const scaledHeight = deviceConfig.height * scale;
+  const effectiveWidth = isPhoneLayout ? Math.max(frameWidth, 320) : deviceConfig.width * scale;
+  const effectiveHeight = isPhoneLayout ? 680 : deviceConfig.height * scale;
+  const effectiveScale = isPhoneLayout ? 1 : scale;
   const projectNumber = String(activeProject + 1).padStart(2, '0');
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 640px)');
+    const update = () => setIsPhoneLayout(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const element = viewportRef.current;
@@ -95,7 +106,7 @@ export const LiveWorkShowcase: React.FC = () => {
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Choose a featured project">
                   {projects.map((project, index) => (
-                    <button key={project.name} type="button" role="tab" aria-selected={activeProject === index} aria-controls="live-work-panel" id={`live-work-tab-${index}`} onClick={() => changeProject(index)} className={`min-h-10 shrink-0 border px-3.5 text-left text-xs font-semibold transition-colors ${activeProject === index ? 'border-[#FF5575]/60 bg-[#FF003C]/10 text-white' : 'border-white/10 bg-white/[0.02] text-white/50 hover:border-white/25 hover:text-white'}`}>
+                    <button key={project.name} type="button" aria-pressed={activeProject === index} onClick={() => changeProject(index)} className={`min-h-10 shrink-0 border px-3.5 text-left text-xs font-semibold transition-colors ${activeProject === index ? 'border-[#FF5575]/60 bg-[#FF003C]/10 text-white' : 'border-white/10 bg-white/[0.02] text-white/50 hover:border-white/25 hover:text-white'}`}>
                       <span className="mr-2 font-mono text-[9px] text-[#00DFC9]">{String(index + 1).padStart(2, '0')}</span>{project.name}
                     </button>
                   ))}
@@ -117,16 +128,16 @@ export const LiveWorkShowcase: React.FC = () => {
                   <a href={selected.url} target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-bold text-white/55 transition-colors hover:text-[#00DFC9]"><span className="hidden sm:inline">OPEN</span><ExternalLink className="h-3.5 w-3.5" /></a>
                 </div>
 
-                <div ref={viewportRef} className="relative w-full overflow-hidden bg-[#0b0c10] p-2 sm:p-4">
-                  <div className="relative mx-auto overflow-hidden border border-white/15 bg-white shadow-[0_12px_45px_rgba(0,0,0,0.45)]" style={{ width: deviceConfig.width * scale, height: scaledHeight, borderRadius: device === 'mobile' ? 26 : device === 'tablet' ? 18 : 8 }}>
-                    <div style={{ width: deviceConfig.width, height: deviceConfig.height, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-                      <iframe key={selected.url} title={iframeTitle} src={selected.url} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" onError={() => setFrameUnavailable(true)} className="block border-0 bg-white" style={{ width: deviceConfig.width, height: deviceConfig.height }} />
+                <div ref={viewportRef} className="relative w-full overflow-hidden bg-[#0b0c10] p-0 sm:p-4">
+                  <div className="relative mx-auto overflow-hidden border border-white/15 bg-white shadow-[0_12px_45px_rgba(0,0,0,0.45)]" style={{ width: effectiveWidth, height: effectiveHeight, borderRadius: isPhoneLayout ? 0 : device === 'mobile' ? 26 : device === 'tablet' ? 18 : 8 }}>
+                    <div style={{ width: effectiveWidth, height: effectiveHeight, transform: `scale(${effectiveScale})`, transformOrigin: 'top left' }}>
+                      <iframe key={selected.url} title={iframeTitle} src={selected.url} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" onError={() => setFrameUnavailable(true)} className="block border-0 bg-white" style={{ width: effectiveWidth, height: effectiveHeight }} />
                     </div>
                     {frameUnavailable && <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#111218]/95 p-6 text-center"><Monitor className="h-8 w-8 text-[#FF5575]" /><p className="max-w-sm text-sm font-semibold text-white">This website does not allow an embedded preview.</p><a href={selected.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#FF003C] px-4 py-2.5 text-xs font-bold text-white">OPEN LIVE WEBSITE <ExternalLink className="h-3.5 w-3.5" /></a></div>}
                   </div>
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-1">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/35">{deviceConfig.label} viewport / {deviceConfig.width}px</span>
-                    <span className="font-mono text-[9px] text-white/35">LIVE SITE / EXTERNAL CONTENT</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/35">{isPhoneLayout ? 'Your phone' : deviceConfig.label} viewport / {Math.round(effectiveWidth)}px</span>
+                    <span className="font-mono text-[9px] text-white/35">{isPhoneLayout ? 'MOBILE LAYOUT' : 'LIVE SITE / EXTERNAL CONTENT'}</span>
                   </div>
                 </div>
               </div>
