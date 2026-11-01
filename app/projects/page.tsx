@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import App from '@/src/App';
 import { PROJECTS_DATA } from '@/src/data/portfolioData';
 
-const title = 'Web Development Projects and Case Studies | Christopher J. Callaghan';
-const description = 'Explore full-stack platforms, e-commerce systems, AI products, APIs and digital experiences built by Christopher J. Callaghan.';
+const title = 'Selected Websites, Software & App Projects | Christopher J. Callaghan';
+const description = 'Explore selected live websites alongside the software platforms, mobile apps, AI products, APIs and integrations built by Christopher J. Callaghan.';
 
 export const metadata: Metadata = {
   title,
