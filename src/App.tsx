@@ -9,6 +9,8 @@ import { Hero } from './components/Hero';
 import { AcademySection, DeliveryPathSection, HomeClosingSections, HomeSections } from './components/HomeSections';
 import { ProjectsSection } from './components/ProjectsSection';
 import { LiveWorkShowcase } from './components/LiveWorkShowcase';
+import { TechStackTicker } from './components/ProductEngineeringShowcase';
+import { TestimonialsMarquee } from './components/TestimonialsMarquee';
 import { SimpleFooter } from './components/SimpleFooter';
 import { ToolsDirectory } from './components/ToolsDirectory';
 import { WebsiteGrader } from './components/WebsiteGrader';
@@ -161,9 +163,11 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
             />
             <HomeSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <LiveWorkShowcase />
+            <TestimonialsMarquee />
             <DeliveryPathSection />
             <HomeClosingSections onOpenConsultation={handleOpenConsultation} onNavigate={handleSelectTab} />
             <AcademySection onNavigateToClasses={() => handleSelectTab('classes')} />
+            <TechStackTicker />
           </>
         )}
 
