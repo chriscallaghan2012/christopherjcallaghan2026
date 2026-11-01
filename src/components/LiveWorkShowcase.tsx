@@ -111,7 +111,7 @@ export const LiveWorkShowcase: React.FC = () => {
                     </button>
                   ))}
                 </div>
-                <div className="flex shrink-0 items-center gap-1 self-start border border-white/10 bg-black/30 p-1 sm:self-auto" aria-label="Preview device size">
+                <div className="hidden shrink-0 items-center gap-1 self-start border border-white/10 bg-black/30 p-1 sm:flex sm:self-auto" aria-label="Preview device size">
                   {devices.map((item) => {
                     const Icon = item.icon;
                     return <button key={item.id} type="button" onClick={() => setDevice(item.id)} aria-pressed={device === item.id} aria-label={`Preview at ${item.label} size`} className={`inline-flex h-9 items-center gap-1.5 px-2.5 text-[10px] font-bold transition-colors sm:px-3 ${device === item.id ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}><Icon className="h-3.5 w-3.5" /><span>{item.label}</span></button>;
