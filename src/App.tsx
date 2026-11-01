@@ -189,10 +189,12 @@ export default function App({ initialTab = 'home', initialService }: AppProps) {
 
         {currentTab === 'projects' && (
           <div className="pt-6">
+            <LiveWorkShowcase />
             <ProjectsSection
               onSelectProject={setSelectedProject}
               onOpenConsultation={handleOpenConsultation}
               showAllInitially={true}
+              excludeProjectIds={[4, 5, 14, 15, 16]}
             />
             <ContactSection />
           </div>
