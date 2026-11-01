@@ -12,6 +12,7 @@ interface ProjectsSectionProps {
   showAllInitially?: boolean;
   compact?: boolean;
   onViewAll?: () => void;
+  excludeProjectIds?: number[];
 }
 
 const CATEGORIES = [
@@ -31,13 +32,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   onOpenConsultation,
   showAllInitially = false,
   compact = false,
-  onViewAll
+  onViewAll,
+  excludeProjectIds = []
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const filteredProjects = useMemo(() => {
     return PROJECTS_DATA.filter((p) => {
+      if (excludeProjectIds.includes(p.id)) return false;
       if (compact && !p.featured) return false;
       const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
       const q = searchQuery.toLowerCase().trim();
@@ -51,7 +54,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       (PROJECT_ORDER.get(left.id) ?? Number.MAX_SAFE_INTEGER) -
       (PROJECT_ORDER.get(right.id) ?? Number.MAX_SAFE_INTEGER)
     );
-  }, [selectedCategory, searchQuery, compact]);
+  }, [selectedCategory, searchQuery, compact, excludeProjectIds]);
 
   return (
     <section id="projects" className="relative w-full py-20 md:py-28 overflow-hidden bg-black/50">
