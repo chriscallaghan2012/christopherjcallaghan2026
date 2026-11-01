@@ -3,7 +3,7 @@ import { ArrowDown, ArrowRight, Code, Instagram, MapPin, MousePointerClick, Sear
 import { MotionConfig, motion } from 'motion/react';
 import { ScrollWritingTitle } from './ScrollWritingTitle';
 import { ProcessFlow } from './ProcessFlow';
-import { ProductEngineeringShowcase } from './ProductEngineeringShowcase';
+import { ProductEngineeringShowcase, TechStackTicker } from './ProductEngineeringShowcase';
 import { ACADEMY_URL } from '../../lib/academy';
 
 interface HomeSectionsProps {
@@ -56,7 +56,7 @@ const growthServices = [
 
 export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, onNavigate }) => (
   <>
-    <ProductEngineeringShowcase />
+    <TechStackTicker />
     <section id="ways-to-work" className="relative border-y border-white/10 bg-white/[0.015] py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-14 md:mb-20">
@@ -81,7 +81,18 @@ export const HomeSections: React.FC<HomeSectionsProps> = ({ onOpenConsultation, 
       </div>
     </section>
 
-    <ProductEngineeringShowcase mode="deep-dive" />
+    <ProcessFlow
+      eyebrow="From first conversation to live product"
+      title="A clear route from idea to launch."
+      intro="Start with the outcome. Shape the right scope, build the product and its connections, then launch and improve it with real feedback."
+      steps={[
+        { title: 'Set the objective', description: 'Clarify the problem, audience and outcome the work needs to support.' },
+        { title: 'Shape the scope', description: 'Choose the right product, priorities, integrations and delivery plan.' },
+        { title: 'Build and connect', description: 'Create the experience, backend and services needed to make it work.' },
+        { title: 'Launch and improve', description: 'Deploy, check the important journeys and use feedback to decide what is next.' }
+      ]}
+    />
+    <ProductEngineeringShowcase />
 
     <section className="relative overflow-hidden py-28 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-[#FF003C]/10 blur-[140px]" />
