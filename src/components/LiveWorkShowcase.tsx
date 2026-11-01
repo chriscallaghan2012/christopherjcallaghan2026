@@ -103,7 +103,7 @@ export const LiveWorkShowcase: React.FC = () => {
 
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-7">
             <div className="min-w-0">
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Choose a featured project">
                   {projects.map((project, index) => (
                     <button key={project.name} type="button" aria-pressed={activeProject === index} onClick={() => changeProject(index)} className={`min-h-10 shrink-0 border px-3.5 text-left text-xs font-semibold transition-colors ${activeProject === index ? 'border-[#FF5575]/60 bg-[#FF003C]/10 text-white' : 'border-white/10 bg-white/[0.02] text-white/50 hover:border-white/25 hover:text-white'}`}>
@@ -111,10 +111,10 @@ export const LiveWorkShowcase: React.FC = () => {
                     </button>
                   ))}
                 </div>
-                <div className="hidden shrink-0 items-center gap-1 self-start border border-white/10 bg-black/30 p-1 sm:flex sm:self-auto" aria-label="Preview device size">
+                <div className="hidden shrink-0 items-center gap-1 self-start border border-white/10 bg-black/30 p-1 md:flex md:self-auto" aria-label="Preview device size">
                   {devices.map((item) => {
                     const Icon = item.icon;
-                    return <button key={item.id} type="button" onClick={() => setDevice(item.id)} aria-pressed={device === item.id} aria-label={`Preview at ${item.label} size`} className={`inline-flex h-9 items-center gap-1.5 px-2.5 text-[10px] font-bold transition-colors sm:px-3 ${device === item.id ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}><Icon className="h-3.5 w-3.5" /><span>{item.label}</span></button>;
+                    return <button key={item.id} type="button" onClick={() => setDevice(item.id)} aria-pressed={device === item.id} aria-label={`Preview at ${item.label} size`} className={`inline-flex h-9 items-center gap-1.5 px-2.5 text-[10px] font-bold transition-colors md:px-3 ${device === item.id ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}><Icon className="h-3.5 w-3.5" /><span>{item.label}</span></button>;
                   })}
                 </div>
               </div>
