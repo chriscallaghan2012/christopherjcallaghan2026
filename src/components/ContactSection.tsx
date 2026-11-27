@@ -80,7 +80,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService }
   };
 
   return (
-    <section id="contact" className="relative w-full py-20 md:py-28 overflow-hidden bg-black/80 text-left">
+    <section id="contact" className="relative w-full py-20 md:py-28 overflow-hidden bg-transparent text-left">
       <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-6xl">
         {/* Section Header */}
         <div className="text-center mb-16 space-y-4">

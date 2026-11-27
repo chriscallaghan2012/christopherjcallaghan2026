@@ -228,7 +228,7 @@ export function EnquiryLanding() {
                       </label>
                     </div>
                     <label className={labelClass}>Tell me about the project *
-                      <textarea className={fieldClass + ' min-h-36 resize-y py-3 leading-6'} required minLength={10} maxLength={5000} value={form.message} onChange={(e) => update('message', e.target.value)} placeholder="What are you trying to achieve? What isn't working today? Is there a deadline or something you want to improve?" />
+                      <textarea className={fieldClass.replace('min-h-[52px]', 'min-h-[220px]') + ' sm:min-h-[180px] resize-y py-3 leading-6'} required minLength={10} maxLength={5000} value={form.message} onChange={(e) => update('message', e.target.value)} placeholder="What are you trying to achieve? What isn't working today? Is there a deadline or something you want to improve?" />
                     </label>
                     <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
                       <label>Leave this field empty<input tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => update('website', e.target.value)} /></label>
