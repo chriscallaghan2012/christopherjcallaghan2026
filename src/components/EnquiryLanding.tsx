@@ -32,6 +32,7 @@ export function EnquiryLanding() {
   const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState('');
   const [notice, setNotice] = useState('');
+  const [confirmation, setConfirmation] = useState('Your enquiry has been received. I’ll follow up using the contact details you provided.');
   const [error, setError] = useState('');
 
   const update = (key: keyof typeof form, value: string | boolean) => setForm((current) => ({ ...current, [key]: value }));
@@ -61,8 +62,9 @@ export function EnquiryLanding() {
         })
       });
       const data = await response.json();
-      if (data.refCode && !data.success) {
+      if (data.refCode && !data.success && data.dbResult?.success) {
         setReference(data.refCode);
+        setConfirmation('Your enquiry has been saved. I’ll follow up using the contact details you provided.');
         setNotice(data.error || 'Your enquiry was saved, but the notification email needs attention. You can also email me directly.');
         setSubmitted(true);
         return;
@@ -72,6 +74,9 @@ export function EnquiryLanding() {
         return;
       }
       setReference(data.refCode || 'ENQ-' + Math.random().toString(36).slice(2, 8).toUpperCase());
+      setConfirmation(data.storage === 'neon'
+        ? 'Your enquiry has been saved. I’ll follow up using the contact details you provided.'
+        : 'Your enquiry has been sent. I’ll follow up using the contact details you provided.');
       setNotice(data.warning || '');
       setSubmitted(true);
     } catch {
@@ -165,7 +170,7 @@ export function EnquiryLanding() {
                   <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-300"><CheckCircle2 className="h-7 w-7" /></div>
                   <p className="mt-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">Enquiry received</p>
                   <h2 className="mt-2 text-2xl font-black text-white">Thanks, {form.name}.</h2>
-                  <p className="mt-3 max-w-sm text-sm leading-6 text-white/55">Your enquiry has been saved. I’ll follow up using the contact details you provided.</p>
+                  <p className="mt-3 max-w-sm text-sm leading-6 text-white/55">{confirmation}</p>
                   <p className="mt-5 border border-white/10 bg-white/[0.03] px-4 py-2 font-mono text-xs text-white/65">Reference: <strong className="text-white">{reference}</strong></p>
                   {notice && <p className="mt-4 max-w-sm text-xs leading-5 text-amber-300">{notice}</p>}
                   <a href="/" className="mt-7 inline-flex min-h-11 items-center gap-2 border border-white/15 px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/70 transition hover:border-white/35 hover:text-white">Back to website <ArrowRight className="h-3.5 w-3.5" /></a>
