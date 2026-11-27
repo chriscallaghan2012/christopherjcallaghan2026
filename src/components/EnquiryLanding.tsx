@@ -95,7 +95,7 @@ export function EnquiryLanding() {
             <span className="truncate text-xs font-bold tracking-tight text-white sm:text-sm">Christopher J. Callaghan</span>
           </a>
           <a href="mailto:christopher@christopherjcallaghan.com" className="inline-flex min-h-11 shrink-0 items-center gap-2 border border-white/10 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white/65 transition hover:border-white/25 hover:text-white sm:px-4">
-            <Mail className="h-3.5 w-3.5" /><span className="hidden xs:inline">Prefer email?</span><span>Email me</span>
+            <Mail className="h-3.5 w-3.5" /><span className="hidden sm:inline">Prefer email?</span><span>Email me</span>
           </a>
         </div>
       </header>
@@ -230,7 +230,7 @@ export function EnquiryLanding() {
                     </div>
                     <label className="flex cursor-pointer items-start gap-3 border border-white/10 bg-white/[0.025] p-3.5 text-[11px] leading-5 text-white/55">
                       <input type="checkbox" required checked={form.privacyAccepted} onChange={(e) => update('privacyAccepted', e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#ff003c]" />
-                      <span>I agree that my details can be used to respond to this enquiry. Read the <a href="/privacy-policy" className="text-white underline decoration-white/30 underline-offset-2 hover:decoration-white">privacy policy</a>.</span>
+                      <span>I agree that my details can be used to respond to this enquiry. This form is for project enquiries only; it does not sign me up to marketing emails.</span>
                     </label>
                     <div className="flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
                       <p className="max-w-xs text-[10px] leading-5 text-white/40"><ShieldCheck className="mr-1 inline h-3.5 w-3.5 text-[#00DFC9]" /> Your information is only used to handle your enquiry.</p>
