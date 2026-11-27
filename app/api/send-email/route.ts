@@ -84,6 +84,9 @@ export async function POST(request: Request) {
       name,
       email,
       phone,
+      businessName,
+      websiteUrl,
+      website,
       projectType,
       packageScope,
       budget,
@@ -97,6 +100,11 @@ export async function POST(request: Request) {
       templateType,
       isSandboxTest = false
     } = body;
+
+    // Quietly discard honeypot submissions while returning a generic success response.
+    if (typeof website === 'string' && website.trim()) {
+      return NextResponse.json({ success: true, refCode: 'ENQ-' + Math.random().toString(36).slice(2, 8).toUpperCase() });
+    }
 
     if (!name || !email) {
       return NextResponse.json({ success: false, error: 'Name and email are required fields.' }, { status: 400 });
@@ -123,7 +131,13 @@ export async function POST(request: Request) {
       budget: budget || fundingGoal || 'Not Specified',
       fundingGoal,
       timeline: timeline || 'Flexible',
-      message: message || details || '',
+      message: [
+        message || details || '',
+        businessName ? `Business / organisation: ${String(businessName).trim()}` : '',
+        websiteUrl ? `Current website: ${String(websiteUrl).trim()}` : ''
+      ].filter(Boolean).join('\n\n'),
+      businessName: typeof businessName === 'string' ? businessName.trim() : '',
+      websiteUrl: typeof websiteUrl === 'string' ? websiteUrl.trim() : '',
       attachments: attachmentNames,
       aiBlueprint: aiContext ? formatBlueprintForEmail(aiContext) : undefined,
       type,
